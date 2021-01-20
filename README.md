@@ -1,18 +1,10 @@
-# Extensions.Pack
+# AspNetCore.Simple.Sdk
 
 ```
 PRERELEASE !!!
 ```
 
-A set of extensions for following namespaces:
-
-* System
-* System.Collections.Generic
-* System.Globalization
-* System.IO
-* System.Linq
-* System.Reflection
-* System.Xml
+A simple SDK to build fast and clean API's with Net5
 
 
 
