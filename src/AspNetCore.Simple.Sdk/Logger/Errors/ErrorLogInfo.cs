@@ -4,21 +4,17 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public class ErrorLogInfo
     {
-        public ErrorLogInfo(string id,
-                            string message,
+        public ErrorLogInfo(string message,
                             string title,
                             IEnumerable<string> stackTrace,
                             Dictionary<string, object> requestInfos)
         {
-            Id = id;
             Title = title;
             Message = message;
             StackTrace = stackTrace;
             RequestInfos = requestInfos;
             ErrorType = "PulseError";
         }
-
-        public string Id { get; }
 
         public string Title { get; }
 

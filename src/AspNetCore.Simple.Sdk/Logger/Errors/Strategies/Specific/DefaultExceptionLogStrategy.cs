@@ -24,7 +24,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies.Specific
 
         protected override ErrorLogInfo GetErrorLogFrom(HttpContext httpContext, Exception exception)
         {
-            return new ErrorLogInfo(httpContext.Request.GetCloudFrontId(), exception.Message, exception.GetType().Name, exception.StackTrace?.Split(System.Environment.NewLine),
+            return new ErrorLogInfo(exception.Message, exception.GetType().Name, exception.StackTrace?.Split(System.Environment.NewLine),
                 httpContext.Request.GetQueryRequestInfo().ToDictionary(k => k.key, v => v.value));
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
@@ -32,38 +33,6 @@ namespace AspNetCore.Simple.Sdk.Extensions
                     yield return (header.Key, header.Value.Flatten(","));
                 }
             }
-        }
-
-        public static string GetAuthorization(this HttpRequest source)
-        {
-            return GetFirstHeaderValueOrDefault(source, HeaderNames.Authorization);
-        }
-
-        public static string GetReferer(this HttpRequest source)
-        {
-            return GetFirstHeaderValueOrDefault(source, HeaderNames.Referer);
-        }
-
-        public static string GetCloudFrontId(this HttpRequest httpRequest)
-        {
-            return GetFirstHeaderValueOrDefault(httpRequest, "X-Amz-Cf-Id", "n.A");
-        }
-
-        public static string GetFirstHeaderValueOrDefault(this HttpRequest httpRequest, string headerKey, string defaultValue = "")
-        {
-            var headerValues = httpRequest?.Headers?.GetValueOrDefault(headerKey);
-            if (headerValues.HasValue.IsFalse())
-            {
-                return defaultValue;
-            }
-
-            var headerValuesValue = headerValues.Value.FirstOrDefault();
-            if (headerValuesValue.IsNull())
-            {
-                return defaultValue;
-            }
-
-            return headerValuesValue;
         }
     }
 }
