@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <PackageLicenseFile>License.txt</PackageLicenseFile>
+        <Authors>Rene Peuser</Authors>
+        <Company>Rene Peuser Softwaresolutions</Company>
+        <Description>This simple SDK contains following helpful optimizations:
+- Swagger
+- ApiVersioning
+- Middleware for error logging
+- Middleware for error response handling
+</Description>
+        <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
+        <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
+        <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
+        <PackageReleaseNotes>First beta release</PackageReleaseNotes>
+        <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
+        <PackageId>AspNetCore.Simple.Sdk</PackageId>
+        <OutputType>Library</OutputType>
+        <AssemblyName>AspNetCore.Simple.Sdk</AssemblyName>
+        <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+        <DocumentationFile>D:\AzureDevOps\Extensions\src\Extensions\Extensions.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Extensions.Pack" Version="0.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\License.txt">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+</Project>

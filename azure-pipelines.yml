@@ -1,0 +1,48 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+  - master
+  - refs/tags/*
+  - dev/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+
+- task: UseDotNet@2
+  displayName: Use .NET 5
+  inputs:
+    version: 5.0.x
+    packageType: sdk
+    includePreviewVersions: true
+
+- task: GitVersion@5
+  displayName: git version
+  inputs:
+    runtime: 'core'
+    updateAssemblyInfo: true
+
+- script: dotnet build --configuration $(buildConfiguration) ./src/AspNetCore.Simple.Sdk.sln  /p:Version='$(GitVersion.NuGetVersion)'
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet test
+  inputs:
+    command: 'test'
+    projects: './src/AspNetCore.Simple.Sdk.sln'
+    arguments: '--configuration $(buildConfiguration)'
+
+- script: dotnet pack ./src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj --output $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration) /p:Version='$(GitVersion.NuGetVersion)'
+  displayName: 'dotnet pack $(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'publish artifacts'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
