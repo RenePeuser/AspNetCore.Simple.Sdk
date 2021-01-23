@@ -25,8 +25,7 @@ steps:
 
 - task: GitVersion@5
   displayName: git version
-  inputs:
-    runtime: 'core'
+  inputs:      
     updateAssemblyInfo: true
 
 - script: dotnet build --configuration $(buildConfiguration) ./src/AspNetCore.Simple.Sdk.sln  /p:Version='$(GitVersion.NuGetVersion)'
