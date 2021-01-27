@@ -4,15 +4,16 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-  - master
-  - refs/tags/*
+  - master  
   - dev/*
+  - feat/*
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
+  GitVersion.SemVer: ''
 
 steps:
 
@@ -24,22 +25,34 @@ steps:
     includePreviewVersions: true
 
 - task: GitVersion@5
-  displayName: git version
-  inputs:      
+  displayName: gitversion
+  inputs:          
     updateAssemblyInfo: true
 
-- script: dotnet build --configuration $(buildConfiguration) ./src/AspNetCore.Simple.Sdk.sln  /p:Version='$(GitVersion.NuGetVersion)'
-  displayName: 'dotnet build $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: build
+  inputs:
+    command: 'build'
+    projects: './src/AspNetCore.Simple.Sdk.sln'
+    configuration: '$(buildConfiguration)'
+    versioningScheme: byEnvVar
+    versionEnvVar: 'GitVersion.SemVer'
 
 - task: DotNetCoreCLI@2
-  displayName: dotnet test
+  displayName: test
   inputs:
     command: 'test'
     projects: './src/AspNetCore.Simple.Sdk.sln'
     arguments: '--configuration $(buildConfiguration)'
+    versioningScheme: byEnvVar
+    versionEnvVar: 'GitVersion.SemVer'
 
-- script: dotnet pack ./src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj --output $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration) /p:Version='$(GitVersion.NuGetVersion)'
-  displayName: 'dotnet pack $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: pack
+  inputs:
+    command: 'pack'
+    packagesToPack: './src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj'
+    versioningScheme: 'off'
 
 - task: PublishBuildArtifacts@1
   displayName: 'publish artifacts'
