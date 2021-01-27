@@ -17,13 +17,6 @@ variables:
 
 steps:
 
-- task: UseDotNet@2
-  displayName: Setup Net5.x
-  inputs:
-    version: 5.0.x
-    packageType: sdk
-    includePreviewVersions: true
-
 - task: gitversion/setup@0
   displayName: Setup GitVersion Tool
   inputs:
