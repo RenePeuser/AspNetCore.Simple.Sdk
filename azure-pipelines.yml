@@ -29,23 +29,11 @@ steps:
     useConfigFile: true
     configFilePath: "./GitVersion.yml"
 
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: 'build'
-    projects: './src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj'
-    configuration: '$(buildConfiguration)'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'GitVersion.SemVer'
+- script: dotnet build --configuration $(buildConfiguration) /p:AssemblyVerison='$(GitVersion.SemVer)'
+  displayName: 'dotnet build $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: 'test'
-    projects: './src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'GitVersion.SemVer'
+- script: dotnet test
+  displayName: 'dotnet test'
 
 - task: DotNetCoreCLI@2
   displayName: Pack
