@@ -5,7 +5,7 @@
         <PackageLicenseFile>License.txt</PackageLicenseFile>
         <Authors>Rene Peuser</Authors>
         <Company>Rene Peuser Softwaresolutions</Company>
-        <Description>This simple SDK contains following helpful optimizations:
+        <Description>WIP - This simple SDK contains following helpful optimizations:
 - Swagger
 - ApiVersioning
 - Middleware for error logging
