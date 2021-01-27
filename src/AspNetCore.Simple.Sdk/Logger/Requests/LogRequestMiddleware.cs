@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Requests
 {
-    // Just for test to find out a problem, to analyze
     public class LogRequestMiddleware : IMiddleware
     {
         private readonly ILogger<LogRequestMiddleware> _logger;

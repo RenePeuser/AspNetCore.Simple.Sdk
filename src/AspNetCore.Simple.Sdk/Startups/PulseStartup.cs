@@ -17,9 +17,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.Simple.Sdk.Startups
 {
-    public abstract class SimpleStartup
+    public abstract class StartupBase
     {
-        protected SimpleStartup(IConfiguration configuration,
+        protected StartupBase(IConfiguration configuration,
                                IWebHostEnvironment webHostEnvironment,
                                Assembly assembly,
                                PathString basePath,
@@ -83,7 +83,6 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             app.UsePathBase(BasePath);
 
-            // only one exception not to copy all stuff to congigure develoment as long it is not cleaned up!
             if (WebHostEnvironment.IsDevelopment().IsFalse())
             {
                 app.UseErrorHandlingProduction();

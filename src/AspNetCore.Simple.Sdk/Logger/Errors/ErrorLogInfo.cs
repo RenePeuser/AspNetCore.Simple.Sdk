@@ -13,15 +13,11 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
             Message = message;
             StackTrace = stackTrace;
             RequestInfos = requestInfos;
-            ErrorType = "PulseError";
         }
 
         public string Title { get; }
 
         public string Message { get; }
-
-        // Gets our unique identifier to find all our errors in cloud watch via search query
-        public string ErrorType { get; }
 
         public Dictionary<string, object> RequestInfos { get; }
 

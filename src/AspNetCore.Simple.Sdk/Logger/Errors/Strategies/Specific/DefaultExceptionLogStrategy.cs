@@ -16,8 +16,6 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies.Specific
 
         protected override bool CanHandleException(Exception exception)
         {
-            // This default exception is very important, this can handle any exception, focused to that case that no any
-            // other exception type was able to handle the current exception
             var result = base.CanHandleException(exception);
             return result.IsFalse() || result;
         }

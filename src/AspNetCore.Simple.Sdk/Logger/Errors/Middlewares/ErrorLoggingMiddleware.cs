@@ -23,9 +23,6 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors.Middlewares
             catch (Exception exception)
             {
                 _errorLogStrategy.Handle(context, exception);
-
-                // important here to rethrow the exception, because the error handle middleware
-                // wants to set the correct values to the error response
                 throw;
             }
         }

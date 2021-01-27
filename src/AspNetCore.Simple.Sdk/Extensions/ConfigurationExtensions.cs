@@ -6,12 +6,12 @@ namespace AspNetCore.Simple.Sdk.Extensions
     {
         public static T GetSetting<T>(this IConfiguration configuration)
         {
-            return configuration.GetSection(typeof(T).Name).Get<T>();
+            return GetSetting<T>(configuration, typeof(T).Name);
         }
 
-        public static T GetSetting<T>(this IConfiguration configuration, string sectionName)
+        public static T GetSetting<T>(this IConfiguration configuration, string settingName)
         {
-            return configuration.GetSection(sectionName).Get<T>();
+            return configuration.GetSection(settingName).Get<T>();
         }
     }
 }

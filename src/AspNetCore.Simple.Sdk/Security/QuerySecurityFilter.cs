@@ -2,7 +2,6 @@
 using AspNetCore.Simple.Sdk.ErrorHandling.Development;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,9 +19,7 @@ namespace AspNetCore.Simple.Sdk.Security
     {
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            // is not used.
         }
-
         public void OnActionExecuting(ActionExecutingContext context)
         {
             var declaredQueryParameters = context.ActionDescriptor.GetQueryParameters();

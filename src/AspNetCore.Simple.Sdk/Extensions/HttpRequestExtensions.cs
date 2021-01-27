@@ -26,7 +26,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
                     var handler = new JwtSecurityTokenHandler();
                     var token = handler.ReadJwtToken(header.Value.First().Split().Last());
 
-                    yield return ("Authorization", token.Payload.ToDictionary(item => item.Key, item => item.Value));
+                    yield return (HeaderNames.Authorization, token.Payload.ToDictionary(item => item.Key, item => item.Value));
                 }
                 else
                 {

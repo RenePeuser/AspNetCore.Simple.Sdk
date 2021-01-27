@@ -16,14 +16,10 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling.Development
         internal Task HandleAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = MediaTypeNames.Application.Json;
-
-            // If there is no specific exception error handling then internal server error.
             context.Response.StatusCode = GetErrorCode(exception).Cast<int>();
 
             var problemDetails = new ProblemDetails
             {
-                // Status = context.Response.StatusCode,
-                // Title = "Exception handled by the middleware",
                 Detail = exception.Message
             };
 

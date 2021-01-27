@@ -31,8 +31,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies
             {
                 return true;
             }
-
-            //  important not to safe cast because we want the specific exception type not a castable verion !!
+            
             if (CanHandleException(exception).IsFalse())
             {
                 return false;
