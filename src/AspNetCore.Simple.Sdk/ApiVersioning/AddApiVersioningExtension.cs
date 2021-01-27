@@ -9,7 +9,7 @@ namespace AspNetCore.Simple.Sdk.ApiVersioning
         {
             services.AddApiVersioning(apiVersionOptions =>
             {
-                apiVersionOptions.DefaultApiVersion = new ApiVersion(0, 1);
+                apiVersionOptions.DefaultApiVersion = new ApiVersion(1, 0);
                 apiVersionOptions.AssumeDefaultVersionWhenUnspecified = true;
             });
         }

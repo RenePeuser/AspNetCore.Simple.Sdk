@@ -17,13 +17,13 @@ using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.Simple.Sdk.Startups
 {
-    public abstract class StartupBase
+    public abstract class SimpleStartup
     {
-        protected StartupBase(IConfiguration configuration,
-                               IWebHostEnvironment webHostEnvironment,
-                               Assembly assembly,
-                               PathString basePath,
-                               string swaggerApiTitle)
+        protected SimpleStartup(IConfiguration configuration,
+                              IWebHostEnvironment webHostEnvironment,
+                              Assembly assembly,
+                              PathString basePath,
+                              string swaggerApiTitle)
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
@@ -52,7 +52,7 @@ namespace AspNetCore.Simple.Sdk.Startups
 
         // This method gets called by the runtime if there is no expicit "Production configure method.
         public virtual void ConfigureServices(IServiceCollection services)
-        { 
+        {
             services.AddSwaggerGenSimplified(Assembly, SwaggerApiTitle);
 
             services.AddControllers();
@@ -71,6 +71,7 @@ namespace AspNetCore.Simple.Sdk.Startups
 
         public virtual void ConfigureDevelopment(IApplicationBuilder app)
         {
+            Configure(app);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
