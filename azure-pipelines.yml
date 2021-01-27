@@ -18,47 +18,50 @@ variables:
 steps:
 
 - task: UseDotNet@2
-  displayName: Use .NET 5
+  displayName: Setup Net5.x
   inputs:
     version: 5.0.x
     packageType: sdk
     includePreviewVersions: true
 
 - task: gitversion/setup@0
+  displayName: Setup GitVersion Tool
   inputs:
-    versionSpec: '5.6.0'    
+    versionSpec: '5.6.0'
+    includePrerelease: true
 
 - task: gitversion/execute@0
+  displayName: Run GitVersion
   inputs:
     useConfigFile: true
     configFilePath: "./GitVersion.yml"
 
 - task: DotNetCoreCLI@2
-  displayName: build
+  displayName: Build
   inputs:
     command: 'build'
-    projects: './src/AspNetCore.Simple.Sdk.sln'
+    projects: './src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj'
     configuration: '$(buildConfiguration)'
     versioningScheme: byEnvVar
     versionEnvVar: 'GitVersion.SemVer'
 
 - task: DotNetCoreCLI@2
-  displayName: test
+  displayName: Test
   inputs:
     command: 'test'
-    projects: './src/AspNetCore.Simple.Sdk.sln'
+    projects: './src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj'
     arguments: '--configuration $(buildConfiguration)'
     versioningScheme: byEnvVar
     versionEnvVar: 'GitVersion.SemVer'
 
 - task: DotNetCoreCLI@2
-  displayName: pack
+  displayName: Pack
   inputs:
     command: 'pack'
     packagesToPack: './src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj'
     versioningScheme: 'off'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'publish artifacts'
+  displayName: Publish Artifacts
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
