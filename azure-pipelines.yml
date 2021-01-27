@@ -32,9 +32,7 @@ steps:
   inputs:
     useConfigFile: true
     configFilePath: "./GitVersion.yml"
-    updateAssemblyInfoFilename: '**/AssemblyInfo.cs'
-    updateAssemblyInfo: true
-    
+
 - task: DotNetCoreCLI@2
   displayName: build
   inputs:
