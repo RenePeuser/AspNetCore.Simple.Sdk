@@ -4,45 +4,50 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-  - master
-  - refs/tags/*
+  - master  
   - dev/*
+  - feat/*
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
+  GitVersion.SemVer: ''
 
 steps:
 
+- task: gitversion/setup@0
+  displayName: Setup GitVersion Tool
+  inputs:
+    versionSpec: '5.6.0'
+    includePrerelease: true
+
+- task: gitversion/execute@0
+  displayName: Run GitVersion
+  inputs:
+    useConfigFile: true
+    configFilePath: "./GitVersion.yml"
+
 - task: UseDotNet@2
-  displayName: Use .NET 5
   inputs:
-    version: 5.0.x
-    packageType: sdk
-    includePreviewVersions: true
+    packageType: 'sdk'
+    version: '5.0.x'
 
-- task: GitVersion@5
-  displayName: git version
-  inputs:
-    runtime: 'core'
-    updateAssemblyInfo: true
-
-- script: dotnet build --configuration $(buildConfiguration) ./src/AspNetCore.Simple.Sdk.sln  /p:Version='$(GitVersion.NuGetVersion)'
+- script: dotnet build --configuration $(buildConfiguration) /p:AssemblyVerison='$(GitVersion.SemVer)'
   displayName: 'dotnet build $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: dotnet test
-  inputs:
-    command: 'test'
-    projects: './src/AspNetCore.Simple.Sdk.sln'
-    arguments: '--configuration $(buildConfiguration)'
+- script: dotnet test
+  displayName: 'dotnet test'
 
-- script: dotnet pack ./src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj --output $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration) /p:Version='$(GitVersion.NuGetVersion)'
-  displayName: 'dotnet pack $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: Pack
+  inputs:
+    command: 'pack'
+    packagesToPack: './src/AspNetCore.Simple.Sdk/AspNetCore.Simple.Sdk.csproj'
+    versioningScheme: 'off'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'publish artifacts'
+  displayName: Publish Artifacts
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
