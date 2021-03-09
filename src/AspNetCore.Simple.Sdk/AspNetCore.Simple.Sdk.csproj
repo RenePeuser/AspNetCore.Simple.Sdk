@@ -2,19 +2,25 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
         <PackageLicenseFile>License.txt</PackageLicenseFile>
         <Authors>Rene Peuser</Authors>
         <Company>Rene Peuser Softwaresolutions</Company>
-        <Description>WIP - This simple SDK contains following helpful optimizations:
-- Swagger
-- ApiVersioning
-- Middleware for error logging
-- Middleware for error response handling
-</Description>
+        <Description>
+            WIP - This simple SDK contains following helpful optimizations:
+            - Swagger
+            - ApiVersioning
+            - Middleware for error logging
+            - Middleware for error response handling
+        </Description>
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>First beta release</PackageReleaseNotes>
+        <PackageReleaseNotes>
+            Alpha release - WIP - Currently only for Net5.x
+
+        </PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
@@ -28,7 +34,7 @@
 
     <ItemGroup>
         <PackageReference Include="Extensions.Pack" Version="0.1.1" />
-        <PackageReference Include="GitVersionTask" Version="5.5.1">
+        <PackageReference Include="GitVersion.MsBuild" Version="5.6.6">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

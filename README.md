@@ -3,8 +3,4 @@
 ```
 PRERELEASE !!!
 ```
-
-A simple SDK to build fast and clean API's with Net5
-
-
-
+![How to](./docu/aspnetcore-simple-how-to-gif.gif)

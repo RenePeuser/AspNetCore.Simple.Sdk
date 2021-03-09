@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AspNetCore.Simple.Sdk.Serializer.Json
 {
@@ -8,7 +9,7 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
         public JsonSerializer()
         {
-            _serializeOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _serializeOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() } };
         }
 
         public string Serialize<T>(T source)
