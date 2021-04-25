@@ -14,7 +14,6 @@ namespace AspNetCore.Simple.Sdk.Test
             var testAppsettingsJson = new FileInfo(Path.Combine(Environment.CurrentDirectory, "appsettings.test.json"));
 
             builder.ConfigureAppConfiguration((_, configurationBuilder) => configurationBuilder.AddJsonFile(testAppsettingsJson.FullName));
-
             builder.ConfigureServices(services =>
             {
                 // if we need to switch between services we have to do it here
