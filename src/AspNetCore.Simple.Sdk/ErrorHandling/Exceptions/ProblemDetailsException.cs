@@ -25,13 +25,13 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
                                        string details,
                                        IImmutableDictionary<string, object> errorDetails) : base(title)
         {
-            ProblemDetails = new PulseProblemDetails(title, details, statusCode, errorDetails);
+            ProblemDetails = new ProblemDetails(title, details, statusCode, errorDetails);
         }
 
-        public PulseProblemDetails ProblemDetails { get; }
+        public ProblemDetails ProblemDetails { get; }
     }
 
-    public record PulseProblemDetails(string Title,
+    public record ProblemDetails(string Title,
                                       string Details,
                                       int StatusCode,
                                       IImmutableDictionary<string, object> ErrorDetails);
