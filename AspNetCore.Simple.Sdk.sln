@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Simple.Sdk.Api", "src\AspNetCore.Simple.Sdk.Api\AspNetCore.Simple.Sdk.Api.csproj", "{48E65104-795C-4A90-82C3-F948E66F2CC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Simple.Sdk.Test", "src\AspNetCore.Simple.Sdk.Test\AspNetCore.Simple.Sdk.Test.csproj", "{7F42D35B-0A66-422C-91F8-0DDD04BB8297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{D98DF576-2BBB-4F4C-ADEC-8A10D1016ECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D98DF576-2BBB-4F4C-ADEC-8A10D1016ECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D98DF576-2BBB-4F4C-ADEC-8A10D1016ECA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48E65104-795C-4A90-82C3-F948E66F2CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48E65104-795C-4A90-82C3-F948E66F2CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48E65104-795C-4A90-82C3-F948E66F2CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48E65104-795C-4A90-82C3-F948E66F2CC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F42D35B-0A66-422C-91F8-0DDD04BB8297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F42D35B-0A66-422C-91F8-0DDD04BB8297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F42D35B-0A66-422C-91F8-0DDD04BB8297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F42D35B-0A66-422C-91F8-0DDD04BB8297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

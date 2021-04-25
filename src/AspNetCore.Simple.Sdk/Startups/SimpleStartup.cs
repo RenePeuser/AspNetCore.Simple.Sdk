@@ -17,10 +17,17 @@ namespace AspNetCore.Simple.Sdk.Startups
     public abstract class SimpleStartup
     {
         protected SimpleStartup(IConfiguration configuration,
-                              IWebHostEnvironment webHostEnvironment,
-                              Assembly assembly,
-                              PathString basePath,
-                              string swaggerApiTitle)
+                                IWebHostEnvironment webHostEnvironment,
+                                PathString basePath,
+                                string swaggerApiTitle) : this(configuration, webHostEnvironment, Assembly.GetCallingAssembly(), basePath, swaggerApiTitle)
+        {
+        }
+
+        protected SimpleStartup(IConfiguration configuration,
+                                IWebHostEnvironment webHostEnvironment,
+                                Assembly assembly,
+                                PathString basePath,
+                                string swaggerApiTitle)
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
