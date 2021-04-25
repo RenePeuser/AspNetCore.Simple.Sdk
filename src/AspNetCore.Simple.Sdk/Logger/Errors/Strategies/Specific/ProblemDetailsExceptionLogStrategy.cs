@@ -5,7 +5,7 @@ using AspNetCore.Simple.Sdk.Serializer.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies.Specific
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public class ProblemDetailsExceptionLogStrategy : LogStrategy<ProblemDetailsException>
     {

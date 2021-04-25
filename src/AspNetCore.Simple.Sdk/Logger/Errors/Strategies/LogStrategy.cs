@@ -4,7 +4,7 @@ using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public abstract class LogStrategy<TException> : LogStrategyBase
     {

@@ -1,8 +1,7 @@
-﻿using AspNetCore.Simple.Sdk.Logger.Errors.Strategies;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Middlewares
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public static class ErrorLoggingMiddlewareExtension
     {

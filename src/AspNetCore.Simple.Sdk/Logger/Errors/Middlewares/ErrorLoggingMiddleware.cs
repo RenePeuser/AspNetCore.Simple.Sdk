@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AspNetCore.Simple.Sdk.Logger.Errors.Strategies;
 using Microsoft.AspNetCore.Http;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Middlewares
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     internal class ErrorLoggingMiddleware : IMiddleware
     {

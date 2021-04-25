@@ -1,7 +1,6 @@
-﻿using AspNetCore.Simple.Sdk.Logger.Errors.Strategies.Specific;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public static class LogStrategyExtension
     {

@@ -1,11 +1,10 @@
 ﻿using System;
-using AspNetCore.Simple.Sdk.Logger.Errors.Strategies.Specific;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public abstract class LogStrategyBase : ISpecificErrorLogStrategy
     {

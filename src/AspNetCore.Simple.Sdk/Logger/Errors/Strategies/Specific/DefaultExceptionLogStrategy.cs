@@ -6,7 +6,7 @@ using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies.Specific
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public class DefaultExceptionLogStrategy : LogStrategy<Exception>
     {

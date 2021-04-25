@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using AspNetCore.Simple.Sdk.ErrorHandling.Development;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc.Filters;

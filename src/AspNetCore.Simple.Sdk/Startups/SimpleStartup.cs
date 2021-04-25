@@ -1,19 +1,16 @@
 ﻿using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
-using AspNetCore.Simple.Sdk.ErrorHandling.Development;
-using AspNetCore.Simple.Sdk.ErrorHandling.Production;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
-using AspNetCore.Simple.Sdk.Logger.Errors.Middlewares;
+using AspNetCore.Simple.Sdk.Logger.Errors;
 using AspNetCore.Simple.Sdk.Security;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using AspNetCore.Simple.Sdk.Swagger;
-using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.Simple.Sdk.Startups
 {
@@ -45,8 +42,6 @@ namespace AspNetCore.Simple.Sdk.Startups
 
         public virtual void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            services.AddErrorHandlingDevelopment();
-
             ConfigureServices(services);
         }
 
@@ -61,7 +56,7 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddSingleton(typeof(Assembly), Assembly);
             services.AddHttpClient();
-            services.AddErrorHandlingProduction();
+            services.AddErrorHandling();
             services.AddErrorLogging();
 
             services.AddApiVersioningSimplified();
@@ -84,10 +79,7 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             app.UsePathBase(BasePath);
 
-            if (WebHostEnvironment.IsDevelopment().IsFalse())
-            {
-                app.UseErrorHandlingProduction();
-            }
+            app.UseErrorHandling();
 
             app.UseErrorLogging();
             app.UseHttpsRedirection();

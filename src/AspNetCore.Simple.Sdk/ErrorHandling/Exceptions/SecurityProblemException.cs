@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace AspNetCore.Simple.Sdk.ErrorHandling.Development
+namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
     public class SecurityProblemException : ProblemDetailsException
     {

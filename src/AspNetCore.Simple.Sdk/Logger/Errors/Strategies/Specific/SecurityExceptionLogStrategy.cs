@@ -1,11 +1,10 @@
 ﻿using System.Linq;
-using AspNetCore.Simple.Sdk.ErrorHandling.Development;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies.Specific
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public class SecurityExceptionLogStrategy : LogStrategy<SecurityProblemException>
     {
