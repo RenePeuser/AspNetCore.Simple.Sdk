@@ -1,4 +1,7 @@
-﻿using AspNetCore.Simple.Sdk.ErrorHandling;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +21,28 @@ namespace AspNetCore.Simple.Sdk.Extensions
             }
 
             serviceCollection.AddSingleton(setting);
+        }
+
+        public static IServiceCollection AddSingletonIfNotExists<TImplementation>(this IServiceCollection services)
+            where TImplementation : class
+        {
+            return services.AddSingletonIfNotExists<TImplementation, TImplementation>();
+        }
+
+        public static IServiceCollection AddSingletonIfNotExists<TInterface, TImplementation>(this IServiceCollection services)
+            where TInterface : class
+            where TImplementation : class, TInterface
+        {
+            var fieldInfo = services.GetType().GetField("_descriptors", BindingFlags.NonPublic | BindingFlags.Instance);
+            var _descriptors = fieldInfo.GetValue(services).Cast<List<ServiceDescriptor>>();
+            var existingRegistrations = _descriptors.Where(descriptor => descriptor.ServiceType == typeof(TInterface) && descriptor.ImplementationType == typeof(TImplementation));
+            if (existingRegistrations.Any())
+            {
+                return services;
+            }
+
+            services.AddSingleton(typeof(TInterface), typeof(TImplementation));
+            return services;
         }
     }
 }
