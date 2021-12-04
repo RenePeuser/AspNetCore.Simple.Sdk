@@ -8,7 +8,16 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface.Services
     {
     }
 
+    [ServiceRegistration(ServiceLifetime.Transient, typeof(ITransientServiceSpecific))]
+    public class TransientServiceWithSpecificInterface : ITransientService, ITransientServiceSpecific
+    {
+    }
+
     public interface ITransientService
+    {
+    }
+
+    public interface ITransientServiceSpecific
     {
     }
 }
