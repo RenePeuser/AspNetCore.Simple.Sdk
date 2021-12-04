@@ -8,11 +8,15 @@
         <PackageLicenseFile>License.txt</PackageLicenseFile>
         <Authors>Rene Peuser</Authors>
         <Company>Rene Peuser Softwaresolutions</Company>
-        <Description>WIP - This simple SDK contains following helpful optimizations:
-- Swagger
+        <Description>
+WIP - This simple SDK contains following helpful optimizations:
 - ApiVersioning
-- Middleware for error logging
-- Middleware for error response handling</Description>
+- Auto dependency resolver. Search automatically all dependencies for a type and register it.
+- Errorhandling with middleware
+- Logging with middleware
+- Query security filter
+- Optimized and simplified swagger.
+- Ready to go base class for startup.cs</Description>
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
