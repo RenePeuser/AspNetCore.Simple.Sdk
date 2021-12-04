@@ -30,7 +30,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
             {
                 return true;
             }
-            
+
             if (CanHandleException(exception).IsFalse())
             {
                 return false;

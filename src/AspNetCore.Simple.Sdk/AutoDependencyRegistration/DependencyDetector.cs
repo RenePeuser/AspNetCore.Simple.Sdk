@@ -24,7 +24,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
                                      .OrderByDescending(ctorInfo => ctorInfo.Parameters.Length)
                                      .FirstOrDefault()?.Parameters;
 
-            if (parameterInfos.IsNullOrEmpty())
+            if (parameterInfos is null)
             {
                 yield break;
             }

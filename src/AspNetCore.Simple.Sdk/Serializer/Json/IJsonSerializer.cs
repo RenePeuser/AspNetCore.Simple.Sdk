@@ -4,6 +4,6 @@
     {
         string Serialize<T>(T source);
 
-        T Deserialize<T>(string json);
+        T? Deserialize<T>(string json);
     }
 }

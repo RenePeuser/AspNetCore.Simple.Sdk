@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Serializer.Json;
@@ -15,8 +16,9 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
 
         protected override ErrorLogInfo GetErrorLogFrom(HttpContext httpContext, SecurityProblemException exception)
         {
-            return new ErrorLogInfo(exception.ProblemDetails.Details, exception.ProblemDetails.Title, exception.StackTrace?.Split(System.Environment.NewLine),
-                httpContext.Request.GetQueryRequestInfo().ToDictionary(k => k.key, v => v.value));
+            return new ErrorLogInfo(exception.ProblemDetails.Details, exception.ProblemDetails.Title,
+                                    exception.StackTrace?.Split(Environment.NewLine) ?? Enumerable.Empty<string>(),
+                                    httpContext.Request.GetQueryRequestInfo().ToDictionary(k => k.key, v => v.value));
         }
     }
 }

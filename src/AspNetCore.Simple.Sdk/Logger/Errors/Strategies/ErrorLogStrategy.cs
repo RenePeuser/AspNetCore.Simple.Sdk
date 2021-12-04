@@ -23,7 +23,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
             var result = _specificErrorLogStrategies.Aggregate(false, (current, specificErrorLogStrategy) => specificErrorLogStrategy.HandleException(context, exception, current));
             if (result.IsFalse())
             {
-                _logger.LogError($"[Error] No strategy handled exception: {exception.GetType()}. Following exception occurred: {exception.Message}");
+                _logger.LogError($"No strategy handled exception: {exception.GetType()}. Following exception occurred: {exception.Message}");
             }
         }
     }

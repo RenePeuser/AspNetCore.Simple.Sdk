@@ -1,6 +1,4 @@
 ﻿using System;
-using System.CodeDom;
-using System.Runtime.InteropServices.ComTypes;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 using AspNetCore.Simple.Sdk.Test.Autoregistration.OnlyImplementation.Services;
 using Microsoft.Extensions.Configuration;

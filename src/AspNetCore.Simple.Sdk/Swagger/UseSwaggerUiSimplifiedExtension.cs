@@ -11,7 +11,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
         {
             app.UseSwaggerUI(c =>
             {
-                var trimmedPath = pathString.Value.TrimStart('/');
+                var trimmedPath = pathString.Value?.TrimStart('/');
                 c.RoutePrefix = $"{trimmedPath}/swagger".TrimStart('/');
                 var allApiVersions = new ApiVersionProvider().GetAllApiVersions(assemblies);
                 foreach (var apiVersion in allApiVersions)
