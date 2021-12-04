@@ -40,4 +40,10 @@
     <ProjectReference Include="..\AspNetCore.Simple.Sdk\AspNetCore.Simple.Sdk.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Autoregistration\AppSettings\Json\appsettings.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
