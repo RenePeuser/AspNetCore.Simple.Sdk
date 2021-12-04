@@ -1,4 +1,7 @@
-﻿using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
+﻿using System;
+using System.CodeDom;
+using System.Runtime.InteropServices.ComTypes;
+using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 using AspNetCore.Simple.Sdk.Test.Autoregistration.OnlyImplementation.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,16 +41,16 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.OnlyImplementation
             Assert.AreEqual(result, result2);
         }
 
-        [TestMethod]
-        public void Should_Register_Simple_Scoped_Service_Without_Dependency_With_Default_As_Singleton()
+        [DataTestMethod]
+        [DataRow(typeof(TransientService))]
+        public void Should_Register_Simple_Scoped_Service_Without_Dependency_With_Default_As_Singleton(Type service)
         {
-            _autoregister.DoAutoRegistrationFor<ScopedService>();
+            _autoregister.DoAutoRegistrationFor(service);
             var serviceProvider = _serviceCollection.BuildServiceProvider();
 
-            var result = serviceProvider.GetService<ScopedService>();
-            var result2 = serviceProvider.GetService<ScopedService>();
+            var result = serviceProvider.GetService(service);
+            var result2 = serviceProvider.GetService(service);
 
-            Assert.IsNotNull(result);
             Assert.AreNotEqual(result, result2);
         }
 

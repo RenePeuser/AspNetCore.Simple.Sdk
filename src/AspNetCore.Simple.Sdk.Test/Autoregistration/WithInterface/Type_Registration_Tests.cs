@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
-using AspNetCore.Simple.Sdk.Test.Autoregistration.ServiceHierarchy.Services;
 using AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using IScopedService = AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface.Services.IScopedService;
 
 namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface
 {
@@ -14,7 +12,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface
     public class Type_Registration_Tests
     {
         [DataTestMethod]
-        [DataRow(typeof(ScopedRootRootService), typeof(IScopedService), ServiceLifetime.Scoped)]
+        [DataRow(typeof(ScopedServiceWithInterface), typeof(IScopedService), ServiceLifetime.Scoped)]
         public void Should_Register_Correct_Lifetime_Automatically(Type implementationType, Type interfaceType, ServiceLifetime serviceLifetime)
         {
             var configuration = new ConfigurationBuilder().Build();
