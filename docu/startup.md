@@ -5,11 +5,20 @@ So for quick start you only have to derive from the oprimized startup class and 
 ## Step 1: Startup
 ```csharp
 public class Startup : SimpleStartup
+{
+    public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment) : base(configuration, webHostEnvironment, new PathString("/api/test"), "API for test")
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment) : base(configuration, webHostEnvironment, new PathString("/api/test"), "API for test")
-        {
-        }
     }
+
+    public override void AutoConfigureServices(AutoRegistration autoRegistration)
+    {
+        base.AutoConfigureServices(autoRegistration);
+
+        // Hint: Try to use domain root extension to bundle the entry point for a specific domain.
+        //       Makes your code maintainable, and nice to read !!
+        autoRegistration.AddWeatherForecast();
+    }
+}
 ```
 * Pathstring: this is the base path for all api routes, to reduce noising pasth in your controller implementations
 * Swagger-Title: In this sample it is `API for test`

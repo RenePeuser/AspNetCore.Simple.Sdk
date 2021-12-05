@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using AspNetCore.Simple.Sdk.Startups;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Api
 {
@@ -14,16 +13,13 @@ namespace AspNetCore.Simple.Sdk.Api
         {
         }
 
-        public override void AutoConfigureDevelopmentServices(AutoRegistration autoRegistration)
-        {
-            base.AutoConfigureDevelopmentServices(autoRegistration);
-        }
-
         public override void AutoConfigureServices(AutoRegistration autoRegistration)
         {
             base.AutoConfigureServices(autoRegistration);
 
-            autoRegistration.DoAutoRegistrationFor<SummariesProvider>();
+            // Hint: Try to use domain root extension to bundle the entry point for a specific domain.
+            //       Makes your code maintainable, and nice to read !!
+            autoRegistration.AddWeatherForecast();
         }
     }
 }
