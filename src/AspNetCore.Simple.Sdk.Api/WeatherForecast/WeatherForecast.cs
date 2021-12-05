@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace AspNetCore.Simple.Sdk.Api
+namespace AspNetCore.Simple.Sdk.Api.WeatherForecast
 {
     public class WeatherForecast
     {

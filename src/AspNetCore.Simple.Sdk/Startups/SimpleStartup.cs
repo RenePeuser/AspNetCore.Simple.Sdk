@@ -1,11 +1,14 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
+using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Logger.Errors;
 using AspNetCore.Simple.Sdk.Security;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using AspNetCore.Simple.Sdk.Swagger;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +19,8 @@ namespace AspNetCore.Simple.Sdk.Startups
 {
     public abstract class SimpleStartup
     {
+        private Lazy<AutoRegistration> _lazyAutoRegistration = new();
+
         protected SimpleStartup(IConfiguration configuration,
                                 IWebHostEnvironment webHostEnvironment,
                                 PathString basePath,
@@ -50,6 +55,12 @@ namespace AspNetCore.Simple.Sdk.Startups
         public virtual void ConfigureDevelopmentServices(IServiceCollection services)
         {
             ConfigureServices(services);
+            AutoConfigureDevelopmentServices(GetAutoRegistration(services, Configuration));
+        }
+
+        public virtual void AutoConfigureDevelopmentServices(AutoRegistration autoRegistration)
+        {
+            // only optional for user
         }
 
         // This method gets called by the runtime if there is no expicit "Production configure method.
@@ -69,6 +80,13 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddApiVersioningSimplified();
 
             services.AddJsonSerializer();
+
+            AutoConfigureServices(GetAutoRegistration(services, Configuration));
+        }
+
+        public virtual void AutoConfigureServices(AutoRegistration autoRegistration)
+        {
+            // only optional for user
         }
 
         public virtual void ConfigureDevelopment(IApplicationBuilder app)
@@ -93,6 +111,16 @@ namespace AspNetCore.Simple.Sdk.Startups
             app.UseRouting();
             // app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        private AutoRegistration GetAutoRegistration(IServiceCollection serviceCollection, IConfiguration configuration)
+        {
+            if (_lazyAutoRegistration.IsValueCreated.IsFalse())
+            {
+                _lazyAutoRegistration = new Lazy<AutoRegistration>(() => new AutoRegistrationFactory().Create(serviceCollection, configuration));
+            }
+
+            return _lazyAutoRegistration.Value;
         }
     }
 }

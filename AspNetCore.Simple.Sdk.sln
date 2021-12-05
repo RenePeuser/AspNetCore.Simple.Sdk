@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Simple.Sdk", "src\AspNetCore.Simple.Sdk\AspNetCore.Simple.Sdk.csproj", "{D98DF576-2BBB-4F4C-ADEC-8A10D1016ECA}"
 EndProject
@@ -10,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Simple.Sdk.Api", "src\AspNetCore.Simple.Sdk.Api\AspNetCore.Simple.Sdk.Api.csproj", "{48E65104-795C-4A90-82C3-F948E66F2CC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Simple.Sdk.Api", "src\AspNetCore.Simple.Sdk.Api\AspNetCore.Simple.Sdk.Api.csproj", "{48E65104-795C-4A90-82C3-F948E66F2CC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Simple.Sdk.Test", "src\AspNetCore.Simple.Sdk.Test\AspNetCore.Simple.Sdk.Test.csproj", "{7F42D35B-0A66-422C-91F8-0DDD04BB8297}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Simple.Sdk.Test", "src\AspNetCore.Simple.Sdk.Test\AspNetCore.Simple.Sdk.Test.csproj", "{7F42D35B-0A66-422C-91F8-0DDD04BB8297}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

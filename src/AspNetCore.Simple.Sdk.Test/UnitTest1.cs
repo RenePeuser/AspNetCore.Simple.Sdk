@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AspNetCore.Simple.MsTest.Sdk;
 using AspNetCore.Simple.Sdk.Api;
+using AspNetCore.Simple.Sdk.Api.WeatherForecast;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AspNetCore.Simple.Sdk.Test
