@@ -24,7 +24,7 @@ public class Startup : SimpleStartup
 }
 ```
 
-## Mnualy usage via factory
+## Manualy usage via factory
 ```csharp
 public class Startup
 {
