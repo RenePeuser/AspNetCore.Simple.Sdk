@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Extensions.Pack;
 
@@ -7,11 +8,11 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
     internal class DependencyDetector
     {
-        internal IEnumerable<Type> FindDependenciesFor(Type type)
+        internal IImmutableList<Type> FindDependenciesFor(Type type)
         {
             var dependencies = FindDependenciesForInternal(type);
             var filterDuplicate = dependencies.Distinct(dependency => dependency.FullName);
-            return filterDuplicate;
+            return filterDuplicate.ToImmutableList();
         }
 
         private IEnumerable<Type> FindDependenciesForInternal(Type type)

@@ -1,6 +1,7 @@
 ﻿using System;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 using Extensions.Pack;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings.Settings
@@ -15,6 +16,20 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings.Settings
     public class ScopedSettingsWithValidator
     {
         public string Name { get; init; }
+    }
+
+    [AppSettingsRegistration("Settings", typeof(ScopedSettingsWithValidator), ServiceLifetime.Scoped, typeof(ScopeSettingsValidator))]
+    public class ScopedSettingsWithCustomRegistration
+    {
+        public string Name { get; init; }
+    }
+
+    public class CustomRegistrationForScopedSettings : ICustomTypeRegistration
+    {
+        public void Register(IServiceCollection serviceCollection, IConfiguration configuration)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ScopeSettingsValidator : SettingsValidator<ScopedSettingsWithValidator>

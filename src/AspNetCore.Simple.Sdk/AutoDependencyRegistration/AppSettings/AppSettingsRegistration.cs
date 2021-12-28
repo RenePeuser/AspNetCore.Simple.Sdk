@@ -5,20 +5,20 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal class AppSettingsRegistrationStrategy : IRegistrationStrategy
+    internal class AppSettingsRegistration : IRegistrationStrategy
     {
         private readonly LifetimeDetector _lifetimeDetector;
         private readonly IServiceCollection _serviceCollection;
         private readonly IConfiguration _configuration;
 
-        public AppSettingsRegistrationStrategy(LifetimeDetector lifetimeDetector, IServiceCollection serviceCollection, IConfiguration configuration)
+        public AppSettingsRegistration(LifetimeDetector lifetimeDetector, IServiceCollection serviceCollection, IConfiguration configuration)
         {
             _lifetimeDetector = lifetimeDetector;
             _serviceCollection = serviceCollection;
             _configuration = configuration;
         }
 
-        public bool DoAutoRegistration(Type type, bool registrationDone)
+        public bool DoRegistrationFor(Type type, bool registrationDone)
         {
             if (registrationDone)
             {

@@ -26,7 +26,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                 foreach (var apiVersion in allApiVersions)
                 {
-                    options.SwaggerDoc($"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}", new OpenApiInfo {Title = swaggerUiTitle, Version = $"v{apiVersion.MajorVersion}"});
+                    options.SwaggerDoc($"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}", new OpenApiInfo { Title = swaggerUiTitle, Version = $"v{apiVersion.MajorVersion}" });
                 }
             });
         }

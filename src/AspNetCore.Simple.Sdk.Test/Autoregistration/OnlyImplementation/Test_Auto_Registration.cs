@@ -23,7 +23,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.OnlyImplementation
         }
 
         [TestMethod]
-        public void Should_Regsister_Simple_Service_Without_Dependency_With_Default_As_Singleton()
+        public void Should_Register_Simple_Service_Without_Dependency_With_Default_As_Singleton()
         {
             _autoregister.DoAutoRegistrationFor<SimpleService>();
 

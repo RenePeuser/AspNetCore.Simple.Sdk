@@ -11,7 +11,9 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         private readonly RegistrationCheck _registrationCheck;
         private readonly DependencyDetector _dependencyDetector;
 
-        public TypeRegistration(IEnumerable<IRegistrationStrategy> registrationStrategies, RegistrationCheck registrationCheck, DependencyDetector dependencyDetector)
+        public TypeRegistration(IEnumerable<IRegistrationStrategy> registrationStrategies,
+                                RegistrationCheck registrationCheck,
+                                DependencyDetector dependencyDetector)
         {
             _registrationStrategies = registrationStrategies;
             _registrationCheck = registrationCheck;
@@ -46,7 +48,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
                 return;
             }
 
-            var registrationResult = _registrationStrategies.Aggregate(false, (current, registrationStrategy) => registrationStrategy.DoAutoRegistration(type, current));
+            var registrationResult = _registrationStrategies.Aggregate(false, (current, registrationStrategy) => registrationStrategy.DoRegistrationFor(type, current));
             if (registrationResult.IsFalse())
             {
                 throw new MissingRegistrationStrategyException($"For type: '{type.Name}' in namespace: '{type.Namespace}' we do not have a strategy to register it correctly. Please check that you use: '{nameof(ServiceRegistrationAttribute)}' for services or '{nameof(AppSettingsRegistrationAttribute)}' for any kind of app settings");

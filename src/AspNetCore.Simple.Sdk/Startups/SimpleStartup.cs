@@ -63,7 +63,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             // only optional for user
         }
 
-        // This method gets called by the runtime if there is no expicit "Production configure method.
+        // This method gets called by the runtime if there is no explicit "Production configure method.
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGenSimplified(Assembly, SwaggerApiTitle);
