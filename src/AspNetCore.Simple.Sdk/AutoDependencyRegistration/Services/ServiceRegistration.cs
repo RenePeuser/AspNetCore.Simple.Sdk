@@ -11,6 +11,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         private readonly IServiceCollection _serviceCollection;
         private readonly LifetimeDetector _lifetimeDetector;
         private readonly InterfaceDetector _interfaceDetector;
+        private readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
         public ServiceRegistration(IServiceCollection serviceCollection,
                                    LifetimeDetector lifetimeDetector,
@@ -35,11 +36,17 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             }
 
             // A service must have declared methods otherwise it is a data class !
-            var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-            if (methods.Any(method => method.IsHideBySig.IsFalse() && method.IsSpecialName.IsFalse()))
+            var properties = type.GetProperties(_bindingFlags);
+            if (properties.Any())
             {
                 return false;
             }
+
+            //// if we do not have properties and no methods this is an unknown state without explicit type registration not to know hot to register it.
+            //if (type.GetMethods(_bindingFlags).IsEmpty())
+            //{
+            //    return false;
+            //}
 
             var interfaceToRegisterFor = _interfaceDetector.DetectInterface(type);
             var lifetime = _lifetimeDetector.DetectFor(type);

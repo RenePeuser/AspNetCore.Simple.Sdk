@@ -6,7 +6,7 @@ namespace AspNetCore.Simple.Sdk.Api.WeatherForecast
     {
         public static void AddWeatherForecast(this AutoRegistration autoRegistration)
         {
-            autoRegistration.DoAutoRegistrationFor<SummariesProvider>();
+            autoRegistration.DoAutoRegistrationFor<WeatherForecastController>();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
@@ -44,6 +45,12 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         private void DoAutoRegistrationInternal(Type type)
         {
             if (_registrationCheck.IsAlreadyRegistered(type))
+            {
+                return;
+            }
+
+            // if you use your controller as entry root registration point, all dependencies was already registered step before :)
+            if (typeof(ControllerBase).IsAssignableFrom(type))
             {
                 return;
             }

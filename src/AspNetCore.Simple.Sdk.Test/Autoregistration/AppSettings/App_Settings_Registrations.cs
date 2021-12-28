@@ -53,14 +53,5 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings
         {
             Assert.ThrowsException<ArgumentException>(() => _autoRegistration.DoAutoRegistrationFor<ScopedSettingsWithValidator>());
         }
-
-        [DataTestMethod]
-        [DataRow(typeof(ScopedSettings))]
-        [DataRow(typeof(TransientSettings))]
-        [DataRow(typeof(SingletonSettings))]
-        public void Should_Be_Able_To_Use_Custom_Registration_For_AppSettings()
-        {
-            Assert.ThrowsException<ArgumentException>(() => _autoRegistration.DoAutoRegistrationFor<ScopedSettingsWithValidator>());
-        }
     }
 }

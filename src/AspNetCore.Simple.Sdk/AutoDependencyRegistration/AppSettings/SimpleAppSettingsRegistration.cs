@@ -12,6 +12,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         private readonly LifetimeDetector _lifetimeDetector;
         private readonly IServiceCollection _serviceCollection;
         private readonly IConfiguration _configuration;
+        private readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
         public SimpleAppSettingsRegistration(LifetimeDetector lifetimeDetector, IServiceCollection serviceCollection, IConfiguration configuration)
         {
@@ -41,15 +42,22 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 
             // Specific logic, if we have a pure data structure which will be injected we will check
             // 1. If is a pure data class, if we find explicit declared methods this can not be a settings class (simple one)
-            var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+            var methods = type.GetMethods(_bindingFlags).Where(m => m.IsSpecialName.IsFalse());
             if (methods.Any())
+            {
+                return false;
+            }
+
+            // if a settings class does not have properties, and do not have explicit registration information we can not register it as settings
+            var properties = type.GetProperties(_bindingFlags);
+            if (properties.IsEmpty())
             {
                 return false;
             }
 
             // 3. Check class name first
             var settingsName = type.Name;
-            var settings = _configuration.GetSection(settingsName).Get(appsettingsAttribute.SettingsType);
+            var settings = _configuration.GetSection(settingsName).Get(type);
             var lifetime = _lifetimeDetector.DetectFor(type);
             _serviceCollection.Add(new ServiceDescriptor(type, _ => settings, lifetime));
             return true;
