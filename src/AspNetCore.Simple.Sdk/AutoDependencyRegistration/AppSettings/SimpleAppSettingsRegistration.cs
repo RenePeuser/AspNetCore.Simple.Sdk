@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Extensions.Pack;
@@ -13,6 +14,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         private readonly IServiceCollection _serviceCollection;
         private readonly IConfiguration _configuration;
         private readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+        private readonly IEnumerable<string> SettingsPostFixToReplace = new[] { "Settings", "Setting" };
 
         public SimpleAppSettingsRegistration(LifetimeDetector lifetimeDetector, IServiceCollection serviceCollection, IConfiguration configuration)
         {
@@ -58,6 +60,20 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             // 3. Check class name first
             var settingsName = type.Name;
             var settings = _configuration.GetSection(settingsName).Get(type);
+
+            //// 4. Fallback value check if name contains settings remove it
+            //if (settings is null)
+            //{
+            //    settingsName = SettingsPostFixToReplace.Aggregate(settingsName, (current, stringToReplace) => current.Replace(stringToReplace, string.Empty));
+            //    settings = _configuration.GetSection(settingsName).Get(type);
+            //}
+
+            // 5. If settings is still null, then we don't know it
+            if (settings is null)
+            {
+                return false;
+            }
+
             var lifetime = _lifetimeDetector.DetectFor(type);
             _serviceCollection.Add(new ServiceDescriptor(type, _ => settings, lifetime));
             return true;

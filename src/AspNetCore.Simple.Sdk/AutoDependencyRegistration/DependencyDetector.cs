@@ -6,13 +6,46 @@ using Extensions.Pack;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
+    internal class ImplementationFinderForInterface
+    {
+        internal IImmutableList<Type> FindFor(Type interfaceType)
+        {
+            if (interfaceType.IsInterface.IsFalse())
+            {
+                // Use new argument check :)
+            }
+
+
+            var implementations = interfaceType.Assembly.GetTypes()
+                                                        .Where(type => type.IsInterface.IsFalse() && interfaceType.IsAssignableFrom(type))
+                                                        .ToImmutableList();
+
+            return implementations;
+        }
+    }
+
     internal class DependencyDetector
     {
+        private readonly ImplementationFinderForInterface _implementationFinderForInterface;
+
+        public DependencyDetector(ImplementationFinderForInterface implementationFinderForInterface)
+        {
+            _implementationFinderForInterface = implementationFinderForInterface;
+        }
+
         internal IImmutableList<Type> FindDependenciesFor(Type type)
         {
             var dependencies = FindDependenciesForInternal(type);
             var filterDuplicate = dependencies.Distinct(dependency => dependency.FullName);
             return filterDuplicate.ToImmutableList();
+        }
+
+
+        private IImmutableList<Type> FindDependenciesForInterface(Type interfaceType)
+        {
+            var implementations = _implementationFinderForInterface.FindFor(interfaceType);
+            var allDependencies = implementations.SelectMany(FindDependenciesForInternal).ToImmutableList();
+            return allDependencies;
         }
 
         private IEnumerable<Type> FindDependenciesForInternal(Type type)
@@ -32,14 +65,28 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 
             foreach (var parameterInfo in parameterInfos)
             {
-                var nextDependencies = FindDependenciesForInternal(parameterInfo.ParameterType);
-                foreach (var nextDependency in nextDependencies)
+
+                if (parameterInfo.ParameterType.IsInterface)
                 {
-                    yield return nextDependency;
+                    var depdenciesByInterfaces = FindDependenciesForInterface(parameterInfo.ParameterType);
+                    foreach (var dependencyByInterface in depdenciesByInterfaces)
+                    {
+                        yield return dependencyByInterface;
+                    }
+                }
+                else
+                {
+                    var nextDependencies = FindDependenciesForInternal(parameterInfo.ParameterType);
+                    foreach (var nextDependency in nextDependencies)
+                    {
+                        yield return nextDependency;
+                    }
                 }
 
                 yield return parameterInfo.ParameterType;
             }
+
+            yield return type;
         }
     }
 }

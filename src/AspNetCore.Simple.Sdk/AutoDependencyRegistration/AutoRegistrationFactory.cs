@@ -16,7 +16,8 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             var customRegistrationStrategy = new CustomRegistration(serviceCollection, configuration);
 
             var registrationCheck = new RegistrationCheck(serviceCollection);
-            var dependencyDetector = new DependencyDetector();
+            var implementationFinderForInterface = new ImplementationFinderForInterface();
+            var dependencyDetector = new DependencyDetector(implementationFinderForInterface);
             var registrationStrategy = new TypeRegistration(new IRegistrationStrategy[] { customRegistrationStrategy, simpleAppsettingsRegistration, appsettingsRegistrationStrategy, serviceRegistrationStrategy }, registrationCheck, dependencyDetector);
             var autoRegistration = new AutoRegistration(registrationStrategy);
             return autoRegistration;

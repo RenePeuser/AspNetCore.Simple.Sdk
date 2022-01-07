@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace AspNetCore.Simple.Sdk.Test.Autoregistration.ServiceHierarchy
 {
     [TestClass]
-    public class Type_Registration_By_Implementation_Tests
+    public class Type_Registration_By_Interface_Tests
     {
         [TestMethod]
         public void Should_Register_Correct_Lifetime_Automatically_By_Type_With_All_Needed_Dependencies()
@@ -16,14 +16,14 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.ServiceHierarchy
             var serviceCollection = new ServiceCollection();
             var autoRegister = new AutoRegistrationFactory().Create(serviceCollection, configuration);
 
-            autoRegister.DoAutoRegistrationFor(typeof(ScopedRootRootService));
+            autoRegister.DoAutoRegistrationFor(typeof(InterfaceScopedRootRootService));
 
             Assert.AreEqual(3, serviceCollection.Count);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            Assert.IsNotNull(serviceProvider.GetService<IScopedRootService>());
-            Assert.IsNotNull(serviceProvider.GetService<ServiceHierarchy01>());
-            Assert.IsNotNull(serviceProvider.GetService<ServiceHierarchy02>());
+            Assert.IsNotNull(serviceProvider.GetService<IInterfaceScopedRootService>());
+            Assert.IsNotNull(serviceProvider.GetService<IServiceHierarchy01>());
+            Assert.IsNotNull(serviceProvider.GetService<IServiceHierarchy02>());
         }
 
         [TestMethod]
