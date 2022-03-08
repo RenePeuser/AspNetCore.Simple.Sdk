@@ -15,7 +15,8 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 
         internal bool IsAlreadyRegistered(Type type)
         {
-            return _serviceCollection.Any(registration => registration.ServiceType == type && registration.ImplementationType == type);
+            var isAlreaydRegistered = _serviceCollection.Any(registration => registration.ServiceType == type || registration.ImplementationType == type);
+            return isAlreaydRegistered;
         }
     }
 }
