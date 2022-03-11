@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Net;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
@@ -9,6 +11,13 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         public ProblemDetailsException(string title,
                                        string details,
                                        params (string key, object value)[] extensions) : this(StatusCodes.Status500InternalServerError, title, details, extensions)
+        {
+        }
+
+        public ProblemDetailsException(HttpStatusCode statusCode,
+                                       string title,
+                                       string details,
+                                       params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
         {
         }
 

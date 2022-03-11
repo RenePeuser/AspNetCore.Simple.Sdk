@@ -9,7 +9,8 @@ namespace AspNetCore.Simple.Sdk.Api
 {
     public class Startup : SimpleStartup
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment) : base(configuration, webHostEnvironment, new PathString("/api/test"), "API for test")
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment) :
+            base(configuration, webHostEnvironment, new PathString("/api/test"), "API for test")
         {
         }
 

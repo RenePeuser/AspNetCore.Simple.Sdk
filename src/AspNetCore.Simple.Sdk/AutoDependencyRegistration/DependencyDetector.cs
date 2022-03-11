@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -65,6 +66,27 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 
             foreach (var parameterInfo in parameterInfos)
             {
+                if (typeof(IEnumerable).IsAssignableFrom(parameterInfo.ParameterType))
+                {
+                    if (parameterInfo.ParameterType.IsGenericType.IsFalse())
+                    {
+                        throw new InvalidOperationException(
+                            $"It is not possible to inject a non generic list type. Your type: '{parameterInfo.ParameterType}' is not defining a generic type. It is not possible to inject any dependencies of unknown type.");
+                    }
+
+                    var generiyType = parameterInfo.ParameterType.GetGenericArguments();
+                    if (generiyType.Length > 1)
+                    {
+                        throw new InvalidOperationException($"It is not possible to inject a multi generic type list. Your type: '{parameterInfo.ParameterType}'. Your type definition is to complex to find a correct implementation for.");
+                    }
+
+                    var dependencies = FindDependenciesFor(generiyType.First());
+                    foreach (var dependency in dependencies)
+                    {
+                        yield return dependency;
+                    }
+                }
+
 
                 if (parameterInfo.ParameterType.IsInterface)
                 {

@@ -20,6 +20,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.AddSwaggerGrouping();
                 options.OperationFilter<RemoveVersionParameterFilter>();
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
+                options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.AddBearerSecurityDefinition();
                 options.AddBearerSecurityRequirement();
                 options.AddXmlComments(assembly);

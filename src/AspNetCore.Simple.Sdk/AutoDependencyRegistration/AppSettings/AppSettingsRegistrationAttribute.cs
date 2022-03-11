@@ -17,7 +17,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         {
             if (customRegistration is null)
             {
-                throw new ArgumentException("Your custom regostration must not be null.");
+                throw new ArgumentException("Your custom registration must not be null.");
             }
 
             if (customRegistration.IsInterface)
