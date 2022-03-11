@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
@@ -9,6 +10,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
     {
         public static void UseSwaggerUiSimplified(this IApplicationBuilder app, Assembly assemblies, PathString pathString)
         {
+            var prefix = pathString.Value.IsNullOrWhiteSpace() ? "" : "/";
+
             app.UseSwaggerUI(c =>
             {
                 var trimmedPath = pathString.Value?.TrimStart('/');
@@ -16,7 +19,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 var allApiVersions = new ApiVersionProvider().GetAllApiVersions(assemblies);
                 foreach (var apiVersion in allApiVersions)
                 {
-                    c.SwaggerEndpoint($"/{trimmedPath}/swagger/v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}/swagger.json", $"V{apiVersion.MajorVersion}.{apiVersion.MinorVersion}");
+                    c.SwaggerEndpoint($"{prefix}{trimmedPath}/swagger/v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}/swagger.json", $"V{apiVersion.MajorVersion}.{apiVersion.MinorVersion}");
                 }
             });
         }

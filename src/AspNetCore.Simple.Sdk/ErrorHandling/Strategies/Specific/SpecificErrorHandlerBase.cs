@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
-    internal abstract class SpecificErrorHandlerBase : ISpecificErrorHandler
+    public abstract class SpecificErrorHandlerBase : ISpecificErrorHandler
     {
         public async Task<bool> HandleExceptionAsync(HttpContext context, Exception exception, bool lastResult)
         {

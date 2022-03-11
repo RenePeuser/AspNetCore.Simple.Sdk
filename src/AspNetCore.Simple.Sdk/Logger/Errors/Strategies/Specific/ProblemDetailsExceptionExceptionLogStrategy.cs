@@ -8,9 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
-    public class ProblemDetailsExceptionLogStrategy : LogStrategy<ProblemDetailsException>
+    public class ProblemDetailsExceptionExceptionLogStrategy : ExceptionLogStrategy<ProblemDetailsException>
     {
-        public ProblemDetailsExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger<ProblemDetailsExceptionLogStrategy> logger) : base(jsonSerializer, logger)
+        public ProblemDetailsExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger<ProblemDetailsExceptionExceptionLogStrategy> logger) : base(jsonSerializer, logger)
         {
         }
 

@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
-    public abstract class LogStrategy<TException> : LogStrategyBase
+    public abstract class ExceptionLogStrategy<TException> : ExceptionLogStrategyBase
     {
-        protected LogStrategy(IJsonSerializer jsonSerializer, ILogger logger, string errorType = "Error") : base(jsonSerializer, logger, typeof(TException), errorType)
+        protected ExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger logger, string errorType = "Error") : base(jsonSerializer, logger, typeof(TException), errorType)
         {
         }
 

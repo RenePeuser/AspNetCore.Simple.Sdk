@@ -7,9 +7,9 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         public static void AddLogStrategies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IErrorLogStrategy, ErrorLogStrategy>();
-            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, SecurityExceptionLogStrategy>();
-            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, ProblemDetailsExceptionLogStrategy>();
-            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, DefaultExceptionLogStrategy>();
+            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, SecurityExceptionExceptionLogStrategy>();
+            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, ProblemDetailsExceptionExceptionLogStrategy>();
+            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, DefaultExceptionExceptionLogStrategy>();
         }
     }
 }

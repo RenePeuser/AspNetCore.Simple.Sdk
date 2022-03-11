@@ -6,14 +6,14 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
-    public abstract class LogStrategyBase : ISpecificErrorLogStrategy
+    public abstract class ExceptionLogStrategyBase : ISpecificErrorLogStrategy
     {
         private readonly IJsonSerializer _jsonSerializer;
         private readonly ILogger _logger;
         private readonly Type _exceptionType;
         private readonly string _errorType;
 
-        protected LogStrategyBase(IJsonSerializer jsonSerializer,
+        protected ExceptionLogStrategyBase(IJsonSerializer jsonSerializer,
                                   ILogger logger,
                                   Type exceptionType,
                                   string errorType)

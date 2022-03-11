@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
-    internal abstract class SpecificErrorHandler<TException> : SpecificErrorHandlerBase where TException : Exception
+    public abstract class SpecificErrorHandler<TException> : SpecificErrorHandlerBase where TException : Exception
     {
         protected override bool CanHandleException(Exception exception)
         {
