@@ -100,7 +100,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             app.UseSwaggerSimplified(BasePath);
             app.UseSwaggerUiSimplified(Assembly, BasePath);
 
-            app.UseCors("AllowAll");
+            // app.UseCors("AllowAll");
 
             app.UsePathBase(BasePath);
 

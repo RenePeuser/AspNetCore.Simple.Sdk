@@ -41,7 +41,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
     }
 
     public record ProblemDetails(string Title,
-                                      string Details,
-                                      int StatusCode,
-                                      IImmutableDictionary<string, object> ErrorDetails);
+                                 string Details,
+                                 int StatusCode,
+                                 IImmutableDictionary<string, object> ErrorDetails);
 }
