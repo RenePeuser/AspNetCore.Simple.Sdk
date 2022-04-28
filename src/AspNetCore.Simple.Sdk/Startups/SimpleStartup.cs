@@ -100,16 +100,16 @@ namespace AspNetCore.Simple.Sdk.Startups
             app.UseSwaggerSimplified(BasePath);
             app.UseSwaggerUiSimplified(Assembly, BasePath);
 
-            // app.UseCors("AllowAll");
-
             app.UsePathBase(BasePath);
 
             app.UseErrorHandling();
 
             app.UseErrorLogging();
             app.UseHttpsRedirection();
+
             app.UseRouting();
-            // app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 

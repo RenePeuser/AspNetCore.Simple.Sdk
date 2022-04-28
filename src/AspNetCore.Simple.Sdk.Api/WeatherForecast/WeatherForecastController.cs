@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.Simple.Sdk.Api.WeatherForecast
@@ -17,6 +18,7 @@ namespace AspNetCore.Simple.Sdk.Api.WeatherForecast
         public IImmutableList<string> GetAll() => new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" }.ToImmutableList();
     }
 
+    [AllowAnonymous]
     [ApiVersion("1.0")]
     [ApiController]
     [Route("v{version:apiVersion}/weather")]
