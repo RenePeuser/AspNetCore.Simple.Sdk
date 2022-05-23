@@ -24,6 +24,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.AddBearerSecurityDefinition();
                 options.AddBearerSecurityRequirement();
                 options.AddXmlComments(assembly);
+                options.CustomSchemaIds(type => type.ToString());
 
                 foreach (var apiVersion in allApiVersions)
                 {

@@ -20,8 +20,7 @@ WIP - This simple SDK contains following helpful optimizations:
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>Alpha release - WIP - Currently only for Net5.x. 
-Add source link for debugging purpose</PackageReleaseNotes>
+        <PackageReleaseNotes>Fix type name for same types at different controllers</PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
