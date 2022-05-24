@@ -16,22 +16,10 @@ variables:
 
 steps:
 
-- task: gitversion/setup@0
-  displayName: Setup GitVersion Tool
-  inputs:
-    versionSpec: '5.6.0'
-    includePrerelease: true
-
-- task: gitversion/execute@0
-  displayName: Run GitVersion
-  inputs:
-    useConfigFile: true
-    configFilePath: "./GitVersion.yml"
-
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '5.0.x'
+    version: '6.0.x'
 
 - script: dotnet build --configuration $(buildConfiguration) /p:AssemblyVerison='$(GitVersion.SemVer)'
   displayName: 'dotnet build $(buildConfiguration)'
