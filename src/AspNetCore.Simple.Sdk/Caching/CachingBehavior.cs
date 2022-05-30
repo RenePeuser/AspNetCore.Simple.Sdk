@@ -4,14 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Caching
 {
     public static class AddMediatRCachingExtension
     {
-        public static void AddMediatRCaching(this IServiceCollection services, IConfiguration configuration, Assembly assembly)
+        public static void AddMediatRCaching(this IServiceCollection services, Assembly assembly)
         {
             services.AddMediatR(assembly);
             services.AddKeyBuilder();

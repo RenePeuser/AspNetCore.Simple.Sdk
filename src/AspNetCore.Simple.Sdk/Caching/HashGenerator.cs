@@ -34,9 +34,10 @@ namespace AspNetCore.Simple.Sdk.Caching
         public string ComputeHash<T>(T source) where T : class
         {
             var json = _jsonSerializer.Serialize(source);
-            using var md5CryptoProvider = new SHA512CryptoServiceProvider();
-            var data = md5CryptoProvider.ComputeHash(Encoding.ASCII.GetBytes(json));
-            return BitConverter.ToString(data).Replace("-", string.Empty);
+            using var hashAlgorithm = SHA512.Create();
+            var byteValue = Encoding.UTF8.GetBytes(json);
+            var byteHash = hashAlgorithm.ComputeHash(byteValue);
+            return Convert.ToBase64String(byteHash);
         }
     }
 }

@@ -8,10 +8,24 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Cors
 {
+    /// <summary>
+    /// The CORS settings class to handle the CORS configurations
+    /// </summary>
     public record CorsSettings
     {
-        public IImmutableList<string> Origins { get; init; }
-        public IImmutableList<string> Headers { get; init; }
+        /// <summary>
+        /// Provides a list of allowed origins sources
+        /// </summary>
+        public IImmutableList<string> Origins { get; init; } = ImmutableList<string>.Empty;
+
+        /// <summary>
+        /// Provides the list of allowed CORS headers
+        /// </summary>
+        public IImmutableList<string> Headers { get; init; } = ImmutableList<string>.Empty;
+
+        /// <summary>
+        /// Provides if CORS credentials are allowed
+        /// </summary>
         public bool AllowCredentials { get; init; }
     }
 

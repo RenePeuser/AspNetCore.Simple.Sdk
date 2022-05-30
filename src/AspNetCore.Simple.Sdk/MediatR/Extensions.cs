@@ -27,11 +27,11 @@ namespace AspNetCore.Simple.Sdk.MediatR
         /// <summary>
         /// Asynchronously send an object request to a single handler via dynamic dispatch
         /// </summary>
-        /// <param name="mediator">The <see cref="IMediator"/></param>
+        /// <param name="mediator">The <see cref="IMediator"/> instance to extend.</param>
         /// <param name="request">Request object</param>
         /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A task that represents the send operation. The task result contains the type erased handler response</returns>
-        public static Task<object> SendAsync(this IMediator mediator,
+        public static Task<object?> SendAsync(this IMediator mediator,
                                               object request,
                                               CancellationToken cancellationToken = default)
         {
@@ -42,6 +42,7 @@ namespace AspNetCore.Simple.Sdk.MediatR
         /// <summary>
         /// Asynchronously send a notification to multiple handlers
         /// </summary>
+        /// <param name="mediator">The <see cref="IMediator"/> instance to extend.</param>
         /// <param name="notification">Notification object</param>
         /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A task that represents the publish operation.</returns>
@@ -55,6 +56,7 @@ namespace AspNetCore.Simple.Sdk.MediatR
         /// <summary>
         /// Asynchronously send a notification to multiple handlers
         /// </summary>
+        /// <param name="mediator">The <see cref="IMediator"/> instance to extend.</param>
         /// <param name="notification">Notification object</param>
         /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A task that represents the publish operation.</returns>
