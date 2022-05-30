@@ -4,5 +4,10 @@
         <name>AspNetCore.Simple.Sdk</name>
     </assembly>
     <members>
+        <member name="T:AspNetCore.Simple.Sdk.Cors.OptionsMiddleware">
+            <summary>
+            Options middleware is a smart part to handle preflight calls
+            </summary>
+        </member>
     </members>
 </doc>

@@ -2,6 +2,7 @@
 using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
+using AspNetCore.Simple.Sdk.Cors;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Logger.Errors;
@@ -81,6 +82,8 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddJsonSerializer();
 
+            services.AddCorsSettings(Configuration);
+
             AutoConfigureServices(GetAutoRegistration(services, Configuration));
         }
 
@@ -108,8 +111,14 @@ namespace AspNetCore.Simple.Sdk.Startups
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCorsConfiguration();
+
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseOptions();
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
