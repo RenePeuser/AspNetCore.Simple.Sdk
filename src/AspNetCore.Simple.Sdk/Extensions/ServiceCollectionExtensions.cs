@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,21 @@ namespace AspNetCore.Simple.Sdk.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+
+        public static T GetOrThrowMissingException<T>(this IServiceProvider services)
+        {
+            var service = services.GetService<T>();
+            if (service is null)
+            {
+                throw new ProblemDetailsException("Service could not be resolved",
+                                                  $"The service: {typeof(T).Name} could not be resolved please check your service registrations",
+                                                  ("One time registration", $"services.{nameof(AddSingletonIfNotExists)}<{typeof(T).Name}>();"),
+                                                  ("Standard registration", $"services.AddSingleton<{typeof(T).Name}>();"));
+            }
+
+            return service;
+        }
+
         public static void AddSingletonOption<T>(this IServiceCollection serviceCollection, IConfiguration configuration) where T : class
         {
             var setting = configuration.GetSetting<T>();
