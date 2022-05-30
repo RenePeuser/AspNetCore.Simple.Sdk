@@ -26,7 +26,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
             // If there is no specific exception error handling then internal server error.
             context.Response.StatusCode = GetErrorCode(exception).Cast<int>();
 
-            var problemDetails = new ProblemDetails($"{exception.GetType().Name} was thrown.", exception.Message, context.Response.StatusCode, ImmutableDictionary<string, object>.Empty);
+            var problemDetails = new ProblemDetails($"{exception.GetType().Name} was thrown.", exception.Message, context.Response.StatusCode, ImmutableDictionary<string, string>.Empty);
 
             var problemDetailsSerialized = JsonSerializer.Serialize(problemDetails);
             return context.Response.WriteAsync(problemDetailsSerialized);

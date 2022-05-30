@@ -17,22 +17,36 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         public ProblemDetailsException(HttpStatusCode statusCode,
                                        string title,
                                        string details,
-                                       params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
+                                       params (string key, object value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value.ToString()!))
+        {
+        }
+
+        public ProblemDetailsException(int statusCode,
+                                       string title,
+                                       string details,
+                                       params (string key, object value)[] extensions) : this(statusCode, title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value.ToString()!))
+        {
+        }
+
+        public ProblemDetailsException(string title,
+                                       string details,
+                                       params (string key, string value)[] extensions) : this(HttpStatusCode.InternalServerError, title, details, extensions)
+        {
+        }
+
+        public ProblemDetailsException(HttpStatusCode statusCode,
+                                       string title,
+                                       string details,
+                                       params (string key, string value)[] extensions) : this(statusCode.ToInt(), title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value.ToString()))
         {
         }
 
         // i know this is evil with the conversion to immutable dictionary but a fast fix for now.
-        public ProblemDetailsException(int statusCode,
-                                       string title,
-                                       string details,
-                                       params (string key, object value)[] extensions) : this(statusCode, title, details, extensions.ToImmutableDictionary(item => item.key, item => item.value))
-        {
-        }
 
         public ProblemDetailsException(int statusCode,
                                        string title,
                                        string details,
-                                       IImmutableDictionary<string, object> errorDetails) : base(title)
+                                       IImmutableDictionary<string, string> errorDetails) : base(title)
         {
             ProblemDetails = new ProblemDetails(title, details, statusCode, errorDetails);
         }
@@ -43,5 +57,5 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
     public record ProblemDetails(string Title,
                                  string Details,
                                  int StatusCode,
-                                 IImmutableDictionary<string, object> ErrorDetails);
+                                 IImmutableDictionary<string, string> ErrorDetails);
 }
