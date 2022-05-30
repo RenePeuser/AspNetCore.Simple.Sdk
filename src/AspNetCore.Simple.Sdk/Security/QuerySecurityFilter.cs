@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Immutable;
+using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
@@ -19,7 +20,7 @@ namespace AspNetCore.Simple.Sdk.Security
             var names = declaredQueryParameters.Select(d => d.BindingInfo.BinderModelName.IsNotNullOrWhiteSpace() ? d.BindingInfo.BinderModelName : d.Name);
             if (requestQueryParameters.Any(param => names.Contains(param).IsFalse()))
             {
-                throw new SecurityProblemException("Invalid query parameters", "Possible attack detected", request.GetQueryRequestInfo().ToArray());
+                throw new SecurityProblemException("Invalid query parameters", "Possible attack detected", request.GetQueryRequestInfo().ToImmutableDictionary(item => item.key, item => item.value));
             }
         }
     }

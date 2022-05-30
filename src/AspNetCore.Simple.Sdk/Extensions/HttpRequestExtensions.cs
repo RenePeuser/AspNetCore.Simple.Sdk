@@ -15,7 +15,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
             request.Headers.Add(HeaderNames.Authorization, authorization);
         }
 
-        public static IEnumerable<(string key, object value)> GetQueryRequestInfo(this HttpRequest httpRequest)
+        public static IEnumerable<(string key, string value)> GetQueryRequestInfo(this HttpRequest httpRequest)
         {
             yield return ("Request", httpRequest.GetDisplayUrl());
 
@@ -26,7 +26,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
                     var handler = new JwtSecurityTokenHandler();
                     var token = handler.ReadJwtToken(header.Value.First().Split().Last());
 
-                    yield return (HeaderNames.Authorization, token.Payload.ToDictionary(item => item.Key, item => item.Value));
+                    yield return (HeaderNames.Authorization, token.Payload.ToDictionary(item => item.Key, item => item.Value).ToJsonString());
                 }
                 else
                 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
@@ -18,7 +19,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         {
             return new ErrorLogInfo(exception.ProblemDetails.Details, exception.ProblemDetails.Title,
                                     exception.StackTrace?.Split(Environment.NewLine) ?? Enumerable.Empty<string>(),
-                                    httpContext.Request.GetQueryRequestInfo().ToDictionary(k => k.key, v => v.value));
+                                    httpContext.Request.GetQueryRequestInfo().ToImmutableDictionary(k => k.key, v => v.value));
         }
     }
 }
