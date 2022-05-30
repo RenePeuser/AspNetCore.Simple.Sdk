@@ -8,6 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Extensions
 {
+    public class MissingSettingsException<TSettings> : Exception where TSettings : class
+    {
+        public MissingSettingsException() : base($"The setting: '{typeof(TSettings).Name}' is missing. Please check your specific appsettings.json or your environment variables.")
+        {
+
+        }
+    }
+
     public static class ServiceCollectionExtensions
     {
 
@@ -56,6 +64,68 @@ namespace AspNetCore.Simple.Sdk.Extensions
 
             services.AddSingleton(typeof(TInterface), typeof(TImplementation));
             return services;
+        }
+
+        public static T GetSettings<T>(this IConfiguration configuration) where T : class, new()
+        {
+            var originalTypeSettings = configuration.TryGetSettings<T>(out var settings);
+            if (originalTypeSettings)
+            {
+                return settings;
+            }
+
+            var typeNameTrimmedSettings = typeof(T).NormalizeTypeNameForSettings();
+            return configuration.GetSettings<T>(typeNameTrimmedSettings);
+
+        }
+
+        public static T GetSettings<T>(this IConfiguration configuration, string settingsKeyPath)
+            where T : class
+        {
+            var settings = configuration.GetSection(settingsKeyPath).Get<T>();
+            if (settings is null)
+            {
+                throw new MissingSettingsException<T>();
+            }
+
+            return settings;
+        }
+
+        public static bool TryGetSettings<T>(this IConfiguration configuration, out T settings) where T : new()
+        {
+            // original settings by type name
+            var type = typeof(T);
+            var settingsByTypeExists = configuration.TryGetSettings(type.Name, out settings);
+            return settingsByTypeExists is false ? configuration.TryGetSettings(type.NormalizeTypeNameForSettings(), out settings) : settingsByTypeExists;
+        }
+
+        private static string NormalizeTypeNameForSettings(this Type type)
+        {
+            return type.Name.Replace("Settings", string.Empty);
+        }
+
+        public static bool TryGetSettings<T>(this IConfiguration configuration, string settingsKeyPath, out T settings) where T : new()
+        {
+            var section = configuration.GetSection(settingsKeyPath).Get<T>();
+            if (section is null)
+            {
+                settings = new T();
+                return false;
+            }
+
+            settings = section;
+            return true;
+        }
+
+        public static T GetSettingsAndRegisterAsSingleton<T>(this IServiceCollection serviceCollection,
+                                                             IConfiguration configuration,
+                                                             string? settingsKeyPath = null) where T : class, new()
+        {
+            var setting = settingsKeyPath is null ? configuration.GetSettings<T>() : configuration.GetSettings<T>(settingsKeyPath);
+
+            serviceCollection.AddSingleton(setting);
+
+            return setting;
         }
     }
 }
