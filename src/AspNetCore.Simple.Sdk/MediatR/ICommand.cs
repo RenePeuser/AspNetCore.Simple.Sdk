@@ -12,8 +12,13 @@ namespace AspNetCore.Simple.Sdk.MediatR
 
     public interface ICommandHandler<in TCommand, TResult> : IRequestHandler<TCommand, TResult> where TCommand : ICommand<TResult>
     {
-
     }
+
+
+    public abstract class CommandHandlerWithoutResponse<TRequest> : AsyncRequestHandler<TRequest> where TRequest : IRequest
+    {
+    }
+
 
     public interface ICommand<out TResult> : IRequest<TResult>
     {
