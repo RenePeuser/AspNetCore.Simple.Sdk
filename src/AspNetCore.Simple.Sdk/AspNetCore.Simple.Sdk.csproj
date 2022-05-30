@@ -45,8 +45,10 @@ WIP - This simple SDK contains following helpful optimizations:
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
+        <PackageReference Include="StackExchange.Redis" Version="2.5.61" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.3.1" />
