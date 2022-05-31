@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using AspNetCore.Simple.MsTest.Sdk;
+using Extensions.Pack;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,12 +16,9 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         public void Setup()
         {
             // 1. Fetching secrets to get a connection string, for a test database
-            var filePath = Path.Combine(Environment.CurrentDirectory, @"ConfigurationExtensions\appsettings.test.json");
-            var fileInfo = new FileInfo(filePath);
+            var fileStream = this.GetType().Assembly.GetEmbeddedFileStream("ConfigurationExtensions.appsettings.test.json");
 
-            fileInfo.Exists.Should().BeTrue($"File: '{fileInfo.FullName}' does not exists");
-
-            Configuration = new ConfigurationBuilder().AddJsonFile(fileInfo.FullName).Build();
+            Configuration = new ConfigurationBuilder().AddJsonStream(fileStream.Stream).Build();
         }
     }
 }
