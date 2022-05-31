@@ -34,5 +34,27 @@ namespace AspNetCore.Simple.Sdk.Extensions
                 }
             }
         }
+
+        public static string GetAuthorization(this HttpRequest source)
+        {
+            return GetFirstHeaderValueOrDefault(source, HeaderNames.Authorization);
+        }
+
+        public static string GetFirstHeaderValueOrDefault(this HttpRequest httpRequest, string headerKey, string defaultValue = "")
+        {
+            var headerValues = httpRequest.Headers.GetValueOrDefault(headerKey);
+            if (headerValues.IsEmpty())
+            {
+                return defaultValue;
+            }
+
+            var headerValuesValue = headerValues.FirstOrDefault();
+            if (headerValuesValue is null)
+            {
+                return defaultValue;
+            }
+
+            return headerValuesValue;
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace AspNetCore.Simple.Sdk.Cors
                 context.Response.Headers.Add("Access-Control-Allow-Origin", _corsSettings.Origins.ToArray());
                 context.Response.Headers.Add("Access-Control-Allow-Headers", _corsSettings.Headers.ToArray());
                 context.Response.Headers.Add("Access-Control-Allow-Methods", new[] { allowedMethods.Flatten(", ") });
-                context.Response.Headers.Add("Access-Control-Allow-Credentials", new[] { "true" });
+                context.Response.Headers.Add("Access-Control-Allow-Credentials", new[] { _corsSettings.AllowCredentials });
                 context.Response.StatusCode = 204;
                 return Task.CompletedTask;
             }
