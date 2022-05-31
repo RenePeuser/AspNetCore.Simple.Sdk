@@ -20,7 +20,7 @@ WIP - This simple SDK contains following helpful optimizations:
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>Problem details exception with string value</PackageReleaseNotes>
+        <PackageReleaseNotes>Fix cors use-credentials parameter</PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
