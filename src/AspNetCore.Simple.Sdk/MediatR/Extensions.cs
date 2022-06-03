@@ -1,9 +1,20 @@
-﻿using System.Threading;
+﻿using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.MediatR
 {
+    public static class AddMediatorExtension
+    {
+        public static void AddMediator(this IServiceCollection services)
+        {
+            services.AddMediatR(Assembly.GetCallingAssembly());
+        }
+    }
+
+
     /// <summary>
     /// Provides a set of extensions for <see cref="IMediator"/>
     /// </summary>
