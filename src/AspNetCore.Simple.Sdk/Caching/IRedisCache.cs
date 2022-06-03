@@ -31,7 +31,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             catch (Exception e)
             {
                 Console.WriteLine($"No connection could be established to Redis endpoint: '{redisSettings.HostName}', dummy cache without caching will be created. Exception message: {e.Message}.");
-                serviceCollection.AddInMemoryCache(configuration);
+                serviceCollection.AddInMemoryCache();
             }
         }
     }

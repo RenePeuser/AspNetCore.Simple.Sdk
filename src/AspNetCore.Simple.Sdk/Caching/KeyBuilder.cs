@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Caching
 {
-    internal static class AddKeyBuilderExtension
+    public static class AddKeyBuilderExtension
     {
         public static void AddKeyBuilder(this IServiceCollection services)
         {

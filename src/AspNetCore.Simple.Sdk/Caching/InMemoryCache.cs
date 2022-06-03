@@ -2,14 +2,13 @@
 using System.Threading.Tasks;
 using Extensions.Pack;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Caching
 {
     public static class AddInMemoryCacheExtension
     {
-        public static void AddInMemoryCache(this IServiceCollection serviceCollection, IConfiguration configuration)
+        public static void AddInMemoryCache(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<ICachingService, InMemoryCache>();
         }
