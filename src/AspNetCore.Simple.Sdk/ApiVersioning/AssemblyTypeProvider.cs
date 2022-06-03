@@ -1,12 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using AspNetCore.Simple.Sdk.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ApiVersioning
 {
-    internal class AssemblyTypeProvider
+    public static class AddAssemblyTypeProviderExtension
     {
-        internal IEnumerable<Type> GetAllTypes(Assembly assembly)
+        public static void AddAssemblyTypeProvider(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<IAssemblyTypeProvider, AssemblyTypeProvider>();
+        }
+    }
+
+    internal interface IAssemblyTypeProvider
+    {
+        IEnumerable<Type> GetAllTypes(Assembly assembly);
+    }
+
+    internal class AssemblyTypeProvider : IAssemblyTypeProvider
+    {
+        public IEnumerable<Type> GetAllTypes(Assembly assembly)
         {
             return assembly.GetTypes();
         }
