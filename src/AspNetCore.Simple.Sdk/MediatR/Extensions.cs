@@ -8,9 +8,14 @@ namespace AspNetCore.Simple.Sdk.MediatR
 {
     public static class AddMediatorExtension
     {
-        public static void AddMediatR(this IServiceCollection services)
+        public static void AddMediator(this IServiceCollection services)
         {
-            services.AddMediatR(Assembly.GetCallingAssembly());
+            services.AddMediator(Assembly.GetCallingAssembly());
+        }
+
+        public static void AddMediator(this IServiceCollection services, Assembly assembly)
+        {
+            services.AddMediatR(assembly);
         }
     }
 

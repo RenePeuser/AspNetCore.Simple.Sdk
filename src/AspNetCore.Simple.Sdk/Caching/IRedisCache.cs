@@ -17,22 +17,24 @@ namespace AspNetCore.Simple.Sdk.Caching
 
     public static class AddRedisCacheExtension
     {
-        public static void AddRedisCache(this IServiceCollection serviceCollection, IConfiguration configuration)
+        public static void AddRedisCache(this IServiceCollection services, IConfiguration configuration)
         {
             var redisSettings = configuration.GetSetting<Redis>();
             try
             {
                 var connection = ConnectionMultiplexer.Connect(redisSettings.ConnectionString);
                 var database = connection.GetDatabase();
-                serviceCollection.AddSingleton(database);
-                serviceCollection.AddSingleton<ICachingService, RedisCache>();
+                services.AddSingleton(database);
+                services.AddSingleton<ICachingService, RedisCache>();
                 Console.WriteLine($"Connection to Redis endpoint: '{redisSettings.HostName}' was successful. Hostname: '{redisSettings.HostName}'");
             }
             catch (Exception e)
             {
                 Console.WriteLine($"No connection could be established to Redis endpoint: '{redisSettings.HostName}', dummy cache without caching will be created. Exception message: {e.Message}.");
-                serviceCollection.AddInMemoryCache();
+                services.AddInMemoryCache();
             }
+
+            services.AddJsonSerializer();
         }
     }
     public class RedisCache : ICachingService
