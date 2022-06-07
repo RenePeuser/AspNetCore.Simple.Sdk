@@ -52,6 +52,19 @@ namespace AspNetCore.Simple.Sdk.Extensions
             return services.AddSingletonIfNotExists<TImplementation, TImplementation>();
         }
 
+        public static IServiceCollection AddSingletonIfNotExists<TImplementation>(this IServiceCollection services, TImplementation instance)
+            where TImplementation : class
+        {
+            var existingRegistrations = services.Where(descriptor => descriptor.ServiceType == typeof(TImplementation) && descriptor.ImplementationType == typeof(TImplementation));
+            if (existingRegistrations.Any())
+            {
+                return services;
+            }
+
+            services.AddSingleton(instance);
+            return services;
+        }
+
         public static IServiceCollection AddSingletonIfNotExists<TInterface, TImplementation>(this IServiceCollection services)
             where TInterface : class
             where TImplementation : class, TInterface
