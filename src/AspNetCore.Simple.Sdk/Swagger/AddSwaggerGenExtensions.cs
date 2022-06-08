@@ -25,6 +25,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.AddBearerSecurityRequirement();
                 options.AddXmlComments(assembly);
                 options.CustomSchemaIds(type => type.ToString());
+                options.SchemaFilter<EnumSchemaFilter>();
 
                 foreach (var apiVersion in allApiVersions)
                 {
