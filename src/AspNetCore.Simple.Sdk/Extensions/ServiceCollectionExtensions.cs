@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
@@ -18,6 +19,13 @@ namespace AspNetCore.Simple.Sdk.Extensions
 
     public static class ServiceCollectionExtensions
     {
+        public static bool IsAlreadyRegistered<TImplementation>(this IServiceCollection services)
+            where TImplementation : class
+        {
+            var existingRegistrations = services.Where(descriptor => descriptor.ServiceType == typeof(TImplementation) || descriptor.ImplementationType == typeof(TImplementation));
+            return existingRegistrations.Any();
+        }
+
 
         public static T GetOrThrowMissingException<T>(this IServiceProvider services)
         {
@@ -46,37 +54,35 @@ namespace AspNetCore.Simple.Sdk.Extensions
             serviceCollection.AddSingleton(setting);
         }
 
-        public static IServiceCollection AddSingletonIfNotExists<TImplementation>(this IServiceCollection services)
+        public static void AddSingletonIfNotExists<TImplementation>(this IServiceCollection services)
             where TImplementation : class
         {
-            return services.AddSingletonIfNotExists<TImplementation, TImplementation>();
+            services.AddSingletonIfNotExists<TImplementation, TImplementation>();
         }
 
-        public static IServiceCollection AddSingletonIfNotExists<TImplementation>(this IServiceCollection services, TImplementation instance)
+        public static void AddSingletonIfNotExists<TImplementation>(this IServiceCollection services, TImplementation instance)
             where TImplementation : class
         {
             var existingRegistrations = services.Where(descriptor => descriptor.ServiceType == typeof(TImplementation) && descriptor.ImplementationType == typeof(TImplementation));
             if (existingRegistrations.Any())
             {
-                return services;
+                return;
             }
 
             services.AddSingleton(instance);
-            return services;
         }
 
-        public static IServiceCollection AddSingletonIfNotExists<TInterface, TImplementation>(this IServiceCollection services)
+        public static void AddSingletonIfNotExists<TInterface, TImplementation>(this IServiceCollection services)
             where TInterface : class
             where TImplementation : class, TInterface
         {
             var existingRegistrations = services.Where(descriptor => descriptor.ServiceType == typeof(TInterface) && descriptor.ImplementationType == typeof(TImplementation));
             if (existingRegistrations.Any())
             {
-                return services;
+                return;
             }
 
             services.AddSingleton(typeof(TInterface), typeof(TImplementation));
-            return services;
         }
 
         public static T GetSettings<T>(this IConfiguration configuration) where T : class, new()
