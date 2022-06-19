@@ -10,7 +10,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
     {
         internal static IEnumerable<ParameterDescriptor> GetQueryParameters(this ActionDescriptor actionDescriptor)
         {
-            return actionDescriptor.Parameters.Where(p => p.BindingInfo.BindingSource.EqualsTo(BindingSource.Query));
+            return actionDescriptor.Parameters.Where(p => p.BindingInfo!.BindingSource.EqualsTo(BindingSource.Query));
         }
     }
 }

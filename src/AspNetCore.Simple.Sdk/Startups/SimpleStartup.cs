@@ -6,6 +6,7 @@ using AspNetCore.Simple.Sdk.Cors;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Logger.Errors;
+using AspNetCore.Simple.Sdk.MediatR;
 using AspNetCore.Simple.Sdk.Security;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using AspNetCore.Simple.Sdk.Swagger;
@@ -68,6 +69,9 @@ namespace AspNetCore.Simple.Sdk.Startups
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGenSimplified(Assembly, SwaggerApiTitle);
+
+            services.AddMediator(Assembly);
+            services.AddValidationBehavior();
 
             services.AddControllers();
             services.AddQuerySecurityFilter();

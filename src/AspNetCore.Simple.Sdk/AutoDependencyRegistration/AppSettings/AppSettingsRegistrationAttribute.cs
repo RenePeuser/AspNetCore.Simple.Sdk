@@ -11,6 +11,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
     }
 
 
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class CustomRegistrationAttribute : Attribute
     {
         public CustomRegistrationAttribute(Type customRegistration)

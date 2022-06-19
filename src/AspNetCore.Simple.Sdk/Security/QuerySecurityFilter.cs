@@ -17,7 +17,7 @@ namespace AspNetCore.Simple.Sdk.Security
             var declaredQueryParameters = context.ActionDescriptor.GetQueryParameters();
             var request = context.HttpContext.Request;
             var requestQueryParameters = request.Query.Keys;
-            var names = declaredQueryParameters.Select(d => d.BindingInfo.BinderModelName.IsNotNullOrWhiteSpace() ? d.BindingInfo.BinderModelName : d.Name);
+            var names = declaredQueryParameters.Select(d => d.BindingInfo!.BinderModelName.IsNotNullOrWhiteSpace() ? d.BindingInfo.BinderModelName : d.Name);
             if (requestQueryParameters.Any(param => names.Contains(param).IsFalse()))
             {
                 throw new SecurityProblemException("Invalid query parameters", "Possible attack detected", request.GetQueryRequestInfo().ToImmutableDictionary(item => item.key, item => item.value));
