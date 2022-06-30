@@ -7,6 +7,7 @@ using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Logger.Errors;
 using AspNetCore.Simple.Sdk.MediatR;
+using AspNetCore.Simple.Sdk.Polly;
 using AspNetCore.Simple.Sdk.Security;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using AspNetCore.Simple.Sdk.Swagger;
@@ -83,10 +84,10 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddErrorLogging();
 
             services.AddApiVersioningSimplified();
-
             services.AddJsonSerializer();
-
             services.AddCorsSettings(Configuration);
+
+            services.AddBackOff();
 
             AutoConfigureServices(GetAutoRegistration(services, Configuration));
         }

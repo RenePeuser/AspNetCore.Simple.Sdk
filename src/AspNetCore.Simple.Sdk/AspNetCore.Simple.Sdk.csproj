@@ -20,7 +20,7 @@ WIP - This simple SDK contains following helpful optimizations:
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>Add new method to deseriliaze by type</PackageReleaseNotes>
+        <PackageReleaseNotes>Add Backoff service for retry timeout algorhytm</PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
@@ -39,6 +39,7 @@ WIP - This simple SDK contains following helpful optimizations:
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Argument.Check" Version="2.0.0-alpha.52" />
         <PackageReference Include="Extensions.Pack" Version="2.0.0-alpha.15" />
         <PackageReference Include="GitVersion.MsBuild" Version="5.10.1">
             <PrivateAssets>all</PrivateAssets>
