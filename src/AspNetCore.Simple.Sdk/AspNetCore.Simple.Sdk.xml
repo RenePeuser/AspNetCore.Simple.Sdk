@@ -71,5 +71,35 @@
             <param name="cancellationToken">Optional cancellation token</param>
             <returns>A task that represents the publish operation.</returns>
         </member>
+        <member name="T:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom">
+            <summary>
+            A random number generator with a Uniform distribution that is thread-safe (via locking).
+            Can be instantiated with a custom <see cref="T:System.Int32"/> seed to make it emit deterministically.
+            </summary>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.#ctor(System.Nullable{System.Int32})">
+            <summary>
+            Creates an instance of the <see cref="T:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom"/> class.
+            </summary>
+            <param name="seed">An optional <see cref="T:System.Random"/> seed to use.
+            If not specified, will use a shared instance with a random seed, per Microsoft recommendation for maximum randomness.</param>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.NextDouble">
+            <summary>
+            Returns a random floating-point number that is greater than or equal to 0.0,
+            and less than 1.0.
+            This method uses locks in order to avoid issues with concurrent access.
+            </summary>
+            <returns>Nächste Zufallszahl.</returns>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.Uniform(System.Double,System.Double)">
+            <summary>
+            Returns a random floating-point number that is greater than or equal to <paramref name="a"/>,
+            and less than <paramref name="b"/>.
+            </summary>
+            <param name="a">The minimum value.</param>
+            <param name="b">The maximum value.</param>
+            <returns>Random value between <paramref name="a"/> and <paramref name="b"/></returns>
+        </member>
     </members>
 </doc>
