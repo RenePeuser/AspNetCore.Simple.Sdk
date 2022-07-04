@@ -39,9 +39,9 @@ WIP - This simple SDK contains following helpful optimizations:
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Argument.Check" Version="2.0.0-alpha.52" />
-        <PackageReference Include="Extensions.Pack" Version="2.0.0-alpha.15" />
-        <PackageReference Include="GitVersion.MsBuild" Version="5.10.1">
+        <PackageReference Include="Argument.Check" Version="2.0.0-alpha.59" />
+        <PackageReference Include="Extensions.Pack" Version="2.0.0-alpha.21" />
+        <PackageReference Include="GitVersion.MsBuild" Version="5.10.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -49,11 +49,11 @@ WIP - This simple SDK contains following helpful optimizations:
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
-        <PackageReference Include="StackExchange.Redis" Version="2.5.61" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.48" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.3.1" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.18.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
     </ItemGroup>
 
     <ItemGroup>
