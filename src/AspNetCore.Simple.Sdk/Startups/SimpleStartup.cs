@@ -122,7 +122,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseOptions();
+            // app.UseOptions();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
