@@ -26,6 +26,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.AddXmlComments(assembly);
                 options.CustomSchemaIds(type => type.ToString());
                 options.SchemaFilter<EnumSchemaFilter>();
+                options.SchemaFilter<ExtensibleEnumFilter>();
+                options.ParameterFilter<ExtensibleEnumFilter>();
 
                 foreach (var apiVersion in allApiVersions)
                 {
