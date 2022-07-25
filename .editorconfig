@@ -100,6 +100,9 @@ dotnet_diagnostic.CA1724.severity = silent
 dotnet_diagnostic.CA1819.severity = silent
 dotnet_diagnostic.CA1822.severity = silent
 dotnet_diagnostic.CA2007.severity = error
+dotnet_diagnostic.CA1848.severity = silent
+dotnet_diagnostic.CA2254.severity = silent
+
 dotnet_diagnostic.IDE0008.severity = silent
 dotnet_diagnostic.IDE0003.severity = silent
 dotnet_diagnostic.IDE0010.severity = silent
@@ -109,6 +112,8 @@ dotnet_diagnostic.IDE0046.severity = silent
 dotnet_diagnostic.IDE0050.severity = silent
 dotnet_diagnostic.IDE0058.severity = silent
 dotnet_diagnostic.IDE0072.severity = silent
+dotnet_diagnostic.IDE0130.severity = silent
+
 
 ###############################
 # C# Formatting Rules         #

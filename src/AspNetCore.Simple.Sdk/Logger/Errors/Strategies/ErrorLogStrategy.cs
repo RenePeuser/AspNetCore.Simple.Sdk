@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AspNetCore.Simple.Sdk.Logger.Errors.Strategies.Specific;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies
+namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
     public class ErrorLogStrategy : IErrorLogStrategy
     {
@@ -24,7 +23,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors.Strategies
             var result = _specificErrorLogStrategies.Aggregate(false, (current, specificErrorLogStrategy) => specificErrorLogStrategy.HandleException(context, exception, current));
             if (result.IsFalse())
             {
-                _logger.LogError($"[Error] No strategy handled exception: {exception.GetType()}. Following exception occurred: {exception.Message}");
+                _logger.LogError($"No strategy handled exception: {exception.GetType()}. Following exception occurred: {exception.Message}");
             }
         }
     }

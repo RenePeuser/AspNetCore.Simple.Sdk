@@ -1,26 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
+        <Nullable>enable</Nullable>
         <PackageLicenseFile>License.txt</PackageLicenseFile>
         <Authors>Rene Peuser</Authors>
         <Company>Rene Peuser Softwaresolutions</Company>
         <Description>
-            WIP - This simple SDK contains following helpful optimizations:
-            - Swagger
-            - ApiVersioning
-            - Middleware for error logging
-            - Middleware for error response handling
-        </Description>
+WIP - This simple SDK contains following helpful optimizations:
+- ApiVersioning
+- Auto dependency resolver. Search automatically all dependencies for a type and register it.
+- Errorhandling with middleware
+- Logging with middleware
+- Query security filter
+- Optimized and simplified swagger.
+- Ready to go base class for startup.cs</Description>
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>
-            Alpha release - WIP - Currently only for Net5.x
-
-        </PackageReleaseNotes>
+        <PackageReleaseNotes>Add Backoff service for retry timeout algorhytm</PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
@@ -28,21 +28,32 @@
         <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-        <DocumentationFile>D:\AzureDevOps\Extensions\src\Extensions\Extensions.xml</DocumentationFile>
+    <!--Property group settings for source link !-->
+    <PropertyGroup>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DocumentationFile>.\AspNetCore.Simple.Sdk.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Extensions.Pack" Version="0.1.1" />
-        <PackageReference Include="GitVersion.MsBuild" Version="5.6.6">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PackageReference Include="Argument.Check" Version="2.0.0-alpha.59" />
+        <PackageReference Include="Extensions.Pack" Version="2.0.0-alpha.21" />
+        <PackageReference Include="GitVersion.MsBuild" Version="5.10.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.2.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.6.3" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+        <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+        <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.48" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.3.1" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
     </ItemGroup>
 
     <ItemGroup>

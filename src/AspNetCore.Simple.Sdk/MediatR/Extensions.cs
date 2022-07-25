@@ -1,0 +1,86 @@
+﻿using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace AspNetCore.Simple.Sdk.MediatR
+{
+    public static class AddMediatorExtension
+    {
+        public static void AddMediator(this IServiceCollection services)
+        {
+            services.AddMediator(Assembly.GetCallingAssembly());
+        }
+
+        public static void AddMediator(this IServiceCollection services, Assembly assembly)
+        {
+            services.AddMediatR(assembly);
+        }
+    }
+
+
+    /// <summary>
+    /// Provides a set of extensions for <see cref="IMediator"/>
+    /// </summary>
+    public static class MediatorExtensions
+    {
+        /// <summary>
+        /// Asynchronously send a request to a single handler
+        /// </summary>
+        /// <typeparam name="TResponse">Response type</typeparam>
+        /// <param name="mediator">The <see cref="IMediator"/></param>
+        /// <param name="request">Request object</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>A task that represents the send operation. The task result contains the handler response</returns>
+        public static Task<TResponse> SendAsync<TResponse>(this IMediator mediator,
+                                                           IRequest<TResponse> request,
+                                                           CancellationToken cancellationToken = default)
+        {
+            return mediator.Send(request, cancellationToken);
+        }
+
+        /// <summary>
+        /// Asynchronously send an object request to a single handler via dynamic dispatch
+        /// </summary>
+        /// <param name="mediator">The <see cref="IMediator"/> instance to extend.</param>
+        /// <param name="request">Request object</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>A task that represents the send operation. The task result contains the type erased handler response</returns>
+        public static Task<object?> SendAsync(this IMediator mediator,
+                                              object request,
+                                              CancellationToken cancellationToken = default)
+        {
+            return mediator.Send(request, cancellationToken);
+        }
+
+
+        /// <summary>
+        /// Asynchronously send a notification to multiple handlers
+        /// </summary>
+        /// <param name="mediator">The <see cref="IMediator"/> instance to extend.</param>
+        /// <param name="notification">Notification object</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>A task that represents the publish operation.</returns>
+        public static Task PublishAsync(this IMediator mediator,
+                                        object notification,
+                                        CancellationToken cancellationToken = default)
+        {
+            return mediator.Publish(notification, cancellationToken);
+        }
+
+        /// <summary>
+        /// Asynchronously send a notification to multiple handlers
+        /// </summary>
+        /// <param name="mediator">The <see cref="IMediator"/> instance to extend.</param>
+        /// <param name="notification">Notification object</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>A task that represents the publish operation.</returns>
+        public static Task PublishAsync<TNotification>(this IMediator mediator,
+                                                       TNotification notification,
+                                                       CancellationToken cancellationToken = default) where TNotification : INotification
+        {
+            return mediator.Publish(notification, cancellationToken);
+        }
+    }
+}

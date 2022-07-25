@@ -20,13 +20,18 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.AddSwaggerGrouping();
                 options.OperationFilter<RemoveVersionParameterFilter>();
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
+                options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.AddBearerSecurityDefinition();
                 options.AddBearerSecurityRequirement();
                 options.AddXmlComments(assembly);
+                options.CustomSchemaIds(type => type.ToString());
+                options.SchemaFilter<EnumSchemaFilter>();
+                options.SchemaFilter<ExtensibleEnumFilter>();
+                options.ParameterFilter<ExtensibleEnumFilter>();
 
                 foreach (var apiVersion in allApiVersions)
                 {
-                    options.SwaggerDoc($"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}", new OpenApiInfo {Title = swaggerUiTitle, Version = $"v{apiVersion.MajorVersion}"});
+                    options.SwaggerDoc($"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}", new OpenApiInfo { Title = swaggerUiTitle, Version = $"v{apiVersion.MajorVersion}" });
                 }
             });
         }

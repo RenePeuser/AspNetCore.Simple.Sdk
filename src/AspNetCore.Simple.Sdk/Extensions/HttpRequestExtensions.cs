@@ -15,7 +15,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
             request.Headers.Add(HeaderNames.Authorization, authorization);
         }
 
-        public static IEnumerable<(string key, object value)> GetQueryRequestInfo(this HttpRequest httpRequest)
+        public static IEnumerable<(string key, string value)> GetQueryRequestInfo(this HttpRequest httpRequest)
         {
             yield return ("Request", httpRequest.GetDisplayUrl());
 
@@ -26,13 +26,35 @@ namespace AspNetCore.Simple.Sdk.Extensions
                     var handler = new JwtSecurityTokenHandler();
                     var token = handler.ReadJwtToken(header.Value.First().Split().Last());
 
-                    yield return (HeaderNames.Authorization, token.Payload.ToDictionary(item => item.Key, item => item.Value));
+                    yield return (HeaderNames.Authorization, token.Payload.ToDictionary(item => item.Key, item => item.Value).ToJson());
                 }
                 else
                 {
                     yield return (header.Key, header.Value.Flatten(","));
                 }
             }
+        }
+
+        public static string GetAuthorization(this HttpRequest source)
+        {
+            return GetFirstHeaderValueOrDefault(source, HeaderNames.Authorization);
+        }
+
+        public static string GetFirstHeaderValueOrDefault(this HttpRequest httpRequest, string headerKey, string defaultValue = "")
+        {
+            var headerValues = httpRequest.Headers.GetValueOrDefault(headerKey);
+            if (headerValues.IsEmpty())
+            {
+                return defaultValue;
+            }
+
+            var headerValuesValue = headerValues.FirstOrDefault();
+            if (headerValuesValue is null)
+            {
+                return defaultValue;
+            }
+
+            return headerValuesValue;
         }
     }
 }

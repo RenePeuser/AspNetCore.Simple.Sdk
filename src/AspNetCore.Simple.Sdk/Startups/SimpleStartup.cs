@@ -1,9 +1,13 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
-using AspNetCore.Simple.Sdk.ErrorHandling.Development;
-using AspNetCore.Simple.Sdk.ErrorHandling.Production;
+using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
+using AspNetCore.Simple.Sdk.Cors;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
-using AspNetCore.Simple.Sdk.Logger.Errors.Middlewares;
+using AspNetCore.Simple.Sdk.Logger.Errors;
+using AspNetCore.Simple.Sdk.MediatR;
+using AspNetCore.Simple.Sdk.Polly;
 using AspNetCore.Simple.Sdk.Security;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using AspNetCore.Simple.Sdk.Swagger;
@@ -13,17 +17,25 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.Simple.Sdk.Startups
 {
     public abstract class SimpleStartup
     {
+        private Lazy<AutoRegistration> _lazyAutoRegistration = new();
+
         protected SimpleStartup(IConfiguration configuration,
-                              IWebHostEnvironment webHostEnvironment,
-                              Assembly assembly,
-                              PathString basePath,
-                              string swaggerApiTitle)
+                                IWebHostEnvironment webHostEnvironment,
+                                PathString basePath,
+                                string swaggerApiTitle) : this(configuration, webHostEnvironment, Assembly.GetCallingAssembly(), basePath, swaggerApiTitle)
+        {
+        }
+
+        protected SimpleStartup(IConfiguration configuration,
+                                IWebHostEnvironment webHostEnvironment,
+                                Assembly assembly,
+                                PathString basePath,
+                                string swaggerApiTitle)
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
@@ -45,15 +57,22 @@ namespace AspNetCore.Simple.Sdk.Startups
 
         public virtual void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            services.AddErrorHandlingDevelopment();
-
             ConfigureServices(services);
+            AutoConfigureDevelopmentServices(GetAutoRegistration(services, Configuration));
         }
 
-        // This method gets called by the runtime if there is no expicit "Production configure method.
+        public virtual void AutoConfigureDevelopmentServices(AutoRegistration autoRegistration)
+        {
+            // only optional for user
+        }
+
+        // This method gets called by the runtime if there is no explicit "Production configure method.
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGenSimplified(Assembly, SwaggerApiTitle);
+
+            services.AddMediator(Assembly);
+            services.AddValidationBehavior();
 
             services.AddControllers();
             services.AddQuerySecurityFilter();
@@ -61,12 +80,21 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddSingleton(typeof(Assembly), Assembly);
             services.AddHttpClient();
-            services.AddErrorHandlingProduction();
+            services.AddErrorHandling();
             services.AddErrorLogging();
 
             services.AddApiVersioningSimplified();
-
             services.AddJsonSerializer();
+            services.AddCorsSettings(Configuration);
+
+            services.AddBackOff();
+
+            AutoConfigureServices(GetAutoRegistration(services, Configuration));
+        }
+
+        public virtual void AutoConfigureServices(AutoRegistration autoRegistration)
+        {
+            // only optional for user
         }
 
         public virtual void ConfigureDevelopment(IApplicationBuilder app)
@@ -80,20 +108,33 @@ namespace AspNetCore.Simple.Sdk.Startups
             app.UseSwaggerSimplified(BasePath);
             app.UseSwaggerUiSimplified(Assembly, BasePath);
 
-            app.UseCors("AllowAll");
-
             app.UsePathBase(BasePath);
 
-            if (WebHostEnvironment.IsDevelopment().IsFalse())
-            {
-                app.UseErrorHandlingProduction();
-            }
+            app.UseErrorHandling();
 
             app.UseErrorLogging();
             app.UseHttpsRedirection();
+
             app.UseRouting();
-            // app.UseAuthorization();
+
+            app.UseCorsConfiguration();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            // app.UseOptions();
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        private AutoRegistration GetAutoRegistration(IServiceCollection serviceCollection, IConfiguration configuration)
+        {
+            if (_lazyAutoRegistration.IsValueCreated.IsFalse())
+            {
+                _lazyAutoRegistration = new Lazy<AutoRegistration>(() => new AutoRegistrationFactory().Create(serviceCollection, configuration));
+            }
+
+            return _lazyAutoRegistration.Value;
         }
     }
 }

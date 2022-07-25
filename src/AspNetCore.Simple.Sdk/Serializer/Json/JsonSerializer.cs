@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace AspNetCore.Simple.Sdk.Serializer.Json
@@ -17,9 +18,14 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
             return System.Text.Json.JsonSerializer.Serialize(source, _serializeOptions);
         }
 
-        public T Deserialize<T>(string json)
+        public T? Deserialize<T>(string json)
         {
             return System.Text.Json.JsonSerializer.Deserialize<T>(json, _serializeOptions);
+        }
+
+        public object? Deserialize(string json, Type responseType)
+        {
+            return System.Text.Json.JsonSerializer.Deserialize(json, responseType, _serializeOptions);
         }
     }
 }

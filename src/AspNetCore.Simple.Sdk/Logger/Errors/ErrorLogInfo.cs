@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
@@ -7,7 +8,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         public ErrorLogInfo(string message,
                             string title,
                             IEnumerable<string> stackTrace,
-                            Dictionary<string, object> requestInfos)
+                            IImmutableDictionary<string, string> requestInfos)
         {
             Title = title;
             Message = message;
@@ -19,7 +20,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
 
         public string Message { get; }
 
-        public Dictionary<string, object> RequestInfos { get; }
+        public IImmutableDictionary<string, string> RequestInfos { get; }
 
         public IEnumerable<string> StackTrace { get; }
     }

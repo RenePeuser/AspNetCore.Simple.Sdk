@@ -1,13 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Extensions.Pack;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ApiVersioning
 {
-    internal class ApiVersionProvider
+    public static class AddApiVersionProviderExtension
+    {
+        public static void AddApiVersionProvider(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<IApiVersionProvider, ApiVersionProvider>();
+        }
+    }
+
+    public interface IApiVersionProvider
+    {
+        IImmutableList<ApiVersion> GetAllApiVersions(Assembly assemblies);
+    }
+
+    internal class ApiVersionProvider : IApiVersionProvider
     {
         private readonly AssemblyTypeProvider _assemblyTypeProvider;
 
@@ -20,16 +34,17 @@ namespace AspNetCore.Simple.Sdk.ApiVersioning
             _assemblyTypeProvider = assemblyTypeProvider;
         }
 
-        internal IEnumerable<ApiVersion> GetAllApiVersions(Assembly assemblies)
+        public IImmutableList<ApiVersion> GetAllApiVersions(Assembly assemblies)
         {
             var allApiVersions = _assemblyTypeProvider.GetAllTypes(assemblies)
                                                       .Where(type => type.HasCustomAttribute<ApiVersionAttribute>())
                                                       .SelectMany(type => type.GetCustomAttributes<ApiVersionAttribute>())
                                                       .SelectMany(attribute => attribute.Versions)
                                                       .Distinct()
-                                                      .OrderBy(version => version.ToString());
+                                                      .OrderBy(version => version.ToString())
+                                                      .ToImmutableList();
 
-            return allApiVersions.IsEmpty() ? new ApiVersion(0, 1).ToEnumerable() : allApiVersions;
+            return allApiVersions.IsEmpty() ? new ApiVersion(0, 1).ToEnumerable().ToImmutableList() : allApiVersions;
         }
     }
 }

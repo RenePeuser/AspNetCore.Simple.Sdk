@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AspNetCore.Simple.Sdk</name>
+    </assembly>
+    <members>
+        <member name="T:AspNetCore.Simple.Sdk.Cors.CorsSettings">
+            <summary>
+            The CORS settings class to handle the CORS configurations
+            </summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Cors.CorsSettings.Origins">
+            <summary>
+            Provides a list of allowed origins sources
+            </summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Cors.CorsSettings.Headers">
+            <summary>
+            Provides the list of allowed CORS headers
+            </summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Cors.CorsSettings.AllowCredentials">
+            <summary>
+            Provides if CORS credentials are allowed
+            </summary>
+        </member>
+        <member name="T:AspNetCore.Simple.Sdk.Cors.OptionsMiddleware">
+            <summary>
+            Options middleware is a smart part to handle preflight calls
+            </summary>
+        </member>
+        <member name="T:AspNetCore.Simple.Sdk.MediatR.MediatorExtensions">
+            <summary>
+            Provides a set of extensions for <see cref="T:MediatR.IMediator"/>
+            </summary>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.MediatR.MediatorExtensions.SendAsync``1(MediatR.IMediator,MediatR.IRequest{``0},System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously send a request to a single handler
+            </summary>
+            <typeparam name="TResponse">Response type</typeparam>
+            <param name="mediator">The <see cref="T:MediatR.IMediator"/></param>
+            <param name="request">Request object</param>
+            <param name="cancellationToken">Optional cancellation token</param>
+            <returns>A task that represents the send operation. The task result contains the handler response</returns>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.MediatR.MediatorExtensions.SendAsync(MediatR.IMediator,System.Object,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously send an object request to a single handler via dynamic dispatch
+            </summary>
+            <param name="mediator">The <see cref="T:MediatR.IMediator"/> instance to extend.</param>
+            <param name="request">Request object</param>
+            <param name="cancellationToken">Optional cancellation token</param>
+            <returns>A task that represents the send operation. The task result contains the type erased handler response</returns>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.MediatR.MediatorExtensions.PublishAsync(MediatR.IMediator,System.Object,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously send a notification to multiple handlers
+            </summary>
+            <param name="mediator">The <see cref="T:MediatR.IMediator"/> instance to extend.</param>
+            <param name="notification">Notification object</param>
+            <param name="cancellationToken">Optional cancellation token</param>
+            <returns>A task that represents the publish operation.</returns>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.MediatR.MediatorExtensions.PublishAsync``1(MediatR.IMediator,``0,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously send a notification to multiple handlers
+            </summary>
+            <param name="mediator">The <see cref="T:MediatR.IMediator"/> instance to extend.</param>
+            <param name="notification">Notification object</param>
+            <param name="cancellationToken">Optional cancellation token</param>
+            <returns>A task that represents the publish operation.</returns>
+        </member>
+        <member name="T:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom">
+            <summary>
+            A random number generator with a Uniform distribution that is thread-safe (via locking).
+            Can be instantiated with a custom <see cref="T:System.Int32"/> seed to make it emit deterministically.
+            </summary>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.#ctor(System.Nullable{System.Int32})">
+            <summary>
+            Creates an instance of the <see cref="T:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom"/> class.
+            </summary>
+            <param name="seed">An optional <see cref="T:System.Random"/> seed to use.
+            If not specified, will use a shared instance with a random seed, per Microsoft recommendation for maximum randomness.</param>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.NextDouble">
+            <summary>
+            Returns a random floating-point number that is greater than or equal to 0.0,
+            and less than 1.0.
+            This method uses locks in order to avoid issues with concurrent access.
+            </summary>
+            <returns>Nächste Zufallszahl.</returns>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.Uniform(System.Double,System.Double)">
+            <summary>
+            Returns a random floating-point number that is greater than or equal to <paramref name="a"/>,
+            and less than <paramref name="b"/>.
+            </summary>
+            <param name="a">The minimum value.</param>
+            <param name="b">The maximum value.</param>
+            <returns>Random value between <paramref name="a"/> and <paramref name="b"/></returns>
+        </member>
+    </members>
+</doc>
