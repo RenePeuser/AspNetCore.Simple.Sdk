@@ -17,6 +17,7 @@ This simple SDK contains following helpful optimizations:
 - Optimized and simplified swagger.
 - Ready to go base class for startup.cs</Description>
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
+
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
         <PackageReleaseNotes>Enable Swagger annotations</PackageReleaseNotes>
