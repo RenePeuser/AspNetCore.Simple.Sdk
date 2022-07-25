@@ -10,13 +10,20 @@ namespace AspNetCore.Simple.Sdk.Swagger
 {
     public class ExtensibleEnumFilter : ISchemaFilter, IParameterFilter
     {
-        void ISchemaFilter.Apply(OpenApiSchema model, SchemaFilterContext context) => RedefineSchemaIfEnumOrNullableEnumType(context.Type, model);
+        void ISchemaFilter.Apply(OpenApiSchema model, SchemaFilterContext context) =>
+            RedefineSchemaIfEnumOrNullableEnumType(context.Type, model);
 
-        void IParameterFilter.Apply(OpenApiParameter parameter, ParameterFilterContext context) => RedefineSchemaIfEnumOrNullableEnumType(context.ParameterInfo.ParameterType, parameter.Schema);
+        void IParameterFilter.Apply(OpenApiParameter parameter, ParameterFilterContext context) =>
+            RedefineSchemaIfEnumOrNullableEnumType(context.ParameterInfo?.ParameterType, parameter.Schema);
 
-        private static void RedefineSchemaIfEnumOrNullableEnumType(Type type, OpenApiSchema schema)
+        private static void RedefineSchemaIfEnumOrNullableEnumType(Type? type, OpenApiSchema schema)
         {
-            if (type.IsEnum.IsFalse())
+            if (type is null)
+            {
+                return;
+            }
+
+            if (!type.IsEnum)
             {
                 var underlyingType = Nullable.GetUnderlyingType(type);
                 if (underlyingType is not { IsEnum: true })
@@ -35,14 +42,14 @@ namespace AspNetCore.Simple.Sdk.Swagger
             schema.Format = null;
 
             var openApiStrings = Enum
-                                 .GetNames(type)
-                                 .Select(name => new
-                                 {
-                                     OriginalName = name,
-                                     AttributedName = type.GetMember(name)[0].GetCustomAttributes(typeof(EnumMemberAttribute), false).OfType<EnumMemberAttribute>().FirstOrDefault()?.Value
-                                 })
-                                 .Select(nameSpec => nameSpec.AttributedName.IsNullOrWhiteSpace() ? nameSpec.OriginalName : nameSpec.AttributedName)
-                                 .Select(resolvedName => new OpenApiString(resolvedName));
+                .GetNames(type)
+                .Select(name => new
+                {
+                    OriginalName = name,
+                    AttributedName = type.GetMember(name)[0].GetCustomAttributes(typeof(EnumMemberAttribute), false).OfType<EnumMemberAttribute>().FirstOrDefault()?.Value
+                })
+                .Select(nameSpec => nameSpec.AttributedName.IsNullOrWhiteSpace() ? nameSpec.OriginalName : nameSpec.AttributedName)
+                .Select(resolvedName => new OpenApiString(resolvedName));
 
             var openApiArray = new OpenApiArray();
             openApiArray.AddRange(openApiStrings);
