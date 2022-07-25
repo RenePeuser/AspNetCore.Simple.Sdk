@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,9 +26,10 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.AddBearerSecurityRequirement();
                 options.AddXmlComments(assembly);
                 options.CustomSchemaIds(type => type.ToString());
-                options.SchemaFilter<EnumSchemaFilter>();
+                options.SchemaFilter<EnumSchemaFilter>(Array.Empty<object>());
                 options.SchemaFilter<ExtensibleEnumFilter>();
                 options.ParameterFilter<ExtensibleEnumFilter>();
+                options.EnableAnnotations();
 
                 foreach (var apiVersion in allApiVersions)
                 {
