@@ -9,9 +9,8 @@
         <Authors>Rene Peuser</Authors>
         <Company>Rene Peuser Softwaresolutions</Company>
         <Description>
-WIP - This simple SDK contains following helpful optimizations:
+This simple SDK contains following helpful optimizations:
 - ApiVersioning
-- Auto dependency resolver. Search automatically all dependencies for a type and register it.
 - Errorhandling with middleware
 - Logging with middleware
 - Query security filter
