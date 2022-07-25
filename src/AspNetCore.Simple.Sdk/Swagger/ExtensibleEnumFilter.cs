@@ -10,11 +10,16 @@ namespace AspNetCore.Simple.Sdk.Swagger
 {
     public class ExtensibleEnumFilter : ISchemaFilter, IParameterFilter
     {
-        void ISchemaFilter.Apply(OpenApiSchema model, SchemaFilterContext context) =>
+        void ISchemaFilter.Apply(OpenApiSchema model, SchemaFilterContext context)
+        {
             RedefineSchemaIfEnumOrNullableEnumType(context.Type, model);
+        }
 
-        void IParameterFilter.Apply(OpenApiParameter parameter, ParameterFilterContext context) =>
+
+        void IParameterFilter.Apply(OpenApiParameter parameter, ParameterFilterContext context)
+        {
             RedefineSchemaIfEnumOrNullableEnumType(context.ParameterInfo?.ParameterType, parameter.Schema);
+        }
 
         private static void RedefineSchemaIfEnumOrNullableEnumType(Type? type, OpenApiSchema schema)
         {
