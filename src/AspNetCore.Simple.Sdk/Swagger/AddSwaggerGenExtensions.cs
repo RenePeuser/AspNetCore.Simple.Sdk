@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
+using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -14,15 +17,16 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public string Description { get; init; } = string.Empty;
         public string ContactName { get; init; } = string.Empty;
         public string ContactEmail { get; init; } = string.Empty;
-        public Uri? ContactUrl { get; init; }
+        public string ContactUrl { get; init; } = string.Empty;
     }
 
     public static class AddSwaggerGenExtensions
     {
-        public static void AddSwaggerGenSimplified(
-            this IServiceCollection services, Assembly assembly,
-            SwaggerInfo swaggerInfo)
+        public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
         {
+            var swaggerInfo = configuration.GetSetting<SwaggerInfo>();
+            swaggerInfo = swaggerInfo is null ? new SwaggerInfo() : swaggerInfo;
+
             var apiVersionProvider = new ApiVersionProvider();
             var allApiVersions = apiVersionProvider.GetAllApiVersions(assembly);
 
@@ -65,7 +69,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 {
                     Email = swaggerInfo.ContactEmail,
                     Name = swaggerInfo.ContactName,
-                    Url = swaggerInfo.ContactUrl
+                    Url = swaggerInfo.ContactUrl.IsNullOrWhiteSpace() ? null : new Uri(swaggerInfo.ContactUrl)
                 }
             };
 

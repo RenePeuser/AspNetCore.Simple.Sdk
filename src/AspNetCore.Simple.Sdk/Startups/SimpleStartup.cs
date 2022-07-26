@@ -26,27 +26,22 @@ namespace AspNetCore.Simple.Sdk.Startups
 
         protected SimpleStartup(IConfiguration configuration,
                                 IWebHostEnvironment webHostEnvironment,
-                                PathString basePath,
-                                SwaggerInfo swaggerInfo) : this(configuration, webHostEnvironment, Assembly.GetCallingAssembly(), basePath, swaggerInfo)
+                                PathString basePath) : this(configuration, webHostEnvironment, Assembly.GetCallingAssembly(), basePath)
         {
         }
 
         protected SimpleStartup(IConfiguration configuration,
                                 IWebHostEnvironment webHostEnvironment,
                                 Assembly assembly,
-                                PathString basePath,
-                                SwaggerInfo swaggerInfo)
+                                PathString basePath)
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
             Assembly = assembly;
             BasePath = basePath;
-            SwaggerInfo = swaggerInfo;
         }
 
         protected IWebHostEnvironment WebHostEnvironment { get; }
-
-        protected SwaggerInfo SwaggerInfo { get; }
 
         protected Assembly Assembly { get; }
 
@@ -68,7 +63,7 @@ namespace AspNetCore.Simple.Sdk.Startups
         // This method gets called by the runtime if there is no explicit "Production configure method.
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGenSimplified(Assembly, SwaggerInfo);
+            services.AddSwaggerGenSimplified(Assembly, Configuration);
 
             services.AddMediator(Assembly);
             services.AddValidationBehavior();
