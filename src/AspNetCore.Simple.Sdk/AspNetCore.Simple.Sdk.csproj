@@ -50,6 +50,7 @@ WIP - This simple SDK contains following helpful optimizations:
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
         <PackageReference Include="StackExchange.Redis" Version="2.6.48" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.4.0" />

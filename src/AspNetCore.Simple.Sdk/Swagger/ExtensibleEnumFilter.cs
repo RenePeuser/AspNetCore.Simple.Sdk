@@ -8,6 +8,13 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
+    /// <summary>A schema-and-parameter filter that replaces, in the generated Json, each <see langword="enum"/>-based definition
+    /// with a <see langword="string"/>-based definition plus "x-extensible-enum" list (a list of the enum member names.)<br />
+    /// As a consequence, names instead of numbers will be used in the client code generators' IntelliSense and validations.
+    /// Unlike <see cref="EnumSchemaFilter "/>, when the C# enum's members grow, this will not signify a breaking change
+    /// for consuming clients.<br />
+    /// See also <a href="https://opensource.zalando.com/restful-api-guidelines/#112">guideline #112</a> by Zalando, who invented this mechanism.
+    /// </summary>
     public class ExtensibleEnumFilter : ISchemaFilter, IParameterFilter
     {
         void ISchemaFilter.Apply(OpenApiSchema model, SchemaFilterContext context)
