@@ -8,6 +8,12 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
+    /// <summary>A schema filter that removes, in the generated Json, the numeric member values from the <see langword="enum"/>s definitions and
+    /// and replaces them with the <see langword="string"/> member names. However, the data type of the referencing parameters and properties
+    /// remains numeric (usually <see langword="int"/>).<br />
+    /// <br />
+    /// As a consequence, names instead of numbers will be used in the client code generators' IntelliSense and validations.
+    /// </summary>
     public class EnumSchemaFilter : ISchemaFilter
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)

@@ -27,7 +27,7 @@ namespace AspNetCore.Simple.Sdk.Startups
         protected SimpleStartup(IConfiguration configuration,
                                 IWebHostEnvironment webHostEnvironment,
                                 PathString basePath,
-                                string swaggerApiTitle) : this(configuration, webHostEnvironment, Assembly.GetCallingAssembly(), basePath, swaggerApiTitle)
+                                SwaggerInfo swaggerInfo) : this(configuration, webHostEnvironment, Assembly.GetCallingAssembly(), basePath, swaggerInfo)
         {
         }
 
@@ -35,25 +35,24 @@ namespace AspNetCore.Simple.Sdk.Startups
                                 IWebHostEnvironment webHostEnvironment,
                                 Assembly assembly,
                                 PathString basePath,
-                                string swaggerApiTitle)
+                                SwaggerInfo swaggerInfo)
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
             Assembly = assembly;
             BasePath = basePath;
-            SwaggerApiTitle = swaggerApiTitle;
+            SwaggerInfo = swaggerInfo;
         }
 
         protected IWebHostEnvironment WebHostEnvironment { get; }
+
+        protected SwaggerInfo SwaggerInfo { get; }
 
         protected Assembly Assembly { get; }
 
         protected PathString BasePath { get; }
 
-        public string SwaggerApiTitle { get; }
-
         protected IConfiguration Configuration { get; }
-
 
         public virtual void ConfigureDevelopmentServices(IServiceCollection services)
         {
@@ -69,7 +68,7 @@ namespace AspNetCore.Simple.Sdk.Startups
         // This method gets called by the runtime if there is no explicit "Production configure method.
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGenSimplified(Assembly, SwaggerApiTitle);
+            services.AddSwaggerGenSimplified(Assembly, SwaggerInfo);
 
             services.AddMediator(Assembly);
             services.AddValidationBehavior();
