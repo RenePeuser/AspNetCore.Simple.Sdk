@@ -7,6 +7,7 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
     {
         public static void AddJsonSerializer(this IServiceCollection serviceCollection)
         {
+
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
 
             serviceCollection.AddMvc()
