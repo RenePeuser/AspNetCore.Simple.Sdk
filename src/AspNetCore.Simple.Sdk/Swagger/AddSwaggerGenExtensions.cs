@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
+
     public static class Audiences
     {
         public static string ComponentInternal => "component-internal";
