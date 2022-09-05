@@ -20,7 +20,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
 
     public record TraceTelemetryFilterSettings
     {
-        public string[] NamesToIgnore { get; set; } = Array.Empty<string>();
+        public string[] NamesToIgnore { get; init; } = Array.Empty<string>();
     }
 
     internal class TraceTelemetryFilter : ITelemetryProcessor

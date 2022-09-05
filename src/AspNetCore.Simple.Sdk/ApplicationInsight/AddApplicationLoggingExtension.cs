@@ -1,4 +1,6 @@
-﻿using AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors;
+﻿using System;
+using System.Linq;
+using AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.ApplicationInsights;
@@ -13,6 +15,18 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         {
             if (configuration.TryGetSettings<ApplicationInsightsSettings>(out var applicationInsightsSettings))
             {
+                var eventTelemetryNamesToIgnore = configuration.GetSection("ApplicationInsights:EventTelemetryFilterSettings:NamesToIgnore").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var requestTelemetryNamesToIgnore = configuration.GetSection("ApplicationInsights:RequestTelemetryFilterSettings:NamesToIgnore").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var traceTelemetryNamesToIgnore = configuration.GetSection("ApplicationInsights:TraceTelemetryFilterSettings:NamesToIgnore").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+
+                applicationInsightsSettings = applicationInsightsSettings with
+                {
+                    EventTelemetryFilterSettings = applicationInsightsSettings.EventTelemetryFilterSettings with { NamesToIgnore = eventTelemetryNamesToIgnore },
+                    RequestTelemetryFilterSettings = applicationInsightsSettings.RequestTelemetryFilterSettings with { NamesToIgnore = requestTelemetryNamesToIgnore },
+                    TraceTelemetryFilterSettings = applicationInsightsSettings.TraceTelemetryFilterSettings with { NamesToIgnore = traceTelemetryNamesToIgnore },
+                };
+
+
                 services.AddSingletonIfNotExists(applicationInsightsSettings);
 
                 // We will not to inject anytime full application insights configuration
