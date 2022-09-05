@@ -36,7 +36,7 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
             var scopeClaim = context.HttpContext.User.FindFirst(c => c.Type == "scope");
             if (scopeClaim.IsNull())
             {
-                throw new ProblemDetailsException(HttpStatusCode.BadRequest,
+                throw new ProblemDetailsException(HttpStatusCode.Unauthorized,
                                                   "Token does not contain a scope.",
                                                   "Please ensure your token has an OAuth 2.0 \"scope\" claim defined.",
                                                   ("Request", $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}"),
