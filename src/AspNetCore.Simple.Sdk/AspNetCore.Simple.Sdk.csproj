@@ -21,7 +21,7 @@
 
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>Introduce optional Auth0, OAuth scopes, ApplicactionInsights, Swaggger optimizations for OAuth0, only if it is used</PackageReleaseNotes>
+        <PackageReleaseNotes>Fix array settings to flat string comma separated for names to ignore for better handling in environment variables</PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
