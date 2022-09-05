@@ -38,6 +38,16 @@
             Provides a set of extensions for <see cref="T:MediatR.IMediator"/>
             </summary>
         </member>
+        <member name="M:AspNetCore.Simple.Sdk.MediatR.MediatorExtensions.SendAsync(MediatR.IMediator,MediatR.IRequest,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously send a request to a single handler
+            </summary>
+            <typeparam name="TResponse">Response type</typeparam>
+            <param name="mediator">The <see cref="T:MediatR.IMediator"/></param>
+            <param name="request">Request object</param>
+            <param name="cancellationToken">Optional cancellation token</param>
+            <returns>A task that represents the send operation. The task result contains the handler response</returns>
+        </member>
         <member name="M:AspNetCore.Simple.Sdk.MediatR.MediatorExtensions.SendAsync``1(MediatR.IMediator,MediatR.IRequest{``0},System.Threading.CancellationToken)">
             <summary>
             Asynchronously send a request to a single handler

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.MediatR
@@ -25,6 +26,22 @@ namespace AspNetCore.Simple.Sdk.MediatR
     /// </summary>
     public static class MediatorExtensions
     {
+
+        /// <summary>
+        /// Asynchronously send a request to a single handler
+        /// </summary>
+        /// <typeparam name="TResponse">Response type</typeparam>
+        /// <param name="mediator">The <see cref="IMediator"/></param>
+        /// <param name="request">Request object</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
+        /// <returns>A task that represents the send operation. The task result contains the handler response</returns>
+        public static Task SendAsync(this IMediator mediator,
+                                     IRequest request,
+                                     CancellationToken cancellationToken = default)
+        {
+            return mediator.Send(request, cancellationToken);
+        }
+
         /// <summary>
         /// Asynchronously send a request to a single handler
         /// </summary>
