@@ -1,0 +1,83 @@
+﻿using AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors;
+using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
+using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace AspNetCore.Simple.Sdk.ApplicationInsight
+{
+    public static class AddApplicationInsightsSettingsExtension
+    {
+        public static void AddApplicationInsightsSettings(this IServiceCollection services, IConfiguration configuration)
+        {
+            if (configuration.TryGetSettings<ApplicationInsightsSettings>(out var applicationInsightsSettings))
+            {
+                services.AddSingletonIfNotExists(applicationInsightsSettings);
+
+                // We will not to inject anytime full application insights configuration
+                services.AddSingletonIfNotExists(applicationInsightsSettings.EventTelemetryFilterSettings);
+                services.AddSingletonIfNotExists(applicationInsightsSettings.RequestTelemetryFilterSettings);
+                services.AddSingletonIfNotExists(applicationInsightsSettings.TraceTelemetryFilterSettings);
+            }
+        }
+    }
+
+    public record ApplicationInsightsSettings
+    {
+        public string InstrumentationKey { get; init; }
+
+        public EventTelemetryFilterSettings EventTelemetryFilterSettings { get; init; } = new EventTelemetryFilterSettings();
+
+        public RequestTelemetryFilterSettings RequestTelemetryFilterSettings { get; init; } = new RequestTelemetryFilterSettings();
+
+        public TraceTelemetryFilterSettings TraceTelemetryFilterSettings { get; init; } = new TraceTelemetryFilterSettings();
+
+    }
+
+    internal static class AddApplictionInsightsExtensions
+    {
+        internal static void AddApplicationInsights(this IServiceCollection services, IConfiguration configuration)
+        {
+            // Only if configuration is available
+            if (configuration.TryGetSettings<ApplicationInsightsSettings>(out _).IsFalse())
+            {
+                return;
+            }
+
+            // If Telemetry client already registered go out.
+            if (services.IsAlreadyRegistered<TelemetryClient>())
+            {
+                return;
+            }
+
+            services.AddTelemetryClient();
+            services.AddTelemetryProcessors(configuration);
+            services.AddTelemetryInitializers();
+            services.AddTelemetryLoggingBehavior();
+        }
+
+        internal static void AddTelemetryClient(this IServiceCollection services)
+        {
+            services.AddApplicationInsightsTelemetry(options => options.EnableAdaptiveSampling = false);
+        }
+
+        internal static void AddTelemetryProcessors(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddEventTelemetryFilter(configuration);
+            services.AddRequestTelemetryFilter(configuration);
+            services.AddTraceTelemetryFilter(configuration);
+        }
+
+        internal static void AddTelemetryInitializers(this IServiceCollection services)
+        {
+            services.AddRequestBodyInitializer();
+            services.AddBetterLoggingBehavior();
+        }
+
+        internal static void AddTelemetryLoggingBehavior(this IServiceCollection services)
+        {
+            services.AddBetterLoggingBehavior();
+        }
+    }
+}

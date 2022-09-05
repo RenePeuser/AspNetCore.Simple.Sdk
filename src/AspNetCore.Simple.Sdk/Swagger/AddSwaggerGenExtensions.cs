@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
+using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using AspNetCore.Simple.Sdk.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +40,11 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
         public string ContactEmail { get; init; } = string.Empty;
 
+        public bool WithServerInfo { get; init; }
+
         public Uri? ContactUrl { get; init; }
+
+        public Uri? AccessTokenUrl { get; init; }
     }
 
     public static class AddSwaggerGenExtensions
@@ -47,8 +52,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
         {
             var swaggerInfo = configuration.GetSetting<SwaggerInfo>();
-            swaggerInfo = swaggerInfo is null ? new SwaggerInfo() : swaggerInfo;
-
             var apiVersionProvider = new ApiVersionProvider();
             var allApiVersions = apiVersionProvider.GetAllApiVersions(assembly);
 
@@ -61,13 +64,25 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();
-                options.AddBearerSecurityDefinition();
-                options.AddBearerSecurityRequirement();
+
+                // ToDo: think about next version strategy how to switch 
+                if (configuration.TryGetSettings<Auth0>(out _))
+                {
+                    options.DocumentFilter<OAuth2Filter>();
+                }
+                else
+                {
+                    options.AddBearerSecurityDefinition();
+                    options.AddBearerSecurityRequirement();
+                }
+
                 options.AddXmlComments(assembly);
                 options.CustomSchemaIds(type => type.ToString());
-                // Conflicts with ExtensibleEnumFilter. Use one or the other.
+
+                // EnumSchemaFilter conflicts with ExtensibleEnumFilter. Use one or the other.
                 // options.SchemaFilter<EnumSchemaFilter>();
                 options.SchemaFilter<ExtensibleEnumFilter>();
+
                 options.ParameterFilter<ExtensibleEnumFilter>();
                 options.EnableAnnotations();  // necessary to include the SwaggerOperationAttribute.OperationIds in the Swagger Json
 

@@ -34,14 +34,14 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     var newOpenApiPathItem = path.Value;
                     if (versionInfo.IsNull())
                     {
-                        yield return (path.Key.Replace("v{version}", swaggerDoc.Info.Version), newOpenApiPathItem);
+                        yield return (path.Key.Replace("{version}", swaggerDoc.Info.Version), newOpenApiPathItem);
                         continue;
                     }
 
                     var apiVersion = Convert(swaggerDoc.Info);
                     if (versionInfo.Versions.Any(v => v.EqualsTo(apiVersion)))
                     {
-                        yield return (path.Key.Replace("v{version}", swaggerDoc.Info.Version), newOpenApiPathItem);
+                        yield return (path.Key.Replace("{version}", swaggerDoc.Info.Version), newOpenApiPathItem);
                     }
                 }
             }

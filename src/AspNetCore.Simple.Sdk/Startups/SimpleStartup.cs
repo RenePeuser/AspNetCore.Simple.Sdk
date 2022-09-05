@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
+using AspNetCore.Simple.Sdk.ApplicationInsight;
+using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
+using AspNetCore.Simple.Sdk.Automapper;
 using AspNetCore.Simple.Sdk.Cors;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
@@ -33,7 +36,8 @@ namespace AspNetCore.Simple.Sdk.Startups
         protected SimpleStartup(IConfiguration configuration,
                                 IWebHostEnvironment webHostEnvironment,
                                 Assembly assembly,
-                                PathString basePath)
+                                PathString basePath
+            )
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
@@ -63,8 +67,6 @@ namespace AspNetCore.Simple.Sdk.Startups
         // This method gets called by the runtime if there is no explicit "Production configure method.
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGenSimplified(Assembly, Configuration);
-
             services.AddMediator(Assembly);
             services.AddValidationBehavior();
 
@@ -83,6 +85,16 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddBackOff();
 
+            services.AddOAuthAuthentication(Configuration);
+
+            services.AddMediator();
+
+            services.AddSwaggerGenSimplified(Assembly, Configuration);
+
+            services.AddAutoMapper();
+
+            services.AddApplicationInsights(Configuration);
+
             AutoConfigureServices(GetAutoRegistration(services, Configuration));
         }
 
@@ -99,7 +111,7 @@ namespace AspNetCore.Simple.Sdk.Startups
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public virtual void Configure(IApplicationBuilder app)
         {
-            app.UseSwaggerSimplified(BasePath);
+            app.UseSwaggerSimplified(Configuration, BasePath);
             app.UseSwaggerUiSimplified(Assembly, BasePath);
 
             app.UsePathBase(BasePath);

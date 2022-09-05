@@ -4,6 +4,10 @@
         <name>AspNetCore.Simple.Sdk</name>
     </assembly>
     <members>
+        <member name="M:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute.#ctor(System.String)">
+            <summary>Creates a new <see cref="T:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute"/> instance.</summary>
+            <param name="scope">The required scope for the operation.</param>
+        </member>
         <member name="T:AspNetCore.Simple.Sdk.Cors.CorsSettings">
             <summary>
             The CORS settings class to handle the CORS configurations
@@ -122,6 +126,11 @@
             Unlike <see cref="T:AspNetCore.Simple.Sdk.Swagger.EnumSchemaFilter"/>, when the C# enum's members grow, this will not signify a breaking change
             for consuming clients.<br />
             See also <a href="https://opensource.zalando.com/restful-api-guidelines/#112">guideline #112</a> by Zalando, who invented this mechanism.
+            </summary>
+        </member>
+        <member name="T:AspNetCore.Simple.Sdk.Swagger.OAuth2Filter">
+            <summary>Adds OAuth 2.0 security definitions and requirements. Required scopes are determined by the presence of the
+            <see cref="T:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute"/> on the controller actions.
             </summary>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Swagger.RootLevelTagsFilter">

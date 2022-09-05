@@ -9,13 +9,14 @@
         <Authors>Rene Peuser</Authors>
         <Company>Rene Peuser Softwaresolutions</Company>
         <Description>
-This simple SDK contains following helpful optimizations:
-- ApiVersioning
-- Errorhandling with middleware
-- Logging with middleware
-- Query security filter
-- Optimized and simplified swagger.
-- Ready to go base class for startup.cs</Description>
+            This simple SDK contains following helpful optimizations:
+            - ApiVersioning
+            - Errorhandling with middleware
+            - Logging with middleware
+            - Query security filter
+            - Optimized and simplified swagger.
+            - Ready to go base class for startup.cs
+        </Description>
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
 
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
@@ -35,11 +36,12 @@ This simple SDK contains following helpful optimizations:
         <DebugType>embedded</DebugType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <DocumentationFile>.\AspNetCore.Simple.Sdk.xml</DocumentationFile>
+        <DocumentationFile>.\AspNetCore.Simple.Sdk.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Argument.Check" Version="2.0.0" />
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
         <PackageReference Include="Extensions.Pack" Version="2.0.0" />
         <PackageReference Include="GitVersion.MsBuild" Version="5.10.3">
             <PrivateAssets>all</PrivateAssets>
@@ -47,14 +49,18 @@ This simple SDK contains following helpful optimizations:
         </PackageReference>
         <PackageReference Include="MediatR" Version="10.0.1" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="StackExchange.Redis" Version="2.6.48" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.4.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.1" />
     </ItemGroup>
 
     <ItemGroup>
