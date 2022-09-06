@@ -5,6 +5,7 @@ using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,9 +43,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
         public bool WithServerInfo { get; init; }
 
-        public Uri? ContactUrl { get; init; }
-
-        public Uri? AccessTokenUrl { get; init; }
+        public string? ContactUrl { get; init; }
     }
 
     public static class AddSwaggerGenExtensions
@@ -103,11 +102,11 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 Title = swaggerInfo.Title,
                 Version = $"{apiVersion.MajorVersion}.{apiVersion.MinorVersion}",
                 Description = swaggerInfo.Description,
-                Contact = new OpenApiContact()
+                Contact = new OpenApiContact
                 {
                     Email = swaggerInfo.ContactEmail,
                     Name = swaggerInfo.ContactName,
-                    Url = swaggerInfo.ContactUrl
+                    Url = swaggerInfo.ContactUrl is null ? null : new Uri(swaggerInfo.ContactUrl)
                 },
 
                 Extensions = infoExtension

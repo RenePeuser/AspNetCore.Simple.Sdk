@@ -1,4 +1,5 @@
-﻿using AspNetCore.Simple.Sdk.Automapper;
+﻿using System;
+using AspNetCore.Simple.Sdk.Automapper;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,7 +24,7 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
         public string ClientSecret { get; init; } = string.Empty;
         public string GrantType { get; init; } = "client_credentials";
         public string Audience { get; init; } = string.Empty;
-        public int TokenCacheTimeInHours { get; init; } = 8;
+        public TimeSpan TokenCacheTime { get; init; } = TimeSpan.FromHours(8);
     }
 
     public static class AddOAuthAuthenticationExtension

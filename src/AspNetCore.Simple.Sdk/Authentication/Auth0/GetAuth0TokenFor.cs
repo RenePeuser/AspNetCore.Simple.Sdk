@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using AutoMapper;
 
 namespace AspNetCore.Simple.Sdk.Authentication.Auth0
 {
-    public record GetAuth0TokenFor(Auth0 Auth0Settings, bool UseCache = true) : CachableQuery<Auth0Token>(TimeSpan.FromHours(Auth0Settings.TokenCacheTimeInHours), UseCache);
+    public record GetAuth0TokenFor(Auth0 Auth0Settings, bool UseCache = true) : CachableQuery<Auth0Token>(Auth0Settings.TokenCacheTime, UseCache);
 
     internal class GetAuth0TokenForHandler : IQueryHandler<GetAuth0TokenFor, Auth0Token>
     {
