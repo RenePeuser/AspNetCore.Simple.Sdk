@@ -6,7 +6,7 @@
 trigger:
   - master
   - develop
-  
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -14,7 +14,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
