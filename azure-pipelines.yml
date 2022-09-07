@@ -12,7 +12,6 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  GitVersion.SemVer: ''
 
 steps:
 
@@ -21,7 +20,7 @@ steps:
     packageType: 'sdk'
     version: '6.0.x'
 
-- script: dotnet build --configuration $(buildConfiguration) /p:AssemblyVerison='$(GitVersion.SemVer)'
+- script: dotnet build --configuration $(buildConfiguration)'
   displayName: 'dotnet build $(buildConfiguration)'
 
 - script: dotnet test
