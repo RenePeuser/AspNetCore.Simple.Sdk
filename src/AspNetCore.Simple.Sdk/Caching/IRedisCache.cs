@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Serializer.Json;
+using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
@@ -19,7 +20,17 @@ namespace AspNetCore.Simple.Sdk.Caching
     {
         public static void AddRedisCache(this IServiceCollection services, IConfiguration configuration)
         {
-            var redisSettings = configuration.GetSetting<Redis>();
+            if (configuration.TryGetSettings<Redis>(out var redisSettings).IsFalse())
+            {
+                return;
+            }
+
+            if (services.IsAlreadyRegistered<Redis>())
+            {
+                // Important do not connect redis twice
+                return;
+            }
+
             try
             {
                 var connection = ConnectionMultiplexer.Connect(redisSettings.ConnectionString);

@@ -5,6 +5,7 @@ using AspNetCore.Simple.Sdk.ApplicationInsight;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 using AspNetCore.Simple.Sdk.Automapper;
+using AspNetCore.Simple.Sdk.Caching;
 using AspNetCore.Simple.Sdk.Cors;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
@@ -87,7 +88,12 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddOAuthAuthentication(Configuration);
 
+            // Activate mediator for current assembly and calling once
             services.AddMediator();
+            services.AddMediator(Assembly);
+            services.AddMediatRCaching(Assembly);
+
+            services.AddRedisCache(Configuration);
 
             services.AddSwaggerGenSimplified(Assembly, Configuration);
 
