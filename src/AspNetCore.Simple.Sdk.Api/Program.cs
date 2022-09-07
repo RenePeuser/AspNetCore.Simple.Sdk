@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.Simple.Sdk.Api
 {
+
     public class Program
     {
         public static void Main(string[] args)
