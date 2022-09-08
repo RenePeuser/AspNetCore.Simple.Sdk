@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
@@ -26,7 +27,12 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
             // If there is no specific exception error handling then internal server error.
             context.Response.StatusCode = GetErrorCode(exception).Cast<int>();
 
-            var problemDetails = new ProblemDetails($"{exception.GetType().Name} was thrown.", exception.Message, context.Response.StatusCode, ImmutableDictionary<string, string>.Empty);
+            var problemDetails = new ProblemDetails()
+            {
+                Title = $"{exception.GetType().Name} was thrown.",
+                Detail = exception.Message,
+                Status = context.Response.StatusCode,
+            };
 
             var problemDetailsSerialized = JsonSerializer.Serialize(problemDetails);
             return context.Response.WriteAsync(problemDetailsSerialized);

@@ -10,7 +10,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         {
             context.Response.Clear();
             context.Response.ContentType = MediaTypeNames.Application.Json;
-            context.Response.StatusCode = exception.ProblemDetails.StatusCode;
+            context.Response.StatusCode = exception.ProblemDetails.Status ?? StatusCodes.Status500InternalServerError;
 
             await context.Response.WriteAsJsonAsync(exception.ProblemDetails).ConfigureAwait(false);
         }

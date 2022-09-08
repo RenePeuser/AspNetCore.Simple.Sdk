@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Net;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
@@ -34,14 +37,22 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
                                        string details,
                                        IImmutableDictionary<string, string> errorDetails) : base(title)
         {
-            ProblemDetails = new ProblemDetails(title, details, statusCode, errorDetails);
+            var problemDetails = new ProblemDetails()
+            {
+                Title = title,
+                Detail = details,
+                Status = statusCode
+            };
+
+            errorDetails.ForEach(keyValue =>
+            {
+                var key = keyValue.Key.Split(" ").Select(value => value.FirstCharToUpper()).Flatten().FirstCharToLower();
+                problemDetails.Extensions.Add(key, keyValue.Value);
+            });
+
+            ProblemDetails = problemDetails;
         }
 
         public ProblemDetails ProblemDetails { get; }
     }
-
-    public record ProblemDetails(string Title,
-                                 string Details,
-                                 int StatusCode,
-                                 IImmutableDictionary<string, string> ErrorDetails);
 }
