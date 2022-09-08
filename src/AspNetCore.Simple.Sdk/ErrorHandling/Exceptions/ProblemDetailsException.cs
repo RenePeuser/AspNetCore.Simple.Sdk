@@ -44,7 +44,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
             var problemDetails = new ProblemDetails()
             {
                 Title = title.IsEmpty() ? null : title,
-                Detail = details.IsEmpty() ? null : title,
+                Detail = details.IsEmpty() ? null : details,
                 Status = statusCode
             };
 
