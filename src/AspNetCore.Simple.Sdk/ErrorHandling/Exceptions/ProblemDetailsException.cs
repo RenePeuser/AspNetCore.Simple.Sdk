@@ -4,12 +4,16 @@ using System.Linq;
 using System.Net;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
     public class ProblemDetailsException : Exception
     {
+        public ProblemDetailsException(string title,
+                                       params (string key, string value)[] extensions) : this(HttpStatusCode.InternalServerError, title, string.Empty, extensions)
+        {
+        }
+
         public ProblemDetailsException(string title,
                                        string details,
                                        params (string key, string value)[] extensions) : this(HttpStatusCode.InternalServerError, title, details, extensions)
@@ -39,8 +43,8 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         {
             var problemDetails = new ProblemDetails()
             {
-                Title = title,
-                Detail = details,
+                Title = title.IsEmpty() ? null : title,
+                Detail = details.IsEmpty() ? null : title,
                 Status = statusCode
             };
 
