@@ -44,7 +44,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
                 Status = statusCode
             };
 
-            errorDetails.ForEach(keyValue =>
+            errorDetails.OrderBy(item => item.Key).ForEach(keyValue =>
             {
                 var key = keyValue.Key.Split(" ").Select(value => value.FirstCharToUpper()).Flatten().FirstCharToLower();
                 problemDetails.Extensions.Add(key, keyValue.Value);
