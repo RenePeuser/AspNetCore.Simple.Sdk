@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Mime;
@@ -9,9 +8,18 @@ using System.Threading.Tasks;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
+    internal static class AddDefaultExceptionHandlerExtension
+    {
+        public static void AddDefaultExceptionHandler(this IServiceCollection services)
+        {
+            services.AddSingleton<ISpecificErrorHandler, DefaultExceptionHandler>();
+        }
+    }
+
     internal class DefaultExceptionHandler : SpecificErrorHandler<Exception>
     {
         protected override bool CanHandleException(Exception exception)

@@ -1,9 +1,18 @@
 ﻿using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
+    internal static class AddProblemDetailsExceptionHandlerExtension
+    {
+        public static void AddProblemDetailsExceptionHandler(this IServiceCollection services)
+        {
+            services.AddSingleton<ISpecificErrorHandler, ProblemDetailsExceptionHandler>();
+        }
+    }
+
     internal class ProblemDetailsExceptionHandler : SpecificErrorHandler<ProblemDetailsException>
     {
         protected override async Task HandleAsync(HttpContext context, ProblemDetailsException exception)
