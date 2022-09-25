@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
-using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,17 +16,17 @@ namespace AspNetCore.Simple.Sdk.Cors
         /// <summary>
         /// Provides a list of allowed origins sources
         /// </summary>
-        public IImmutableList<string> Origins { get; init; } = ImmutableList<string>.Empty;
+        public IImmutableList<string> Origins { get; init; } = ImmutableList.Create<string>("*");
 
         /// <summary>
         /// Provides the list of allowed CORS headers
         /// </summary>
-        public IImmutableList<string> Headers { get; init; } = ImmutableList<string>.Empty;
+        public IImmutableList<string> Headers { get; init; } = ImmutableList.Create<string>("Origin, X-Requested-With, Content-Type, Accept");
 
         /// <summary>
         /// Provides if CORS credentials are allowed
         /// </summary>
-        public bool AllowCredentials { get; init; }
+        public bool AllowCredentials { get; init; } = true;
     }
 
     public static class AddCorsConfigurationExtension
@@ -35,7 +35,7 @@ namespace AspNetCore.Simple.Sdk.Cors
 
         public static void AddCorsSettings(this IServiceCollection services, IConfiguration configuration)
         {
-            var corsSettings = GetSettingsOrThrowMissingException(configuration);
+            var corsSettings = GetSettingsOrDefault(configuration);
 
             services.AddSingleton(corsSettings);
 
@@ -49,36 +49,31 @@ namespace AspNetCore.Simple.Sdk.Cors
             ));
         }
 
-        private static CorsSettings GetSettingsOrThrowMissingException(IConfiguration configuration)
+        private static CorsSettings GetSettingsOrDefault(IConfiguration configuration)
         {
             var corsSection = configuration.GetSection(nameof(CorsSettings));
-            var originsValue = corsSection[nameof(CorsSettings.Origins)];
-            if (originsValue is null)
+            if (corsSection.IsNull())
             {
-                throw new ProblemDetailsException("Missing app settings",
-                                                  $"The settings for {nameof(CorsSettings)}__{nameof(CorsSettings.Origins)} is missing. Please check your appsettings.json or your environment variables",
-                                                  ("AppSettings", $"\"{nameof(CorsSettings)}\": {{\n    \"{nameof(CorsSettings.Origins)}\": \"*\",\n}}"),
-                                                  ("Environmentvariable", $"{nameof(CorsSettings)}__{nameof(CorsSettings.Origins)}"));
+                return new CorsSettings();
             }
 
+            var corsSettings = configuration.Get<CorsSettings>();
 
-            var originsAsArray = originsValue.Split(",").Distinct().ToImmutableList();
+
+            // Origins
+            var originsValue = corsSection[nameof(CorsSettings.Origins)];
+            if (originsValue.IsNotNullOrWhiteSpace())
+            {
+                corsSettings = corsSettings with { Origins = originsValue.Split(",").Distinct().ToImmutableList() };
+            }
 
             var headersValue = corsSection[nameof(CorsSettings.Headers)];
-            if (headersValue is null)
+            if (headersValue.IsNotNull())
             {
-                throw new ProblemDetailsException("Missing app settings",
-                    $"The settings for {nameof(CorsSettings)}__{nameof(CorsSettings.Headers)} is missing. Please check your appsettings.json or your environment variables",
-                    ("AppSettings", $"\"{nameof(CorsSettings)}\": {{\n    \"{nameof(CorsSettings.Headers)}\": \"*\",\n}}"),
-                    ("Environmentvariable", $"{nameof(CorsSettings)}__{nameof(CorsSettings.Headers)}"));
+                corsSettings = corsSettings with { Headers = headersValue.Split(",").Distinct().ToImmutableList() };
             }
 
-            var headersAsArray = headersValue.Split(",").Distinct().ToImmutableList();
-
-            var corsSettings = configuration.GetSetting<CorsSettings>();
-
-            return corsSettings with { Origins = originsAsArray, Headers = headersAsArray };
-
+            return corsSettings;
         }
 
         public static void UseCorsConfiguration(this IApplicationBuilder app)
