@@ -61,7 +61,10 @@ namespace AspNetCore.Simple.Sdk.Swagger
         {
             // Hint: This is to include summaries as well to the swagger generation.
             var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{assembly.GetName().Name}.xml");
-            options.IncludeXmlComments(xmlPath);
+            if (File.Exists(xmlPath))
+            {
+                options.IncludeXmlComments(xmlPath);
+            }
         }
     }
 }
