@@ -31,6 +31,13 @@ namespace AspNetCore.Simple.Sdk.Caching
                 return;
             }
 
+            if (redisSettings.ConnectionString.IsNullOrWhiteSpace())
+            {
+                Console.WriteLine($"Connection string for Redis is missing, please check your configuration, secrets for '{nameof(Redis)}__{nameof(Redis.ConnectionString)}'. InMemory cache will be activated instead");
+                services.AddInMemoryCache();
+                return;
+            }
+
             try
             {
                 var connection = ConnectionMultiplexer.Connect(redisSettings.ConnectionString);
@@ -41,7 +48,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             }
             catch (Exception e)
             {
-                Console.WriteLine($"No connection could be established to Redis endpoint: '{redisSettings.HostName}', dummy cache without caching will be created. Exception message: {e.Message}.");
+                Console.WriteLine($"No connection could be established to Redis endpoint: '{redisSettings.HostName}', dummy cache without caching will be created. Exception message: {e.Message}. Please check the 'HostName' and your 'ConnectionString' for correctness");
                 services.AddInMemoryCache();
             }
 
