@@ -11,11 +11,12 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
 
             services.AddSingleton<ErrorHandlingMiddleware>();
 
-            services.AddSingleton<ISpecificErrorHandler, SecurityProblemExceptionHandler>();
-            services.AddSingleton<ISpecificErrorHandler, ProblemDetailsExceptionHandler>();
+            services.AddSecurityProblemExceptionHandler();
+            services.AddProblemDetailsExceptionHandler();
+            services.AddValidationProblemDetailsExceptionHandler();
 
             // Must be the last one, order of registrations means priority of handling exception type !!!
-            services.AddSingleton<ISpecificErrorHandler, DefaultExceptionHandler>();
+            services.AddDefaultExceptionHandler();
         }
 
         public static void UseErrorHandling(this IApplicationBuilder applicationBuilder)

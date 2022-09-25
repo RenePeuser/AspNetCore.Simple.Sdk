@@ -50,7 +50,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
     {
         public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
         {
-            var swaggerInfo = configuration.GetSetting<SwaggerInfo>();
+            var swaggerInfo = configuration.GetSetting<SwaggerInfo>() ?? new();
             var apiVersionProvider = new ApiVersionProvider();
             var allApiVersions = apiVersionProvider.GetAllApiVersions(assembly);
 

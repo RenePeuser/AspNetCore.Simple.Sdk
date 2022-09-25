@@ -1,16 +1,25 @@
 ﻿using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
+    public static class AddSecurityProblemExceptionHandlerExtension
+    {
+        public static void AddSecurityProblemExceptionHandler(this IServiceCollection services)
+        {
+            services.AddSingleton<ISpecificErrorHandler, SecurityProblemExceptionHandler>();
+        }
+    }
+
     internal class SecurityProblemExceptionHandler : SpecificErrorHandler<SecurityProblemException>
     {
         protected override async Task HandleAsync(HttpContext context, SecurityProblemException exception)
         {
             context.Response.Clear();
             context.Response.ContentType = MediaTypeNames.Application.Json;
-            context.Response.StatusCode = exception.ProblemDetails.StatusCode;
+            context.Response.StatusCode = exception.ProblemDetails.Status ?? StatusCodes.Status500InternalServerError;
 
             await context.Response.WriteAsJsonAsync(exception.ProblemDetails).ConfigureAwait(false);
         }
