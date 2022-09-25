@@ -1,4 +1,5 @@
 ﻿using System;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +30,14 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
                 return false;
             }
 
-            var customRegistration = Activator.CreateInstance(customRegistrationAttribute.CustomRegistration).Cast<ICustomTypeRegistration>();
+            var instance = Activator.CreateInstance(customRegistrationAttribute.CustomRegistration);
+            if (instance.IsNull())
+            {
+                throw new ProblemDetailsException("Was not able to create an instance of expected type for auto registration",
+                                                  $"The type: '{customRegistrationAttribute.CustomRegistration.Name}' could not be created");
+            }
+
+            var customRegistration = instance.Cast<ICustomTypeRegistration>();
             customRegistration.Register(_serviceCollection, _configuration);
             return true;
         }

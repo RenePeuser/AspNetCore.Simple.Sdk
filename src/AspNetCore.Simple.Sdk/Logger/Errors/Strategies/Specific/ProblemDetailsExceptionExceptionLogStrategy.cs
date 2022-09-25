@@ -17,7 +17,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
 
         protected override ErrorLogInfo GetErrorLogFrom(HttpContext httpContext, ProblemDetailsException exception)
         {
-            return new ErrorLogInfo(exception.ProblemDetails.Detail, exception.ProblemDetails.Title,
+            return new ErrorLogInfo(exception.ProblemDetails.Detail ?? "n.A", exception.ProblemDetails.Title ?? "n.A",
                                     exception.StackTrace?.Split(Environment.NewLine) ?? Enumerable.Empty<string>(),
                                     httpContext.Request.GetQueryRequestInfo().ToImmutableDictionary(k => k.key, v => v.value));
         }

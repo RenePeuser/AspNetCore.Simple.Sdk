@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
-using AspNetCore.Simple.Sdk.MediatR;
+using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

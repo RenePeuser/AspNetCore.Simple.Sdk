@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace AspNetCore.Simple.Sdk.MediatR
+namespace AspNetCore.Simple.Sdk.Mediator
 {
     public interface IQuery<out TResult> : IRequest<TResult>
     {

@@ -37,7 +37,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         internal IImmutableList<Type> FindDependenciesFor(Type type)
         {
             var dependencies = FindDependenciesForInternal(type);
-            var filterDuplicate = dependencies.Distinct(dependency => dependency.FullName);
+            var filterDuplicate = dependencies.Distinct(dependency => dependency.FullName!);
             return filterDuplicate.ToImmutableList();
         }
 
@@ -56,8 +56,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             //       In good designs with correct constructor implementations there should be only one with the correct dependencies
             var parameterInfos = type.GetConstructors()
                                      .Select(ctor => new { Parameters = ctor.GetParameters(), Constructor = ctor })
-                                     .OrderByDescending(ctorInfo => ctorInfo.Parameters.Length)
-                                     .FirstOrDefault()?.Parameters;
+                                     .MaxBy(ctorInfo => ctorInfo.Parameters.Length)?.Parameters;
 
             if (parameterInfos is null)
             {

@@ -39,7 +39,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
     public record ApplicationInsightsSettings
     {
-        public string InstrumentationKey { get; init; }
+        public string InstrumentationKey { get; init; } = "00000000000000000000000";
 
         public EventTelemetryFilterSettings EventTelemetryFilterSettings { get; init; } = new EventTelemetryFilterSettings();
 

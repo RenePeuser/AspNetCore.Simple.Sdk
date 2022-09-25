@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.Simple.Sdk.MediatR
+namespace AspNetCore.Simple.Sdk.Mediator
 {
     public static class AddMediatorExtension
     {
@@ -19,7 +19,6 @@ namespace AspNetCore.Simple.Sdk.MediatR
         }
     }
 
-
     /// <summary>
     /// Provides a set of extensions for <see cref="IMediator"/>
     /// </summary>
@@ -29,7 +28,6 @@ namespace AspNetCore.Simple.Sdk.MediatR
         /// <summary>
         /// Asynchronously send a request to a single handler
         /// </summary>
-        /// <typeparam name="TResponse">Response type</typeparam>
         /// <param name="mediator">The <see cref="IMediator"/></param>
         /// <param name="request">Request object</param>
         /// <param name="cancellationToken">Optional cancellation token</param>

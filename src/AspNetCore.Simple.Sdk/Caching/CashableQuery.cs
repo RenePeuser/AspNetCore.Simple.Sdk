@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using AspNetCore.Simple.Sdk.MediatR;
+using AspNetCore.Simple.Sdk.Mediator;
 
 namespace AspNetCore.Simple.Sdk.Caching
 {

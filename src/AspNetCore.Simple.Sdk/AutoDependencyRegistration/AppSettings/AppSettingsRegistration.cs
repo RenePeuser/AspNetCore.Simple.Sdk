@@ -1,4 +1,5 @@
 ﻿using System;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +33,14 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             }
 
             var settings = _configuration.GetSection(appsettingsAttribute.AppSettingsName).Get(appsettingsAttribute.SettingsType);
-            var validator = Activator.CreateInstance(appsettingsAttribute.Validator).Cast<ISettingsValidatorBase>();
+            var instance = Activator.CreateInstance(appsettingsAttribute.Validator);
+            if (instance.IsNull())
+            {
+                throw new ProblemDetailsException("Was not able to create an instance of expected validator",
+                                                  $"The type: '{appsettingsAttribute.Validator.Name}' could not be created");
+            }
+
+            var validator = instance.Cast<ISettingsValidatorBase>();
             validator.ValidateBase(settings);
             var lifetime = _lifetimeDetector.DetectFor(type);
             _serviceCollection.Add(new ServiceDescriptor(type, _ => settings, lifetime));

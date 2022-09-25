@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using AspNetCore.Simple.Sdk.Extensions;
-using AspNetCore.Simple.Sdk.MediatR;
+using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using MediatR;
 using Microsoft.ApplicationInsights.DataContracts;
@@ -47,7 +47,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
             var cqrsType = request is ICommand or ICommand<TResponse> ? "Command" : "Query";
             var successful = true;
 
-            var executeEvent = new EventTelemetry($"Executed {cqrsType.ToLower()} {cqrsName}") { Timestamp = DateTimeOffset.UtcNow };
+            var executeEvent = new EventTelemetry($"Executed {cqrsType.ToLowerInvariant()} {cqrsName}") { Timestamp = DateTimeOffset.UtcNow };
             var timer = new Stopwatch();
             timer.Start();
 
@@ -69,8 +69,8 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                 var roundedExecutionTime = Math.Round(timer.Elapsed.TotalMilliseconds);
                 var loggingProperties = new Dictionary<string, string>
                     {
-                        {"Type", cqrsType}, 
-                        {"Name", cqrsName}, 
+                        {"Type", cqrsType},
+                        {"Name", cqrsName},
                         {"Success", successful.ToString()},
                         {"Duration in ms", $"{roundedExecutionTime}"} // TODO: Fix
                     };

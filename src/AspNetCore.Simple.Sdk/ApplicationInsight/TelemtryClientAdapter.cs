@@ -42,7 +42,9 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
         public void TrackException(string message, params (string key, string? value)[] details)
         {
+#pragma warning disable CA2201 // We just full fill the signature, we do not raise here
             _telemetryClient.TrackException(new Exception(message), details.ToDictionary(item => item.key, item => item.value));
+#pragma warning restore CA2201 // We just full fill the signature, we do not raise here
         }
 
         public void TrackException(string message, Exception exception, params (string key, string? value)[] details)

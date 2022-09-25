@@ -10,7 +10,7 @@ using AspNetCore.Simple.Sdk.Cors;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Logger.Errors;
-using AspNetCore.Simple.Sdk.MediatR;
+using AspNetCore.Simple.Sdk.Mediator;
 using AspNetCore.Simple.Sdk.Polly;
 using AspNetCore.Simple.Sdk.Security;
 using AspNetCore.Simple.Sdk.Serializer.Json;

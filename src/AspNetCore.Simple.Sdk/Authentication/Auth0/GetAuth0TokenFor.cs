@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AspNetCore.Simple.Sdk.Caching;
 using AspNetCore.Simple.Sdk.ErrorHandling;
-using AspNetCore.Simple.Sdk.MediatR;
+using AspNetCore.Simple.Sdk.Mediator;
 using AutoMapper;
 
 namespace AspNetCore.Simple.Sdk.Authentication.Auth0

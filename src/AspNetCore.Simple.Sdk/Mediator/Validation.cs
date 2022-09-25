@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.Simple.Sdk.MediatR
+namespace AspNetCore.Simple.Sdk.Mediator
 {
     public static class AddValidationBehaviorExtension
     {

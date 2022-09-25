@@ -98,7 +98,12 @@ namespace AspNetCore.Simple.Sdk.Caching
         private async Task<T?> GetAsync<T>(string key) where T : class
         {
             var responseFromRedis = await _database.StringGetAsync(key).ConfigureAwait(false);
-            return responseFromRedis.HasValue ? _jsonSerializer.Deserialize<T>(responseFromRedis) : default;
+            if (responseFromRedis.IsNull)
+            {
+                return default;
+            }
+
+            return responseFromRedis.HasValue ? _jsonSerializer.Deserialize<T>(responseFromRedis!) : default;
         }
 
         private async Task<T> SetAsync<T>(string key, Func<Task<T>> itemFactory, TimeSpan cachingTime) where T : CachableObject
