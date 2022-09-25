@@ -11,7 +11,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
     {
         public static void UseSwaggerSimplified(this IApplicationBuilder app, IConfiguration configuration, string basePath)
         {
-            var swaggerInfo = configuration.GetSetting<SwaggerInfo>();
+            var swaggerInfo = configuration.GetSetting<SwaggerInfo>() ?? new();
 
             var routeTemplate = basePath.IsNullOrWhiteSpace() ?
                 $"/swagger/{{documentName}}/swagger.json" :
