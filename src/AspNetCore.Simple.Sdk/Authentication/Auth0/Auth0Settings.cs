@@ -18,8 +18,8 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
 
     public record Auth0
     {
-        public string Authority { get; init; } = "https://bit-ba-dev.eu.auth0.com/";
-        public string TokenEndpoint { get; init; } = "https://bit-ba-dev.eu.auth0.com/oauth/token";
+        public string Authority { get; init; } = string.Empty;
+        public string TokenEndpoint { get; init; } = string.Empty;
         public string ClientId { get; init; } = string.Empty;
         public string ClientSecret { get; init; } = string.Empty;
         public string GrantType { get; init; } = "client_credentials";
