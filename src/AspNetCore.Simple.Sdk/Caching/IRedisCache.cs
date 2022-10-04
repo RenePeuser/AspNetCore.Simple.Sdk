@@ -22,6 +22,7 @@ namespace AspNetCore.Simple.Sdk.Caching
         {
             if (configuration.TryGetSettings<Redis>(out var redisSettings).IsFalse())
             {
+                services.AddInMemoryCache();
                 return;
             }
 
