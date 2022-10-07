@@ -41,7 +41,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
             _loggingHelper = loggingHelper;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var cqrsName = typeof(TRequest).Name;
             var cqrsType = request is ICommand or ICommand<TResponse> ? "Command" : "Query";

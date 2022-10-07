@@ -30,7 +30,8 @@ namespace AspNetCore.Simple.Sdk.Mediator
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             // 1. Check if a validator is available
             var validatorForRequest = _serviceProvider.GetService<IRequestValidator<TRequest>>();
