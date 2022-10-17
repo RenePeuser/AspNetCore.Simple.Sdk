@@ -18,8 +18,7 @@ namespace AspNetCore.Simple.Sdk.Storage
     {
         public static void AddAzureBlobStorage(this IServiceCollection services, IConfiguration configuration)
         {
-            var storageSettings = configuration.GetSettings<StorageSettings>();
-            if (storageSettings.IsNotNull())
+            if (configuration.TryGetSettings<StorageSettings>(out var storageSettings))
             {
                 services.AddSingletonIfNotExists(storageSettings);
                 services.AddSingletonIfNotExists<IAzureBlobStorage, AzureBlobStorage>();
