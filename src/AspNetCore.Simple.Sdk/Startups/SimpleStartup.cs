@@ -14,11 +14,13 @@ using AspNetCore.Simple.Sdk.Mediator;
 using AspNetCore.Simple.Sdk.Polly;
 using AspNetCore.Simple.Sdk.Security;
 using AspNetCore.Simple.Sdk.Serializer.Json;
+using AspNetCore.Simple.Sdk.Storage;
 using AspNetCore.Simple.Sdk.Swagger;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -98,6 +100,8 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddSwaggerGenSimplified(Assembly, Configuration);
 
             services.AddAutoMapper();
+
+            services.AddAzureBlobStorage(Configuration);
 
             services.AddApplicationInsights(Configuration);
 

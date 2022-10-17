@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ApiVersioning

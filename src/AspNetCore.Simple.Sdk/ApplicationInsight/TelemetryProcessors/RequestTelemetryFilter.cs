@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using AspNetCore.Simple.Sdk.Extensions;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
