@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using Azure.Storage.Blobs;
 using Extensions.Pack;
@@ -26,13 +29,41 @@ namespace AspNetCore.Simple.Sdk.Storage
         }
     }
 
+    public static class AddAzureBlobStorageFactoryExtension
+    {
+        public static void AddAzureBlobStorageFactory(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<IAzureBlobStorageFactory, AzureBlobStorageFactory>();
+        }
+    }
+
+    public interface IAzureBlobStorageFactory
+    {
+        IAzureBlobStorage CreateFrom(string connectionString);
+    }
+
+    internal class AzureBlobStorageFactory : IAzureBlobStorageFactory
+    {
+        private readonly ConcurrentDictionary<string, IAzureBlobStorage> _bloStorageClients = new();
+
+        public IAzureBlobStorage CreateFrom(string connectionString)
+        {
+            return _bloStorageClients.GetOrAdd(connectionString, key => new AzureBlobStorage(new StorageSettings { ConnectionString = key }));
+        }
+    }
+
+
     public interface IAzureBlobStorage
     {
         Task<BlobClient> AddOrUpdateBlobAsync(string containerName, string fileName, string content);
 
         Task<BlobClient> AddOrUpdateBlobAsync(string containerName, InMemoryFileAsByteArray inMemoryFileAsByteArray);
 
-        IAsyncEnumerable<BlobContainerClient> GetAll();
+        Task<BlobClient> GetBlobAsync(string containerName, string fileName);
+
+        Task DeleteBlobAsync(string containerName, string fileName);
+
+        IAsyncEnumerable<BlobContainerClient> GetAllContainerAsync();
 
         Task<BlobContainerClient> GetOrAddContainerAsync(string containerName);
 
@@ -66,7 +97,30 @@ namespace AspNetCore.Simple.Sdk.Storage
             return await container.AddOrUpdateAsync(inMemoryFileAsByteArray).ConfigureAwait(false);
         }
 
-        public IAsyncEnumerable<BlobContainerClient> GetAll()
+        public async Task<BlobClient?> GetBlobAsync(string containerName, string fileName)
+        {
+            var container = await FirstOrDefaultAsync(containerName).ConfigureAwait(false);
+            if (container.IsNull())
+            {
+                return null;
+            }
+
+            return container.GetBlobClient(fileName);
+        }
+
+        public async Task DeleteBlobAsync(string containerName, string fileName)
+        {
+            var container = await FirstOrDefaultAsync(containerName).ConfigureAwait(false);
+            if (container.IsNull())
+            {
+                var allContainers = await GetAllContainerAsync().ToListAsync().ConfigureAwait(false);
+                throw new ProblemDetailsException("Could not delete expected file because the storage container for does not exists",
+                                                  $"The container: '{containerName}' which should contains the file: '{fileName}' does not exists",
+                                                  ("Available Containers", allContainers.Select(c => c.Name).ToJson()));
+            }
+        }
+
+        public IAsyncEnumerable<BlobContainerClient> GetAllContainerAsync()
         {
             return GetAllAsync();
         }

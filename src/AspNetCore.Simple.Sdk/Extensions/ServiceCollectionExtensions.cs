@@ -40,9 +40,9 @@ namespace AspNetCore.Simple.Sdk.Extensions
             return service;
         }
 
-        public static void AddSingletonOption<T>(this IServiceCollection serviceCollection, IConfiguration configuration) where T : class
+        public static void AddSingletonOption<T>(this IServiceCollection serviceCollection, IConfiguration configuration) where T : class, new()
         {
-            var setting = configuration.GetSetting<T>();
+            var setting = configuration.GetSettings<T>();
             if (setting.IsNull())
             {
                 throw new ProblemDetailsException(StatusCodes.Status500InternalServerError,

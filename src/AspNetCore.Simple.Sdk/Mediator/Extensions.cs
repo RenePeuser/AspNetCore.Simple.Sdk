@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -52,6 +53,7 @@ namespace AspNetCore.Simple.Sdk.Mediator
                                                            CancellationToken cancellationToken = default)
         {
             return mediator.Send(request, cancellationToken);
+
         }
 
         /// <summary>
@@ -67,7 +69,6 @@ namespace AspNetCore.Simple.Sdk.Mediator
         {
             return mediator.Send(request, cancellationToken);
         }
-
 
         /// <summary>
         /// Asynchronously send a notification to multiple handlers

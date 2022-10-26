@@ -62,6 +62,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();
+                options.DocumentFilter<SchemaFilterForCurrentVersion>();
 
                 // ToDo: think about next version strategy how to switch 
                 if (configuration.TryGetSettings<Auth0>(out _))

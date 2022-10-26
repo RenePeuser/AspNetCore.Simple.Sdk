@@ -102,6 +102,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddAutoMapper();
 
             services.AddAzureBlobStorage(Configuration);
+            services.AddAzureBlobStorageFactory();
 
             services.AddApplicationInsights(Configuration);
 
