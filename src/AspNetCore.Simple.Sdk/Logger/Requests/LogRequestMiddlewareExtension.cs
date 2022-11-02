@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AspNetCore.Simple.Sdk.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Logger.Requests
@@ -7,7 +8,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Requests
     {
         public static void AddLogRequestMiddleware(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<LogRequestMiddleware>();
+            serviceCollection.AddSingletonIfNotExists<LogRequestMiddleware>();
         }
 
         public static void UseLogRequestMiddleware(this IApplicationBuilder applicationBuilder)

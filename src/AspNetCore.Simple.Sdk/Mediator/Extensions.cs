@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,13 @@ namespace AspNetCore.Simple.Sdk.Mediator
 {
     public static class AddMediatorExtension
     {
+        private static readonly Dictionary<string, Assembly> RegsiteredMediators = new();
+
+        public static void AddMediator(this IServiceCollection services, Type type)
+        {
+            services.AddMediator(type.Assembly);
+        }
+
         public static void AddMediator(this IServiceCollection services)
         {
             services.AddMediator(Assembly.GetCallingAssembly());
@@ -16,6 +24,12 @@ namespace AspNetCore.Simple.Sdk.Mediator
 
         public static void AddMediator(this IServiceCollection services, Assembly assembly)
         {
+            if (RegsiteredMediators.ContainsKey(assembly.FullName!))
+            {
+                return;
+            }
+
+            RegsiteredMediators.Add(assembly.FullName!, assembly);
             services.AddMediatR(assembly);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,7 @@ namespace AspNetCore.Simple.Sdk.Caching
     {
         public static void AddInMemoryCache(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<ICachingService, InMemoryCache>();
+            serviceCollection.AddSingletonIfNotExists<ICachingService, InMemoryCache>();
         }
     }
     internal class InMemoryCache : ICachingService

@@ -13,6 +13,11 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
     {
         public static void AddApplicationInsightsSettings(this IServiceCollection services, IConfiguration configuration)
         {
+            if (services.IsAlreadyRegistered<ApplicationInsightsSettings>())
+            {
+                return;
+            }
+
             if (configuration.TryGetSettings<ApplicationInsightsSettings>(out var applicationInsightsSettings))
             {
                 var eventTelemetryNamesToIgnore = configuration.GetSection("ApplicationInsights:EventTelemetryFilterSettings:NamesToIgnore").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();

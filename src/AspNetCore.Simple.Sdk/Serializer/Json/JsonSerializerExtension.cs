@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using AspNetCore.Simple.Sdk.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Serializer.Json
@@ -7,8 +8,7 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
     {
         public static void AddJsonSerializer(this IServiceCollection serviceCollection)
         {
-
-            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
+            serviceCollection.AddSingletonIfNotExists<IJsonSerializer, JsonSerializer>();
 
             serviceCollection.AddMvc()
                              .AddJsonOptions(opts =>

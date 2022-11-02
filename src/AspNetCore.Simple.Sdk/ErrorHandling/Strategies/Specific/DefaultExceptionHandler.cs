@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Security.Authentication;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
     {
         public static void AddDefaultExceptionHandler(this IServiceCollection services)
         {
-            services.AddSingleton<ISpecificErrorHandler, DefaultExceptionHandler>();
+            services.AddSingletonIfNotExists<ISpecificErrorHandler, DefaultExceptionHandler>();
         }
     }
 

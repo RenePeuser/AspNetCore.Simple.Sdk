@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using System.Threading.Tasks;
+using AspNetCore.Simple.Sdk.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
     {
         public static void AddSecurityProblemExceptionHandler(this IServiceCollection services)
         {
-            services.AddSingleton<ISpecificErrorHandler, SecurityProblemExceptionHandler>();
+            services.AddSingletonIfNotExists<ISpecificErrorHandler, SecurityProblemExceptionHandler>();
         }
     }
 

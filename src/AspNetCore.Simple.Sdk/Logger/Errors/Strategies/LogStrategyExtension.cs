@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AspNetCore.Simple.Sdk.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
@@ -6,10 +7,10 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
     {
         public static void AddLogStrategies(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IErrorLogStrategy, ErrorLogStrategy>();
-            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, SecurityExceptionExceptionLogStrategy>();
-            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, ProblemDetailsExceptionExceptionLogStrategy>();
-            serviceCollection.AddSingleton<ISpecificErrorLogStrategy, DefaultExceptionExceptionLogStrategy>();
+            serviceCollection.AddSingletonIfNotExists<IErrorLogStrategy, ErrorLogStrategy>();
+            serviceCollection.AddSingletonIfNotExists<ISpecificErrorLogStrategy, SecurityExceptionExceptionLogStrategy>();
+            serviceCollection.AddSingletonIfNotExists<ISpecificErrorLogStrategy, ProblemDetailsExceptionExceptionLogStrategy>();
+            serviceCollection.AddSingletonIfNotExists<ISpecificErrorLogStrategy, DefaultExceptionExceptionLogStrategy>();
         }
     }
 }

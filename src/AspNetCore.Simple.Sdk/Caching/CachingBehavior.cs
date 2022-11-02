@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using AspNetCore.Simple.Sdk.Mediator;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +13,7 @@ namespace AspNetCore.Simple.Sdk.Caching
     {
         public static void AddMediatRCaching(this IServiceCollection services, Assembly assembly)
         {
-            services.AddMediatR(assembly);
+            services.AddMediator(assembly);
             services.AddKeyBuilder();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));

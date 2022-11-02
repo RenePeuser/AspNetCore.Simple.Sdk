@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AspNetCore.Simple.Sdk.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
@@ -7,9 +8,14 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
     {
         public static void AddErrorHandling(this IServiceCollection services)
         {
-            services.AddSingleton<IErrorHandlingStrategy, ErrorHandlingStrategy>();
+            if (services.IsAlreadyRegistered<IErrorHandlingStrategy>())
+            {
+                return;
+            }
 
-            services.AddSingleton<ErrorHandlingMiddleware>();
+            services.AddSingletonIfNotExists<IErrorHandlingStrategy, ErrorHandlingStrategy>();
+
+            services.AddSingletonIfNotExists<ErrorHandlingMiddleware>();
 
             services.AddSecurityProblemExceptionHandler();
             services.AddProblemDetailsExceptionHandler();

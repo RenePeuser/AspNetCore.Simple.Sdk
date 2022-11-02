@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Simple.Sdk.Authentication.Auth0;
+using AspNetCore.Simple.Sdk.Extensions;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,11 @@ namespace AspNetCore.Simple.Sdk.Automapper
     {
         internal static void AddAutoMapper(this IServiceCollection services)
         {
+            if (services.IsAlreadyRegistered<IMapper>())
+            {
+                return;
+            }
+
             // Auto Mapper Configurations
             var mapperConfig = new MapperConfiguration(configure =>
             {
@@ -17,7 +23,7 @@ namespace AspNetCore.Simple.Sdk.Automapper
             });
 
             var mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            services.AddSingletonIfNotExists(mapper);
         }
     }
 }

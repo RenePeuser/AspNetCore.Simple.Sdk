@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using System.Threading.Tasks;
+using AspNetCore.Simple.Sdk.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +11,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
     {
         public static void AddValidationProblemDetailsExceptionHandler(this IServiceCollection services)
         {
-            services.AddSingleton<ISpecificErrorHandler, ValidationProblemDetailsExceptionHandler>();
+            services.AddSingletonIfNotExists<ISpecificErrorHandler, ValidationProblemDetailsExceptionHandler>();
         }
     }
 

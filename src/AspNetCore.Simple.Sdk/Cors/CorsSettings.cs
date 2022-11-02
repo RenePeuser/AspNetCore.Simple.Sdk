@@ -1,9 +1,11 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
+using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace AspNetCore.Simple.Sdk.Cors
 {
@@ -34,9 +36,14 @@ namespace AspNetCore.Simple.Sdk.Cors
 
         public static void AddCorsSettings(this IServiceCollection services, IConfiguration configuration)
         {
+            if (services.IsAlreadyRegistered<CorsSettings>())
+            {
+                return;
+            }
+
             var corsSettings = GetSettingsOrDefault(configuration);
 
-            services.AddSingleton(corsSettings);
+            services.AddSingletonIfNotExists(corsSettings);
 
             services.AddCors(o => o.AddPolicy(CorsSettingsName,
                 builder =>

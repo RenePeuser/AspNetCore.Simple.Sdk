@@ -50,7 +50,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
                                                   $"Please check your appsettings.json, or check if the name of your class '{typeof(T).Name}' mach the section name in your appsettings.json");
             }
 
-            serviceCollection.AddSingleton(setting);
+            serviceCollection.AddSingletonIfNotExists(setting);
         }
 
         public static void AddSingletonIfNotExists<TImplementation>(this IServiceCollection services)
@@ -62,7 +62,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
         public static void AddSingletonIfNotExists<TImplementation>(this IServiceCollection services, TImplementation instance)
             where TImplementation : class
         {
-            var existingRegistrations = services.Where(descriptor => descriptor.ServiceType == typeof(TImplementation) && descriptor.ImplementationType == typeof(TImplementation));
+            var existingRegistrations = services.Where(descriptor => descriptor.ServiceType == typeof(TImplementation));
             if (existingRegistrations.Any())
             {
                 return;
@@ -141,7 +141,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
         {
             var setting = settingsKeyPath is null ? configuration.GetSettings<T>() : configuration.GetSettings<T>(settingsKeyPath);
 
-            serviceCollection.AddSingleton(setting);
+            serviceCollection.AddSingletonIfNotExists(setting);
 
             return setting;
         }

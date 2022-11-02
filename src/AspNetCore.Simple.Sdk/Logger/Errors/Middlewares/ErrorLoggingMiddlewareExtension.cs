@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AspNetCore.Simple.Sdk.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
@@ -9,7 +10,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         {
             serviceCollection.AddLogStrategies();
 
-            serviceCollection.AddSingleton<ErrorLoggingMiddleware>();
+            serviceCollection.AddSingletonIfNotExists<ErrorLoggingMiddleware>();
         }
 
         public static void UseErrorLogging(this IApplicationBuilder applicationBuilder)

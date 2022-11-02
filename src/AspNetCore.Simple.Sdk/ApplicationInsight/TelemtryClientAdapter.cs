@@ -15,6 +15,11 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
     {
         public static void AddTelemetryClientAdapter(this IServiceCollection services)
         {
+            if (services.IsAlreadyRegistered<ITelemetryClientAdapter>())
+            {
+                return;
+            }
+
             services.AddTelemetryClient();
 
             services.AddSingletonIfNotExists<ITelemetryClientAdapter, TelemetryClientAdapter>();

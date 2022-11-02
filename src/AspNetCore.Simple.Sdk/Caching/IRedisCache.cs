@@ -43,8 +43,8 @@ namespace AspNetCore.Simple.Sdk.Caching
             {
                 var connection = ConnectionMultiplexer.Connect(redisSettings.ConnectionString);
                 var database = connection.GetDatabase();
-                services.AddSingleton(database);
-                services.AddSingleton<ICachingService, RedisCache>();
+                services.AddSingletonIfNotExists(database);
+                services.AddSingletonIfNotExists<ICachingService, RedisCache>();
                 Console.WriteLine($"Connection to Redis endpoint: '{redisSettings.HostName}' was successful. Hostname: '{redisSettings.HostName}'");
             }
             catch (Exception e)
