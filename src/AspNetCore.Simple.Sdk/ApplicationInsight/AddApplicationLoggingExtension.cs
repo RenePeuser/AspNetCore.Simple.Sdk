@@ -73,6 +73,12 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
         internal static void AddTelemetryClient(this IServiceCollection services)
         {
+            // If Telemetry client already registered go out.
+            if (services.IsAlreadyRegistered<TelemetryClient>())
+            {
+                return;
+            }
+
             services.AddApplicationInsightsTelemetry(options => options.EnableAdaptiveSampling = false);
         }
 
