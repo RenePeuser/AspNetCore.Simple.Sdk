@@ -20,7 +20,6 @@ using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,6 +45,9 @@ namespace AspNetCore.Simple.Sdk.Startups
             WebHostEnvironment = webHostEnvironment;
             Assembly = assembly;
             BasePath = basePath;
+
+            // Important to handle multiple test runs which start stops quickly.
+            AddMediatorExtension.RegisteredMediators.Clear();
         }
 
         protected IWebHostEnvironment WebHostEnvironment { get; }

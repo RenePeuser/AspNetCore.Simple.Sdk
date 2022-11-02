@@ -1,4 +1,5 @@
-﻿using AspNetCore.Simple.Sdk.Authentication.Auth0;
+﻿using System;
+using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using AspNetCore.Simple.Sdk.Extensions;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,18 +9,26 @@ namespace AspNetCore.Simple.Sdk.Automapper
     // ToDo: Kind of automapper registration is not nice
     internal static class AddAutoMapperExtension
     {
-        internal static void AddAutoMapper(this IServiceCollection services)
+        public static void AddAutoMapper(this IServiceCollection services)
         {
-            if (services.IsAlreadyRegistered<IMapper>())
-            {
-                return;
-            }
+            services.AddAutoMapper(_ => { });
+        }
+
+        public static void AddAutoMapper(this IServiceCollection services, Action<IMapperConfigurationExpression> configure)
+        {
+            //if (services.IsAlreadyRegistered<IMapper>())
+            //{
+            //    return;
+            //}
 
             // Auto Mapper Configurations
-            var mapperConfig = new MapperConfiguration(configure =>
+            var mapperConfig = new MapperConfiguration(config =>
             {
-                configure.AddAuth0ResponseMapping();
-                configure.AddAuth0RequestMapping();
+                config.AddAuth0ResponseMapping();
+                config.AddAuth0RequestMapping();
+
+                // Configure stuff from consumer outside of this lib.
+                configure(config);
             });
 
             var mapper = mapperConfig.CreateMapper();
