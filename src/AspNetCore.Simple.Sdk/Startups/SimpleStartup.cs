@@ -143,7 +143,7 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             // app.UseOptions();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers().RequireAuthorization(); });
         }
 
         private AutoRegistration GetAutoRegistration(IServiceCollection serviceCollection, IConfiguration configuration)
