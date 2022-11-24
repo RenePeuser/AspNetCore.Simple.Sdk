@@ -17,7 +17,7 @@
 
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>Add new blobstorage factory for different blob storages. Add version filter for swagger schema.</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgrade to .Net 7.</PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
