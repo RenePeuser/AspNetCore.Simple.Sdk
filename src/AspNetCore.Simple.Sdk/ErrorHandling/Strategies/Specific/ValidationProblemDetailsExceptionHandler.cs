@@ -15,7 +15,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         }
     }
 
-    internal class ValidationProblemDetailsExceptionHandler : SpecificErrorHandler<ValidationProblemDetailsException>
+    internal sealed class ValidationProblemDetailsExceptionHandler : SpecificErrorHandler<ValidationProblemDetailsException>
     {
         protected override async Task HandleAsync(HttpContext context, ValidationProblemDetailsException exception)
         {

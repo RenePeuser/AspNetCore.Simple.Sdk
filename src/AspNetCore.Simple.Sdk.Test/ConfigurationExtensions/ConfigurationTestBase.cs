@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using AspNetCore.Simple.MsTest.Sdk;
-using Extensions.Pack;
-using FluentAssertions;
+﻿using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

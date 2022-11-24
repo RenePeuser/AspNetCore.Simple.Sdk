@@ -2,6 +2,7 @@
 using System.IO;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,6 +29,12 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.CustomRegistration
         public void Register(IServiceCollection serviceCollection, IConfiguration configuration)
         {
             var settings = configuration.GetSetting<SettingsByCustomRegistration>("Settings");
+
+            if (settings.IsNull())
+            {
+                throw new NotImplementedException();
+            }
+
             serviceCollection.AddSingleton(settings);
         }
     }
@@ -42,9 +49,9 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.CustomRegistration
     [TestClass]
     public class Test_Custom_Registration
     {
-        private IConfigurationRoot _configuration;
-        private ServiceCollection _serviceCollection;
-        private AutoRegistration _autoRegistration;
+        private IConfigurationRoot _configuration = null!;
+        private ServiceCollection _serviceCollection = null!;
+        private AutoRegistration _autoRegistration = null!;
 
         [TestInitialize]
         public void Init()

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal class TypeRegistration
+    internal sealed class TypeRegistration
     {
         private readonly IEnumerable<IRegistrationStrategy> _registrationStrategies;
         private readonly RegistrationCheck _registrationCheck;

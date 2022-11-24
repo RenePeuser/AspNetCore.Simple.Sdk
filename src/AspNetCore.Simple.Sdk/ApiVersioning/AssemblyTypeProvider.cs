@@ -19,7 +19,7 @@ namespace AspNetCore.Simple.Sdk.ApiVersioning
         IEnumerable<Type> GetAllTypes(Assembly assembly);
     }
 
-    internal class AssemblyTypeProvider : IAssemblyTypeProvider
+    internal sealed class AssemblyTypeProvider : IAssemblyTypeProvider
     {
         public IEnumerable<Type> GetAllTypes(Assembly assembly)
         {

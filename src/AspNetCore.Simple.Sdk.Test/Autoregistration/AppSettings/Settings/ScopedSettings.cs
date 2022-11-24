@@ -9,19 +9,19 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings.Settings
     [AppSettingsRegistration("Settings", typeof(ScopedSettings), ServiceLifetime.Scoped)]
     public class ScopedSettings
     {
-        public string Name { get; init; }
+        public string Name { get; init; } = string.Empty;
     }
 
     [AppSettingsRegistration("Settings", typeof(ScopedSettingsWithValidator), ServiceLifetime.Scoped, typeof(ScopeSettingsValidator))]
     public class ScopedSettingsWithValidator
     {
-        public string Name { get; init; }
+        public string Name { get; init; } = string.Empty;
     }
 
     [AppSettingsRegistration("Settings", typeof(ScopedSettingsWithValidator), ServiceLifetime.Scoped, typeof(ScopeSettingsValidator))]
     public class ScopedSettingsWithCustomRegistration
     {
-        public string Name { get; init; }
+        public string Name { get; init; } = string.Empty;
     }
 
     public class CustomRegistrationForScopedSettings : ICustomTypeRegistration

@@ -14,7 +14,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             serviceCollection.AddSingletonIfNotExists<ICachingService, InMemoryCache>();
         }
     }
-    internal class InMemoryCache : ICachingService
+    internal sealed class InMemoryCache : ICachingService
     {
         private readonly IMemoryCache _memoryCache;
         private readonly TimeSpan _defaultTimInCache = TimeSpan.FromHours(1);

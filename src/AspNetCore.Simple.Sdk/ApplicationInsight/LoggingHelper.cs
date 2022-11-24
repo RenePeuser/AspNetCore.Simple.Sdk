@@ -38,26 +38,26 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                     FillExceptionProperties(dictionary, e, e.GetType().Name);
                     break;
                 default:
-                {
-                    var jToken = JToken.FromObject(data);
-
-                    if (jToken is JObject jObject)
                     {
-                        // Just objects are supported, no scalar values or Arrays
-                        foreach (var property in jObject)
+                        var jToken = JToken.FromObject(data);
+
+                        if (jToken is JObject jObject)
                         {
-                            // Mapps just the first level of properties. All other properties will be handled as Json string
-                            dictionary.Add(prefix + property.Key, SerializeForLogging(property.Value));
+                            // Just objects are supported, no scalar values or Arrays
+                            foreach (var property in jObject)
+                            {
+                                // Mapps just the first level of properties. All other properties will be handled as Json string
+                                dictionary.Add(prefix + property.Key, SerializeForLogging(property.Value));
+                            }
                         }
-                    }
-                    else
-                    {
-                        // direct format
-                        dictionary.Add("data", jToken.ToString());
-                    }
+                        else
+                        {
+                            // direct format
+                            dictionary.Add("data", jToken.ToString());
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             return dictionary.ToImmutableDictionary();

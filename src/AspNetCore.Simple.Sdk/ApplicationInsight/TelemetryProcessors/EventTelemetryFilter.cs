@@ -23,7 +23,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
         public string[] NamesToIgnore { get; init; } = Array.Empty<string>();
     }
 
-    internal class EventTelemetryFilter : ITelemetryProcessor
+    internal sealed class EventTelemetryFilter : ITelemetryProcessor
     {
         private readonly ITelemetryProcessor _telemetryProcessor;
         private readonly EventTelemetryFilterSettings _eventTelemetrySettings;

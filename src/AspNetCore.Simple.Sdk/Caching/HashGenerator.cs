@@ -22,7 +22,7 @@ namespace AspNetCore.Simple.Sdk.Caching
         }
     }
 
-    internal class HashGenerator : IHashGenerator
+    internal sealed class HashGenerator : IHashGenerator
     {
         private readonly IJsonSerializer _jsonSerializer;
 
@@ -34,9 +34,8 @@ namespace AspNetCore.Simple.Sdk.Caching
         public string ComputeHash<T>(T source) where T : class
         {
             var json = _jsonSerializer.Serialize(source);
-            using var hashAlgorithm = SHA512.Create();
             var byteValue = Encoding.UTF8.GetBytes(json);
-            var byteHash = hashAlgorithm.ComputeHash(byteValue);
+            var byteHash = SHA512.HashData(byteValue);
             return Convert.ToBase64String(byteHash);
         }
     }

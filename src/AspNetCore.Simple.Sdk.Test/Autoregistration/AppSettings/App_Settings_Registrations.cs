@@ -11,8 +11,8 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings
     [TestClass]
     public class App_Settings_Registrations
     {
-        private AutoRegistration _autoRegistration;
-        private ServiceCollection _serviceCollection;
+        private AutoRegistration _autoRegistration = null!;
+        private ServiceCollection _serviceCollection = null!;
 
         [TestInitialize]
         public void Init()
@@ -51,7 +51,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings
         [TestMethod]
         public void Should_Not_Be_Able_To_Register_AppSettings_Because_Of_Validation_Errors()
         {
-            Assert.ThrowsException<ArgumentException>(() => _autoRegistration.DoAutoRegistrationFor<ScopedSettingsWithValidator>());
+            Assert.ThrowsException<ArgumentException>(_autoRegistration.DoAutoRegistrationFor<ScopedSettingsWithValidator>);
         }
     }
 }

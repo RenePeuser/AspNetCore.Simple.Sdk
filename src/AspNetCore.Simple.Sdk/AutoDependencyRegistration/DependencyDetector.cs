@@ -7,7 +7,7 @@ using Extensions.Pack;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal class ImplementationFinderForInterface
+    internal sealed class ImplementationFinderForInterface
     {
         internal IImmutableList<Type> FindFor(Type interfaceType)
         {
@@ -25,7 +25,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         }
     }
 
-    internal class DependencyDetector
+    internal sealed class DependencyDetector
     {
         private readonly ImplementationFinderForInterface _implementationFinderForInterface;
 

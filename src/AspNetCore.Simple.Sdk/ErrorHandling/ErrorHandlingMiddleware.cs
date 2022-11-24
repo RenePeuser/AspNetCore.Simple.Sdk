@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
     // this middle ware is just for handling the errors, not for logging !!
-    internal class ErrorHandlingMiddleware : IMiddleware
+    internal sealed class ErrorHandlingMiddleware : IMiddleware
     {
         private readonly IErrorHandlingStrategy _errorHandlingStrategy;
 

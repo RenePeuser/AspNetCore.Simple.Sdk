@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
@@ -144,6 +145,46 @@ namespace AspNetCore.Simple.Sdk.Extensions
             serviceCollection.AddSingletonIfNotExists(setting);
 
             return setting;
+        }
+
+        /// <summary>
+        /// WIP - This is a POC to check if it is possible to remove duplicates.
+        /// </summary>
+        public static void RemoveDuplicates(this IServiceCollection serviceCollection)
+        {
+            var duplicates = ItemsToRemove(serviceCollection).ToList();
+
+            serviceCollection.RemoveRange(duplicates);
+
+            IEnumerable<ServiceDescriptor> ItemsToRemove(IServiceCollection serviceCollection)
+            {
+                var groupByType = serviceCollection.GroupBy(s => s.ServiceType).ToList();
+                var typesWithMultipleRegistrations = groupByType.Where(g => g.Count() > 1).ToList();
+
+                foreach (var multipleRegistrations in typesWithMultipleRegistrations)
+                {
+                    // Case 1: ImplementationTypes exists
+                    var implementatonTypes = multipleRegistrations.Where(g => g.ImplementationType.IsNotNull()).GroupBy(g => g.ImplementationType!.Name).Where(g => g.Count() > 1).ToList();
+                    if (implementatonTypes.Count >= 1)
+                    {
+                        foreach (var implementatonType in implementatonTypes.SelectMany(item => item))
+                        {
+                            yield return implementatonType;
+                        }
+                    }
+
+
+                    // Case 2: ImplementatonInstances exists
+                    var implemenationInstances = multipleRegistrations.Where(g => g.ImplementationInstance.IsNotNull()).GroupBy(g => g.ImplementationInstance?.GetType().Name).Where(g => g.Count() > 1).ToList();
+                    if (implemenationInstances.Count >= 1)
+                    {
+                        foreach (var implementatonType in implemenationInstances.SelectMany(item => item))
+                        {
+                            yield return implementatonType;
+                        }
+                    }
+                }
+            }
         }
     }
 }

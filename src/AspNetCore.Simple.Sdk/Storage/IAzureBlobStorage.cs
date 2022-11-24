@@ -42,7 +42,7 @@ namespace AspNetCore.Simple.Sdk.Storage
         IAzureBlobStorage CreateFrom(string connectionString);
     }
 
-    internal class AzureBlobStorageFactory : IAzureBlobStorageFactory
+    internal sealed class AzureBlobStorageFactory : IAzureBlobStorageFactory
     {
         private readonly ConcurrentDictionary<string, IAzureBlobStorage> _bloStorageClients = new();
 
@@ -59,7 +59,7 @@ namespace AspNetCore.Simple.Sdk.Storage
 
         Task<BlobClient> AddOrUpdateBlobAsync(string containerName, InMemoryFileAsByteArray inMemoryFileAsByteArray);
 
-        Task<BlobClient> GetBlobAsync(string containerName, string fileName);
+        Task<BlobClient?> GetBlobAsync(string containerName, string fileName);
 
         Task DeleteBlobAsync(string containerName, string fileName);
 
@@ -74,7 +74,7 @@ namespace AspNetCore.Simple.Sdk.Storage
         Task DeleteAsync(BlobContainerClient container);
     }
 
-    internal class AzureBlobStorage : IAzureBlobStorage
+    internal sealed class AzureBlobStorage : IAzureBlobStorage
     {
         private readonly StorageSettings _storageSettings;
         private readonly BlobServiceClient _blobServiceClient;

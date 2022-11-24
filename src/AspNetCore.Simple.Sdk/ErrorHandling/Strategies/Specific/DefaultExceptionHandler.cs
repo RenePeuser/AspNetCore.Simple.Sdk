@@ -21,7 +21,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         }
     }
 
-    internal class DefaultExceptionHandler : SpecificErrorHandler<Exception>
+    internal sealed class DefaultExceptionHandler : SpecificErrorHandler<Exception>
     {
         protected override bool CanHandleException(Exception exception)
         {

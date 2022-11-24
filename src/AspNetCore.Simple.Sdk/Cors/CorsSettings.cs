@@ -1,11 +1,11 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 
 namespace AspNetCore.Simple.Sdk.Cors
 {
@@ -64,6 +64,11 @@ namespace AspNetCore.Simple.Sdk.Cors
             }
 
             var corsSettings = configuration.Get<CorsSettings>();
+            if (corsSettings.IsNull())
+            {
+                throw new ProblemDetailsException($"Was not able get CORS settings",
+                                                  $"The type: '{nameof(CorsSettings)}' could not be fetched from configuration");
+            }
 
 
             // Origins

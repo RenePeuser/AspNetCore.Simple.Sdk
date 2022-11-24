@@ -14,7 +14,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         }
     }
 
-    internal class ProblemDetailsExceptionHandler : SpecificErrorHandler<ProblemDetailsException>
+    internal sealed class ProblemDetailsExceptionHandler : SpecificErrorHandler<ProblemDetailsException>
     {
         protected override async Task HandleAsync(HttpContext context, ProblemDetailsException exception)
         {

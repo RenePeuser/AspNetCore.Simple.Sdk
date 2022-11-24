@@ -4,7 +4,7 @@ using Extensions.Pack;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal class InterfaceDetector
+    internal sealed class InterfaceDetector
     {
         internal Type? DetectInterface(Type typeToRegister)
         {

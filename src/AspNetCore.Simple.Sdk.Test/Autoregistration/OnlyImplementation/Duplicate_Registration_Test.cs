@@ -11,9 +11,9 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.OnlyImplementation
     [TestClass]
     public class Duplicate_Registration_Test
     {
-        private IConfigurationRoot _configuration;
-        private ServiceCollection _serviceCollection;
-        private AutoRegistration _autoregister;
+        private IConfigurationRoot _configuration = null!;
+        private ServiceCollection _serviceCollection = null!;
+        private AutoRegistration _autoregister = null!;
 
         [TestInitialize]
         public void Init()

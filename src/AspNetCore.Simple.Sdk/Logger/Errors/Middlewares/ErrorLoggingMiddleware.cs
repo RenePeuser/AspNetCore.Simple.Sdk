@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
-    internal class ErrorLoggingMiddleware : IMiddleware
+    internal sealed class ErrorLoggingMiddleware : IMiddleware
     {
         private readonly IErrorLogStrategy _errorLogStrategy;
 

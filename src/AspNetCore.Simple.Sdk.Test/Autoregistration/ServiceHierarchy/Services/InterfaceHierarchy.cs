@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace AspNetCore.Simple.Sdk.Test.Autoregistration.ServiceHierarchy.Services
 {
     [ServiceRegistration(ServiceLifetime.Scoped)]
-    internal class InterfaceScopedRootRootService : IInterfaceScopedRootService
+    internal sealed class InterfaceScopedRootRootService : IInterfaceScopedRootService
     {
         private readonly IServiceHierarchy01 _serviceHierarchy01;
 
@@ -24,7 +24,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.ServiceHierarchy.Services
         void DoSomething();
     }
 
-    internal class InterfaceServiceHierarchy01 : IServiceHierarchy01
+    internal sealed class InterfaceServiceHierarchy01 : IServiceHierarchy01
     {
         private readonly IServiceHierarchy02 _serviceHierarchy02;
 
@@ -44,7 +44,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.ServiceHierarchy.Services
         void DoSomething();
     }
 
-    internal class InterfaceServiceHierarchy02 : IServiceHierarchy02
+    internal sealed class InterfaceServiceHierarchy02 : IServiceHierarchy02
     {
         public void DoSomething()
         {

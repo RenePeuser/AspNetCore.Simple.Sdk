@@ -11,7 +11,7 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
 {
     public record GetAuth0TokenFor(Auth0 Auth0Settings, bool UseCache = true) : CachableQuery<Auth0Token>(Auth0Settings.TokenCacheTime, UseCache);
 
-    internal class GetAuth0TokenForHandler : IQueryHandler<GetAuth0TokenFor, Auth0Token>
+    internal sealed class GetAuth0TokenForHandler : IQueryHandler<GetAuth0TokenFor, Auth0Token>
     {
         private readonly IHttpClientFactory _htpHttpClientFactory;
         private readonly IMapper _mapper;

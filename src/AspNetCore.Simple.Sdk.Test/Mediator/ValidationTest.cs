@@ -19,7 +19,7 @@ namespace AspNetCore.Simple.Sdk.Test.Mediator
     {
         public Task<Person> Handle(GetPersonByName request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new Person(null));
+            return Task.FromResult(new Person(string.Empty));
         }
     }
 
@@ -59,13 +59,13 @@ namespace AspNetCore.Simple.Sdk.Test.Mediator
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            _mediator = serviceProvider.GetService<IMediator>();
+            _mediator = serviceProvider.GetOrThrowMissingException<IMediator>();
         }
 
         [TestMethod]
-        public async Task If_Validator_Exists_User_Response_Exception_Have_To_Be_Thrown()
+        public Task If_Validator_Exists_User_Response_Exception_Have_To_Be_Thrown()
         {
-            await Assert.ThrowsExceptionAsync<ProblemDetailsException>(() => _mediator.SendAsync(new GetPersonByName(null))).ConfigureAwait(false);
+            return Assert.ThrowsExceptionAsync<ProblemDetailsException>(() => _mediator.SendAsync(new GetPersonByName(string.Empty)));
         }
     }
 }

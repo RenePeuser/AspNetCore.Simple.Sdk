@@ -14,7 +14,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         }
     }
 
-    internal class SecurityProblemExceptionHandler : SpecificErrorHandler<SecurityProblemException>
+    internal sealed class SecurityProblemExceptionHandler : SpecificErrorHandler<SecurityProblemException>
     {
         protected override async Task HandleAsync(HttpContext context, SecurityProblemException exception)
         {

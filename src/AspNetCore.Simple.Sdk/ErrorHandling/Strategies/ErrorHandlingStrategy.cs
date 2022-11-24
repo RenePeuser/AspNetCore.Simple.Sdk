@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
-    internal class ErrorHandlingStrategy : IErrorHandlingStrategy
+    internal sealed class ErrorHandlingStrategy : IErrorHandlingStrategy
     {
         private readonly IEnumerable<ISpecificErrorHandler> _specificErrorHandlers;
 

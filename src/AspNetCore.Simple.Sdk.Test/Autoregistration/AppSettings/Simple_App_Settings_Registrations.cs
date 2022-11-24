@@ -11,8 +11,8 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings
     [TestClass]
     public class Simple_App_Settings_Registrations
     {
-        private AutoRegistration _autoRegistration;
-        private ServiceCollection _serviceCollection;
+        private AutoRegistration _autoRegistration = null!;
+        private ServiceCollection _serviceCollection = null!;
 
         [TestInitialize]
         public void Init()

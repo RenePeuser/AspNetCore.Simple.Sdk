@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal class SimpleAppSettingsRegistration : IRegistrationStrategy
+    internal sealed class SimpleAppSettingsRegistration : IRegistrationStrategy
     {
         private readonly LifetimeDetector _lifetimeDetector;
         private readonly IServiceCollection _serviceCollection;

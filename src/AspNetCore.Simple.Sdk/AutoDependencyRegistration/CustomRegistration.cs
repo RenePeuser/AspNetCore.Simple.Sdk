@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal class CustomRegistration : IRegistrationStrategy
+    internal sealed class CustomRegistration : IRegistrationStrategy
     {
         private readonly IServiceCollection _serviceCollection;
         private readonly IConfiguration _configuration;

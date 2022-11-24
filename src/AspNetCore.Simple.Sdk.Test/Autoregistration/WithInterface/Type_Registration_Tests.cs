@@ -2,7 +2,6 @@
 using System.Linq;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 using AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface.Services;
-using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

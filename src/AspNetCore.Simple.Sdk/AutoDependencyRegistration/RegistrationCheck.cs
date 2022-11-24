@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal class RegistrationCheck
+    internal sealed class RegistrationCheck
     {
         private readonly IServiceCollection _serviceCollection;
 

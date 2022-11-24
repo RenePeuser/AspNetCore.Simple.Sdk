@@ -20,7 +20,7 @@ namespace AspNetCore.Simple.Sdk.Caching
         string BuildKey(KeyInfo keyInfo);
     }
 
-    internal class HashKeyBuilder : IKeyBuilder
+    internal sealed class HashKeyBuilder : IKeyBuilder
     {
         private readonly IHashGenerator _hashGenerator;
 

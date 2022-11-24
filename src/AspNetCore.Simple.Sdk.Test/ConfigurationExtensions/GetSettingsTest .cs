@@ -1,5 +1,4 @@
-﻿using System;
-using AspNetCore.Simple.MsTest.Sdk;
+﻿using AspNetCore.Simple.MsTest.Sdk;
 using AspNetCore.Simple.Sdk.Extensions;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -50,16 +49,15 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         public void Should_Be_Able_To_Fetch_Settings_With_Correct_Content()
         {
             var settings = Configuration.GetSettings<DummySettings>(nameof(Dummy));
-            var expectedResult = new DummySettings { Value0 = "A", Value1 = "B", Value2 = "C"};
+            var expectedResult = new DummySettings { Value0 = "A", Value1 = "B", Value2 = "C" };
 
-           Assert.That.ObjectsAreEqual(() => settings, () => expectedResult);
-
+            Assert.That.ObjectsAreEqual(() => settings, () => expectedResult);
         }
 
         [TestMethod]
         public void Should_Throw_Missing_Settings_Exception_When_Settings_Does_Not_Exists()
         {
-            var exception = Assert.ThrowsException<MissingSettingsException<Person>>(() => Configuration.GetSettings<Person>());
+            var exception = Assert.ThrowsException<MissingSettingsException<Person>>(Configuration.GetSettings<Person>);
 
             exception?.Message.Should().Be($"The setting: '{nameof(Person)}' is missing. Please check your specific appsettings.json or your environment variables.");
         }
