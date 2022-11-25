@@ -233,7 +233,7 @@ namespace AspNetCore.Simple.Sdk.Caching
                 {
                     config.AsyncTimeout = _redisSettings.AsyncTimeout.TotalMilliseconds.ToInt();
                     config.SyncTimeout = _redisSettings.SyncTimeout.TotalMilliseconds.ToInt();
-                    config.ConnectRetry = _redisSettings.ConnectRetry;
+                    config.ConnectRetry = 1;
                     config.ConnectTimeout = connectTimeout.TotalMilliseconds.ToInt();
 
                 }).ConfigureAwait(false);
