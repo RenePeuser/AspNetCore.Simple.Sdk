@@ -1,32 +1,53 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AspNetCore.Simple.Sdk.Extensions;
+using AspNetCore.Simple.Sdk.Polly;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using Extensions.Pack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
 
 namespace AspNetCore.Simple.Sdk.Caching
 {
-    public record Redis
+    internal static class AddRedisSettingsExtension
+    {
+        public static void AddRedisSettings(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingletonOption<RedisSettings>(configuration);
+        }
+    }
+
+    public record RedisSettings
     {
         public string HostName { get; init; } = string.Empty;
 
         public string ConnectionString { get; init; } = string.Empty;
+
+        public TimeSpan AsyncTimeout { get; init; } = TimeSpan.FromSeconds(5);
+
+        public TimeSpan SyncTimeout { get; init; } = TimeSpan.FromSeconds(5);
+
+        public TimeSpan ConnectTimeout { get; init; } = TimeSpan.FromSeconds(5);
+
+        public int ConnectRetry { get; init; } = 3;
     }
 
     public static class AddRedisCacheExtension
     {
-        public static void AddRedisCache(this IServiceCollection services, IConfiguration configuration)
+        public static void AddRedisCache(this IServiceCollection services, IConfiguration configuration, ILogger logger)
         {
-            if (configuration.TryGetSettings<Redis>(out var redisSettings).IsFalse())
+            if (configuration.TryGetSettings<RedisSettings>(out var redisSettings).IsFalse())
             {
+                logger.LogInformation($"No Redis settings was found. We activate InMemory caching service. For activating redis just add '{nameof(RedisSettings)}' to your appsettings or environment variables.{Environment.NewLine}Sample:{JToken.Parse(new RedisSettings().ToJson()).ToString(Formatting.Indented)}");
                 services.AddInMemoryCache();
                 return;
             }
 
-            if (services.IsAlreadyRegistered<Redis>())
+            if (services.IsAlreadyRegistered<RedisSettings>())
             {
                 // Important do not connect redis twice
                 return;
@@ -34,38 +55,33 @@ namespace AspNetCore.Simple.Sdk.Caching
 
             if (redisSettings.ConnectionString.IsNullOrWhiteSpace())
             {
-                Console.WriteLine($"Connection string for Redis is missing, please check your configuration, secrets for '{nameof(Redis)}__{nameof(Redis.ConnectionString)}'. InMemory cache will be activated instead");
+                logger.LogInformation($"Connection string for Redis is missing, please check your configuration, secrets for '{nameof(RedisSettings)}__{nameof(RedisSettings.ConnectionString)}'. InMemory cache will be activated instead");
                 services.AddInMemoryCache();
                 return;
             }
 
-            try
-            {
-                var connection = ConnectionMultiplexer.Connect(redisSettings.ConnectionString);
-                var database = connection.GetDatabase();
-                services.AddSingletonIfNotExists(database);
-                services.AddSingletonIfNotExists<ICachingService, RedisCache>();
-                Console.WriteLine($"Connection to Redis endpoint: '{redisSettings.HostName}' was successful. Hostname: '{redisSettings.HostName}'");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"No connection could be established to Redis endpoint: '{redisSettings.HostName}', dummy cache without caching will be created. Exception message: {e.Message}. Please check the 'HostName' and your 'ConnectionString' for correctness");
-                services.AddInMemoryCache();
-            }
+            services.AddRedisConnectionFactory(configuration);
 
-            services.AddJsonSerializer();
+            // services.AddRedisConnection(configuration);
+            var redisConnection = new RedisConnection(redisSettings, logger, new Backoff());
+            redisConnection.StartupAsync().GetAwaiter().GetResult();
+
+            services.AddSingletonIfNotExists<IRedisConnection>(redisConnection);
+            services.AddSingletonIfNotExists<ICachingService, RedisCache>();
         }
     }
+
+
     public class RedisCache : ICachingService
     {
-        private readonly IDatabase _database;
+        private readonly IRedisConnection _redisConnection;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly TimeSpan _defaultTimInCache = TimeSpan.FromHours(1);
 
-        public RedisCache(IDatabase database,
+        public RedisCache(IRedisConnection redisConnection,
                           IJsonSerializer jsonSerializer)
         {
-            _database = database;
+            _redisConnection = redisConnection;
             _jsonSerializer = jsonSerializer;
         }
 
@@ -100,12 +116,12 @@ namespace AspNetCore.Simple.Sdk.Caching
 
         public Task<bool> DeleteAsync(string cacheKey)
         {
-            return _database.KeyDeleteAsync(new RedisKey(cacheKey));
+            return _redisConnection.ExecuteAsync(database => database.KeyDeleteAsync(new RedisKey(cacheKey)));
         }
 
         private async Task<T?> GetAsync<T>(string key) where T : class
         {
-            var responseFromRedis = await _database.StringGetAsync(key).ConfigureAwait(false);
+            var responseFromRedis = await _redisConnection.ExecuteAsync(database => database.StringGetAsync(key)).ConfigureAwait(false);
             if (responseFromRedis.IsNull)
             {
                 return default;
@@ -124,7 +140,7 @@ namespace AspNetCore.Simple.Sdk.Caching
         private Task SetAsync<T>(string key, T value, TimeSpan cachingTime)
         {
             var valueAsJson = _jsonSerializer.Serialize(value);
-            return _database.StringSetAsync(key, valueAsJson, cachingTime);
+            return _redisConnection.ExecuteAsync(database => database.StringSetAsync(key, valueAsJson, cachingTime));
         }
     }
 }

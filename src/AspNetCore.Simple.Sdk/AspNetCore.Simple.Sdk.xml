@@ -8,6 +8,28 @@
             <summary>Creates a new <see cref="T:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute"/> instance.</summary>
             <param name="scope">The required scope for the operation.</param>
         </member>
+        <member name="T:AspNetCore.Simple.Sdk.Caching.RedisConnection">
+            <summary>
+            We use recommended connection from Microsoft to connect to redis only modernized :)
+            https://github.com/Azure-Samples/azure-cache-redis-samples/blob/main/quickstart/aspnet-core/ContosoTeamStats/RedisConnection.cs
+            </summary>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Caching.RedisConnection.ReconnectAsync(System.Boolean,System.TimeSpan)">
+            https://github.com/Azure-Samples/azure-cache-redis-samples/blob/main/quickstart/aspnet-core/ContosoTeamStats/RedisConnection.cs
+            <summary>
+            Force a new ConnectionMultiplexer to be created.
+            NOTES:
+                1. Users of the ConnectionMultiplexer MUST handle ObjectDisposedExceptions, which can now happen as a result of calling ForceReconnectAsync().
+                2. Call ForceReconnectAsync() for RedisConnectionExceptions and RedisSocketExceptions. You can also call it for RedisTimeoutExceptions,
+                    but only if you're using generous ReconnectMinInterval and ReconnectErrorThreshold. Otherwise, establishing new connections can cause
+                    a cascade failure on a server that's timing out because it's already overloaded.
+                3. The code will:
+                    a. wait to reconnect for at least the "ReconnectErrorThreshold" time of repeated errors before actually reconnecting
+                    b. not reconnect more frequently than configured in "ReconnectMinInterval"
+            </summary>
+            <param name="initializing">Should only be true when ForceReconnect is running at startup.</param>
+            <param name="connectTimeout">The timeout for redis for Polly retry to support best possible reconnect cases</param>
+        </member>
         <member name="T:AspNetCore.Simple.Sdk.Cors.CorsSettings">
             <summary>
             The CORS settings class to handle the CORS configurations

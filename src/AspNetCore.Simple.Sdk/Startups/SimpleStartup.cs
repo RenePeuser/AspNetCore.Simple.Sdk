@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Startups
 {
@@ -38,17 +39,19 @@ namespace AspNetCore.Simple.Sdk.Startups
         protected SimpleStartup(IConfiguration configuration,
                                 IWebHostEnvironment webHostEnvironment,
                                 Assembly assembly,
-                                PathString basePath
-            )
+                                PathString basePath)
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
             Assembly = assembly;
             BasePath = basePath;
+            Logger = new Logger<SimpleStartup>(LoggerFactory.Create(logBuilder => logBuilder.AddConsole().AddDebug()));
 
             // Important to handle multiple test runs which start stops quickly.
             AddMediatorExtension.RegisteredMediators.Clear();
         }
+
+        protected ILogger Logger { get; }
 
         protected IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -97,7 +100,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddMediator(Assembly);
             services.AddMediatRCaching(Assembly);
 
-            services.AddRedisCache(Configuration);
+            services.AddRedisCache(Configuration, Logger);
 
             services.AddSwaggerGenSimplified(Assembly, Configuration);
 
