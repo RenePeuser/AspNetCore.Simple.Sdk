@@ -123,17 +123,17 @@ namespace AspNetCore.Simple.Sdk.Caching
         private Task RetryOnError(Exception exception, TimeSpan waitTime, int retry, Context context)
         {
             _logger.LogInformation($"Redis retry policy executed. {exception.Message}");
-            return ReconnectAsync(false, waitTime);
+            return ReconnectInternalAsync(false, waitTime);
         }
 
         public Task StartupAsync()
         {
-            return _redisRetryPolicy.ExecuteAsync(() => ReconnectAsync(true, _redisSettings.ConnectTimeout));
+            return _redisRetryPolicy.ExecuteAsync(() => ReconnectInternalAsync(true, _redisSettings.ConnectTimeout));
         }
 
         public Task ReconnectAsync()
         {
-            return _redisRetryPolicy.ExecuteAsync(() => ReconnectAsync(false, _redisSettings.ConnectTimeout));
+            return _redisRetryPolicy.ExecuteAsync(() => ReconnectInternalAsync(false, _redisSettings.ConnectTimeout));
         }
 
         public Task<T> ExecuteAsync<T>(Func<IDatabase, Task<T>> asyncFunc)
@@ -157,7 +157,7 @@ namespace AspNetCore.Simple.Sdk.Caching
         /// </summary>
         /// <param name="initializing">Should only be true when ForceReconnect is running at startup.</param>
         /// <param name="connectTimeout">The timeout for redis for Polly retry to support best possible reconnect cases</param>
-        private async Task ReconnectAsync(bool initializing, TimeSpan connectTimeout)
+        private async Task ReconnectInternalAsync(bool initializing, TimeSpan connectTimeout)
         {
             var previousTicks = Interlocked.Read(ref _lastReconnectTicks);
             var previousReconnectTime = new DateTimeOffset(previousTicks, TimeSpan.Zero);
