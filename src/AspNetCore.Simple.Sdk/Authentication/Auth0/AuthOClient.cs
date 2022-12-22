@@ -1,25 +1,9 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using AspNetCore.Simple.Sdk.Caching;
-using AutoMapper;
 
 namespace AspNetCore.Simple.Sdk.Authentication.Auth0
 {
-    public static class AddAuth0ResponseMappingExtension
-    {
-        public static void AddAuth0ResponseMapping(this IMapperConfigurationExpression mapperConfigurationExpression)
-        {
-            mapperConfigurationExpression.CreateMap<Auth0TokenReponse, Auth0Token>()
-                                         .ForMember(authTokenResponse => authTokenResponse.ExpiresOnUtc, token => token.MapFrom(t => DateTime.UtcNow.Add(TimeSpan.FromSeconds(t.ExpiresInSeconds))))
-                                         .ForMember(authTokenResponse => authTokenResponse.TokenReadyToUse, token => token.MapFrom(t => $"{t.TokenType} {t.Token}"));
-        }
-
-        public static void AddAuth0RequestMapping(this IMapperConfigurationExpression mapperConfigurationExpression)
-        {
-            mapperConfigurationExpression.CreateMap<Auth0, Auth0Request>();
-        }
-    }
-
     public record Auth0Token : CachableObject
     {
         public string Token { get; init; } = string.Empty;

@@ -1,5 +1,4 @@
 ﻿using System;
-using AspNetCore.Simple.Sdk.Automapper;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,8 +40,6 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
             {
                 return;
             }
-
-            services.AddAutoMapper();
 
             services.AddSingletonIfNotExists(auth0Settings);
 

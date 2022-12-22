@@ -14,7 +14,7 @@
             https://github.com/Azure-Samples/azure-cache-redis-samples/blob/main/quickstart/aspnet-core/ContosoTeamStats/RedisConnection.cs
             </summary>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Caching.RedisConnection.ReconnectAsync(System.Boolean,System.TimeSpan)">
+        <member name="M:AspNetCore.Simple.Sdk.Caching.RedisConnection.ReconnectInternalAsync(System.Boolean,System.TimeSpan)">
             https://github.com/Azure-Samples/azure-cache-redis-samples/blob/main/quickstart/aspnet-core/ContosoTeamStats/RedisConnection.cs
             <summary>
             Force a new ConnectionMultiplexer to be created.

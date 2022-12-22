@@ -4,7 +4,6 @@ using AspNetCore.Simple.Sdk.ApiVersioning;
 using AspNetCore.Simple.Sdk.ApplicationInsight;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
-using AspNetCore.Simple.Sdk.Automapper;
 using AspNetCore.Simple.Sdk.Caching;
 using AspNetCore.Simple.Sdk.Cors;
 using AspNetCore.Simple.Sdk.ErrorHandling;
@@ -103,8 +102,6 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddRedisCache(Configuration, Logger);
 
             services.AddSwaggerGenSimplified(Assembly, Configuration);
-
-            services.AddAutoMapper();
 
             services.AddAzureBlobStorage(Configuration);
             services.AddAzureBlobStorageFactory();
