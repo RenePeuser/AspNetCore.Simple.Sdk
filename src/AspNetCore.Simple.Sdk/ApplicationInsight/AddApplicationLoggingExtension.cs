@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors;
-using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Configuration;

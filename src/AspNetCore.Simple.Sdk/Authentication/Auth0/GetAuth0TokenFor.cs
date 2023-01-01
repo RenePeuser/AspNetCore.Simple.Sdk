@@ -32,7 +32,7 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
             };
 
             var client = _htpHttpClientFactory.CreateClient();
-            var response = await client.PostAsJsonAsync(request.Auth0Settings.TokenEndpoint, auth0Request, cancellationToken).ConfigureAwait(false);
+            var response = await client.PostAsJsonStringAsync(request.Auth0Settings.TokenEndpoint, auth0Request.ToJson()).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {

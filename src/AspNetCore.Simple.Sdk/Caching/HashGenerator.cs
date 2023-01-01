@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Serializer.Json;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Caching

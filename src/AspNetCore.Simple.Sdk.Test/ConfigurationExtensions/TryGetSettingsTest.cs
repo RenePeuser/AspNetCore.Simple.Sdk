@@ -1,5 +1,5 @@
 ﻿using AspNetCore.Simple.MsTest.Sdk;
-using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -55,11 +55,6 @@
             Options middleware is a smart part to handle preflight calls
             </summary>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Extensions.ServiceCollectionExtensions.RemoveDuplicates(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            WIP - This is a POC to check if it is possible to remove duplicates.
-            </summary>
-        </member>
         <member name="T:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions">
             <summary>
             Provides a set of extensions for <see cref="T:MediatR.IMediator"/>

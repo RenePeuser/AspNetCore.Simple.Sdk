@@ -1,4 +1,4 @@
-﻿using AspNetCore.Simple.Sdk.Extensions;
+﻿using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

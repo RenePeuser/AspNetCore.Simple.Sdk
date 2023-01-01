@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;

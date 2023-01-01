@@ -1,4 +1,4 @@
-﻿using AspNetCore.Simple.Sdk.Extensions;
+﻿using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors

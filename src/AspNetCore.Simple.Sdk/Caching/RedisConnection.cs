@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Polly;
 using AspNetCore.Simple.Sdk.Utils;
 using Extensions.Pack;

@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

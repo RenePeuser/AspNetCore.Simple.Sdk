@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ApiVersioning

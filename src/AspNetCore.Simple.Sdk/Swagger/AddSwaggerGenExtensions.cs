@@ -5,6 +5,7 @@ using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

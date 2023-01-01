@@ -1,6 +1,6 @@
 ﻿using System.Net.Mime;
 using System.Threading.Tasks;
-using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 

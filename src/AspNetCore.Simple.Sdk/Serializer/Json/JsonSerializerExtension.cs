@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using AspNetCore.Simple.Sdk.Extensions;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Serializer.Json

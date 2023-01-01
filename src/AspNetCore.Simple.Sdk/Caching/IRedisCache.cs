@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Polly;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using Extensions.Pack;
