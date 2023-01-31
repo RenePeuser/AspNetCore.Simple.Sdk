@@ -14,10 +14,9 @@
             - Ready to go base class for startup.cs
         </Description>
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
-
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>Remove Automapper dependency</PackageReleaseNotes>
+        <PackageReleaseNotes>Add DateOnly mapping to swagger options</PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
@@ -31,6 +30,7 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <DebugType>embedded</DebugType>
     </PropertyGroup>
+
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DocumentationFile>.\AspNetCore.Simple.Sdk.xml</DocumentationFile>
     </PropertyGroup>
@@ -39,7 +39,7 @@
         <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
         <PackageReference Include="Argument.Check" Version="2.0.0" />
         <PackageReference Include="Extensions.Pack" Version="3.0.0" />
-        <PackageReference Include="GitVersion.MsBuild" Version="5.11.1">
+        <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -47,17 +47,17 @@
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
         <PackageReference Include="Polly" Version="7.2.3" />
-        <PackageReference Include="StackExchange.Redis" Version="2.6.86" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.4.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.90" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.5.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.26.0" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     </ItemGroup>
 

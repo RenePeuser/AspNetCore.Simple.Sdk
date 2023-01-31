@@ -93,6 +93,13 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                     options.SwaggerDoc($"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}", openApiInfo);
                 }
+
+                options.MapType<DateOnly>(() => new OpenApiSchema
+                {
+                    Type = "string",
+                    Format = "date",
+                    Example = new OpenApiString("2023-11-17")
+                });
             });
         }
 
