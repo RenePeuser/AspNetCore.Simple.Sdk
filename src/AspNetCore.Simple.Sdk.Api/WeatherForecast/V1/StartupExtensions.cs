@@ -1,6 +1,6 @@
 ﻿using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 
-namespace AspNetCore.Simple.Sdk.Api.WeatherForecast
+namespace AspNetCore.Simple.Sdk.Api.WeatherForecast.V1
 {
     public static class AddWeatherForecastExtension
     {

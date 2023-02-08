@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AspNetCore.Simple.Sdk.Api.WeatherForecast
+namespace AspNetCore.Simple.Sdk.Api.WeatherForecast.V1
 {
     public class WeatherConfig
     {

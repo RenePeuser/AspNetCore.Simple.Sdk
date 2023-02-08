@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using AspNetCore.Simple.Sdk.ApiVersioning;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
@@ -24,6 +30,13 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public static string ExternalPartner => "external-partner";
         public static string ExternalPublic => "external-public";
     }
+
+
+    public record SwaggerInfos
+    {
+        public SwaggerInfo[] SwaggerInfosByVersion { get; init; } = Array.Empty<SwaggerInfo>(); // only [] cause of configuration does not support IImmutableList
+    }
+
 
     public record SwaggerInfo
     {
@@ -44,13 +57,15 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public bool WithServerInfo { get; init; }
 
         public string? ContactUrl { get; init; }
+
+        public string Version { get; init; } = "1.0";
     }
 
     public static class AddSwaggerGenExtensions
     {
         public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
         {
-            var swaggerInfo = configuration.GetSetting<SwaggerInfo>() ?? new();
+            var swaggerInfo = configuration.GetSetting<SwaggerInfos>() ?? new SwaggerInfos();
             var apiVersionProvider = new ApiVersionProvider();
             var allApiVersions = apiVersionProvider.GetAllApiVersions(assembly);
 
@@ -103,25 +118,56 @@ namespace AspNetCore.Simple.Sdk.Swagger
             });
         }
 
-        private static OpenApiInfo GetVersionSpecificApiInfo(SwaggerInfo swaggerInfo, ApiVersion apiVersion)
+        private static OpenApiInfo GetVersionSpecificApiInfo(SwaggerInfos swaggerInfos, ApiVersion apiVersion)
         {
-            var infoExtension = GetExtensionInfo(swaggerInfo).ToDictionary(item => item.key, item => item.openApiExtension);
+            var versionSpecificSwaggerInfo = swaggerInfos.SwaggerInfosByVersion.FirstOrDefault(swagger =>
+            {
+                var apiVersionSwaggerInfo = ToApiVersion(swagger.Version);
+                return apiVersionSwaggerInfo == apiVersion;
+            });
+
+            if (versionSpecificSwaggerInfo.IsNull())
+            {
+                // Fallback no infos if nothing was found
+                Debug.WriteLine($"No specific swagger info was found for api version: {apiVersion}. Please check your appsettings.json, environment variables for a correct declaration to get swagger infos per version");
+                var sample = new SwaggerInfos() { SwaggerInfosByVersion = new SwaggerInfo[] { new SwaggerInfo() } }.ToJson();
+                Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize(JToken.Parse(sample).ToString(Formatting.Indented)));
+                versionSpecificSwaggerInfo = new SwaggerInfo();
+            }
+
+            var infoExtension = GetExtensionInfo(versionSpecificSwaggerInfo).ToDictionary(item => item.key, item => item.openApiExtension);
             var info = new OpenApiInfo
             {
-                Title = swaggerInfo.Title,
+                Title = versionSpecificSwaggerInfo.Title,
                 Version = $"{apiVersion.MajorVersion}.{apiVersion.MinorVersion}",
-                Description = swaggerInfo.Description,
+                Description = versionSpecificSwaggerInfo.Description,
                 Contact = new OpenApiContact
                 {
-                    Email = swaggerInfo.ContactEmail,
-                    Name = swaggerInfo.ContactName,
-                    Url = swaggerInfo.ContactUrl is null ? null : new Uri(swaggerInfo.ContactUrl)
+                    Email = versionSpecificSwaggerInfo.ContactEmail,
+                    Name = versionSpecificSwaggerInfo.ContactName,
+                    Url = versionSpecificSwaggerInfo.ContactUrl is null ? null : new Uri(versionSpecificSwaggerInfo.ContactUrl)
                 },
 
                 Extensions = infoExtension
             };
 
             return info;
+        }
+
+        private static ApiVersion ToApiVersion(string version)
+        {
+            var values = version.ToLower(CultureInfo.InvariantCulture).Replace("v", string.Empty).Split(".").Select(number => number.ToInt()).ToArray();
+            if (values.Length == 1)
+            {
+                return new ApiVersion(values.First(), 0);
+            }
+
+            if (values.Length == 2)
+            {
+                return new ApiVersion(values.First(), values.ElementAt(1));
+            }
+
+            throw new ProblemDetailsException(500, "Unknown version string", $"Could not convert swagger version info: '{version}' into AP-Version");
         }
 
         private static IEnumerable<(string key, IOpenApiExtension openApiExtension)> GetExtensionInfo(SwaggerInfo swaggerInfo)

@@ -1,9 +1,9 @@
-﻿using AspNetCore.Simple.Sdk.Api.WeatherForecast;
-using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
+﻿using AspNetCore.Simple.Sdk.AutoDependencyRegistration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using AspNetCore.Simple.Sdk.Startups;
 using Microsoft.AspNetCore.Http;
+using AspNetCore.Simple.Sdk.Api.WeatherForecast.V1;
 
 namespace AspNetCore.Simple.Sdk.Api
 {
