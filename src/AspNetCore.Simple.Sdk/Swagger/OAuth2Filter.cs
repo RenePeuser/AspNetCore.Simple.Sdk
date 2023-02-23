@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
+using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -15,6 +18,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
     public sealed class OAuth2Filter : IDocumentFilter
     {
         private readonly Auth0 _auth0Settings;
+        private const string TargetOauth2SecuritySchemeName = "oauth2";
 
         // Ctor must be public for DI, even if the class itself is internal.
         public OAuth2Filter(Auth0 auth0Settings)
@@ -24,44 +28,43 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
         void IDocumentFilter.Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-            const string targetOauth2SecuritySchemeName = "oauth2";
+            var selectedVersion = swaggerDoc.Info.Version.ToApiVersion();
 
             // ------------------------------ Prepare the target document's OAuth 2.0 security scheme
             var targetOAuth2Flow = new OpenApiOAuthFlow();
             targetOAuth2Flow.TokenUrl = new Uri(_auth0Settings.TokenEndpoint);
 
             // targetOAuth2Flow.Scopes will be set later further below, once we know the aggregated set of scopes used by the operations.
-            var targetOAuth2SecurityScheme = new OpenApiSecurityScheme
-            {
-                Type = SecuritySchemeType.OAuth2,
-                Name = targetOauth2SecuritySchemeName,
-                Reference = new()
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    // The ID is needed by OpenApiSecuritySchemeReferenceEqualityComparer, which is used by OpenApiSecurityRequirement,
-                    // which derives from Dictionary<OpenApiSecurityScheme, IList<String>>.
-                    Id = targetOauth2SecuritySchemeName
-                },
-                Flows = new()
-                {
-                    // An API does not really care about the kind of flow. However, OpenAPI forces us to choose a flow.
-                    // --> We arbitrarily choose the "ClientCredentials" flow to declare the token URL and scpes within.
-                    ClientCredentials = targetOAuth2Flow
-                }
-            };
+            var targetOAuth2SecurityScheme = CreateOpenApiSecurityScheme(TargetOauth2SecuritySchemeName, targetOAuth2Flow);
 
             // ------------------------------ Get the source code operations (and their OAuth 2.0 scopes)
             var oauth2ScopedSourceOpsPerRelativePath = context
                 .ApiDescriptions
+                .Where(desc =>
+                {
+                    var controllerActionDescriptor = desc.ActionDescriptor.As<ControllerActionDescriptor>();
+                    if (controllerActionDescriptor.IsNull())
+                    {
+                        return false;
+                    }
+
+                    var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
+                    if (apiVersionAttribute.IsNull())
+                    {
+                        return false;
+                    }
+
+                    return apiVersionAttribute.Versions.Any(version => version == selectedVersion);
+                })
                 .Select(sourceApi => new
                 {
-                    RelativePath = sourceApi.RelativePath ?? string.Empty,
+                    RelativePath = sourceApi.RelativePath?.Replace("{version}", swaggerDoc.Info.Version) ?? string.Empty,
                     sourceApi.HttpMethod,  // null meaning "all HTTP methods"
                     // Applying FirstOrDefault is o.k., because OAuth2ScopeAttribute has AllowMultiple = false.
                     OAuth2Scope = sourceApi.ActionDescriptor.EndpointMetadata.OfType<OAuth2ScopeAttribute>().FirstOrDefault()?.Scope
                 })
                 .Where(sourceOp => sourceOp.OAuth2Scope.IsNotNullOrEmpty())
-                .GroupBy(sourceOp => sourceOp.RelativePath)
+                .GroupBy(sourceOp => sourceOp.RelativePath.Replace("{version}", swaggerDoc.Info.Version))
                 .ToImmutableDictionary(sourceOpGrp => sourceOpGrp.Key, sourceOpGrp => sourceOpGrp.ToImmutableArray());
 
             // ------------------------------ Copy the source code operation OAuth 2.0 scopes to the target document's operations.
@@ -93,7 +96,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 targetOAuth2Scope => $"The {targetOAuth2Scope} scope.");
 
             // ------------------------------ Add or replace the target document's OAuth 2.0 security scheme
-            swaggerDoc.Components.SecuritySchemes[targetOauth2SecuritySchemeName] = targetOAuth2SecurityScheme;
+            swaggerDoc.Components.SecuritySchemes[TargetOauth2SecuritySchemeName] = targetOAuth2SecurityScheme;
 
             // ------------------------------ Only if needed: Add the Oauth 2.0 security scheme to the target document's root security declaration
             // The target document's root security declaration
@@ -107,6 +110,28 @@ namespace AspNetCore.Simple.Sdk.Swagger
             //   See also the Swagger OAuth 2.0 documentation (https://swagger.io/docs/specification/authentication/oauth2/), section "No Scopes".
             //   This is implemented in the following line of code.
             if (distinctTargetOAuth2Scopes.Count == 0) { swaggerDoc.SecurityRequirements.Add(new() { [targetOAuth2SecurityScheme] = ImmutableArray<string>.Empty }); }
+        }
+
+        private static OpenApiSecurityScheme CreateOpenApiSecurityScheme(string targetOauth2SecuritySchemeName, OpenApiOAuthFlow targetOAuth2Flow)
+        {
+            return new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OAuth2,
+                Name = targetOauth2SecuritySchemeName,
+                Reference = new()
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    // The ID is needed by OpenApiSecuritySchemeReferenceEqualityComparer, which is used by OpenApiSecurityRequirement,
+                    // which derives from Dictionary<OpenApiSecurityScheme, IList<String>>.
+                    Id = targetOauth2SecuritySchemeName
+                },
+                Flows = new()
+                {
+                    // An API does not really care about the kind of flow. However, OpenAPI forces us to choose a flow.
+                    // --> We arbitrarily choose the "ClientCredentials" flow to declare the token URL and scpes within.
+                    ClientCredentials = targetOAuth2Flow
+                }
+            };
         }
     }
 }

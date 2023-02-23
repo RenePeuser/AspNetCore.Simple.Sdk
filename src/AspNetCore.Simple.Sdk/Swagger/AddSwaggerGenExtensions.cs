@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 using AspNetCore.Simple.Sdk.ApiVersioning;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
 using AspNetCore.Simple.Sdk.ErrorHandling;
@@ -31,12 +30,15 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public static string ExternalPublic => "external-public";
     }
 
-
     public record SwaggerInfos
     {
-        public SwaggerInfo[] SwaggerInfosByVersion { get; init; } = Array.Empty<SwaggerInfo>(); // only [] cause of configuration does not support IImmutableList
-    }
+        // only [] cause of configuration does not support IImmutableList
+        public SwaggerInfo[] SwaggerInfosByVersion { get; init; } = Array.Empty<SwaggerInfo>();
 
+        public bool IgnoreNonVersionedPath { get; set; } = true;
+
+        public string PathToIgnore { get; set; } = string.Empty;
+    }
 
     public record SwaggerInfo
     {
@@ -66,6 +68,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
         {
             var swaggerInfo = configuration.GetSetting<SwaggerInfos>() ?? new SwaggerInfos();
+
+            services.AddSingletonIfNotExists(swaggerInfo);
+
             var apiVersionProvider = new ApiVersionProvider();
             var allApiVersions = apiVersionProvider.GetAllApiVersions(assembly);
 
@@ -74,12 +79,13 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.DocInclusionPredicate((_, _) => true);
                 options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                 options.AddSwaggerGrouping();
+                options.SupportNonNullableReferenceTypes();
+
                 options.OperationFilter<RemoveVersionParameterFilter>();
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();
                 options.DocumentFilter<SchemaFilterForCurrentVersion>();
-                options.SupportNonNullableReferenceTypes();
 
                 // ToDo: think about next version strategy how to switch 
                 if (configuration.TryGetSettings<Auth0>(out _))
@@ -122,7 +128,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
         {
             var versionSpecificSwaggerInfo = swaggerInfos.SwaggerInfosByVersion.FirstOrDefault(swagger =>
             {
-                var apiVersionSwaggerInfo = ToApiVersion(swagger.Version);
+                var apiVersionSwaggerInfo = swagger.Version.ToApiVersion();
                 return apiVersionSwaggerInfo == apiVersion;
             });
 
@@ -152,22 +158,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
             };
 
             return info;
-        }
-
-        private static ApiVersion ToApiVersion(string version)
-        {
-            var values = version.ToLower(CultureInfo.InvariantCulture).Replace("v", string.Empty).Split(".").Select(number => number.ToInt()).ToArray();
-            if (values.Length == 1)
-            {
-                return new ApiVersion(values.First(), 0);
-            }
-
-            if (values.Length == 2)
-            {
-                return new ApiVersion(values.First(), values.ElementAt(1));
-            }
-
-            throw new ProblemDetailsException(500, "Unknown version string", $"Could not convert swagger version info: '{version}' into AP-Version");
         }
 
         private static IEnumerable<(string key, IOpenApiExtension openApiExtension)> GetExtensionInfo(SwaggerInfo swaggerInfo)

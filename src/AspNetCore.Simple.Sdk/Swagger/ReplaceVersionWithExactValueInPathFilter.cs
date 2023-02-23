@@ -11,6 +11,13 @@ namespace AspNetCore.Simple.Sdk.Swagger
 {
     public class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
     {
+        private readonly SwaggerInfos _swaggerInfos;
+
+        public ReplaceVersionWithExactValueInPathFilter(SwaggerInfos swaggerInfos)
+        {
+            _swaggerInfos = swaggerInfos;
+        }
+
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             var collectPathInfos = CollectInfos(swaggerDoc, context).Distinct(item => item.key).ToList();
@@ -30,6 +37,11 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 {
                     var versionInfo = apiDescription.ActionDescriptor.EndpointMetadata.FirstOrDefaultOfType<ApiVersionAttribute>();
 
+                    // New feature if path without version should be ignored we do not list it any more
+                    if (versionInfo.IsNull() && _swaggerInfos.IgnoreNonVersionedPath)
+                    {
+                        continue;
+                    }
 
                     var newOpenApiPathItem = path.Value;
                     if (versionInfo.IsNull())
