@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
-using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +33,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
         // only [] cause of configuration does not support IImmutableList
         public SwaggerInfo[] SwaggerInfosByVersion { get; init; } = Array.Empty<SwaggerInfo>();
 
-        public bool IgnoreNonVersionedPath { get; set; } = true;
+        public bool IgnoreNonVersionedPath { get; init; }
 
         public string PathToIgnore { get; set; } = string.Empty;
     }

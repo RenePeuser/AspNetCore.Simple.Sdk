@@ -31,8 +31,10 @@ namespace AspNetCore.Simple.Sdk.Swagger
             var selectedVersion = swaggerDoc.Info.Version.ToApiVersion();
 
             // ------------------------------ Prepare the target document's OAuth 2.0 security scheme
-            var targetOAuth2Flow = new OpenApiOAuthFlow();
-            targetOAuth2Flow.TokenUrl = new Uri(_auth0Settings.TokenEndpoint);
+            var targetOAuth2Flow = new OpenApiOAuthFlow
+            {
+                TokenUrl = new Uri(_auth0Settings.TokenEndpoint)
+            };
 
             // targetOAuth2Flow.Scopes will be set later further below, once we know the aggregated set of scopes used by the operations.
             var targetOAuth2SecurityScheme = CreateOpenApiSecurityScheme(TargetOauth2SecuritySchemeName, targetOAuth2Flow);

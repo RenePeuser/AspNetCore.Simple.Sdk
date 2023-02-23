@@ -27,7 +27,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                     {
                         var httpScheme = httpReq.Scheme;
-#if (!DEBUG)
+#if !DEBUG
                     httpScheme = "https";
 #endif
                         swaggerDoc.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"{httpScheme}://{httpReq.Host.Value}{basePath}" } };

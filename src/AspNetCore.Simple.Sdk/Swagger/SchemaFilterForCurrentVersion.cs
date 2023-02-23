@@ -18,7 +18,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public SchemaFilterForCurrentVersion(Assembly callingAssembly, SwaggerInfos swaggerInfos)
         {
             _callingAssembly = callingAssembly;
-            _pathToIgnore = swaggerInfos.PathToIgnore.Split(";",StringSplitOptions.RemoveEmptyEntries).ToImmutableList();
+            _pathToIgnore = swaggerInfos.PathToIgnore.Split(";", StringSplitOptions.RemoveEmptyEntries).ToImmutableList();
         }
 
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
