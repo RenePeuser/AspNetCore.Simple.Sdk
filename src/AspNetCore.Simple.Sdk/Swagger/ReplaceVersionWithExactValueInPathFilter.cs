@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
@@ -12,10 +14,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
     public class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
     {
         private readonly SwaggerInfos _swaggerInfos;
+        private readonly IImmutableList<string> _pathsToIgnore;
 
         public ReplaceVersionWithExactValueInPathFilter(SwaggerInfos swaggerInfos)
         {
             _swaggerInfos = swaggerInfos;
+            _pathsToIgnore = _swaggerInfos.PathToIgnore.Split(";", StringSplitOptions.RemoveEmptyEntries).ToImmutableList();
         }
 
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
@@ -31,6 +35,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
         {
             foreach (var path in swaggerDoc.Paths)
             {
+                // If a part of path should be ignored we ignore them
+                if (_pathsToIgnore.Any(pathToIgnore => path.Key.Contains(pathToIgnore)))
+                {
+                    continue;
+                }
+
                 var apiDescriptions = context.ApiDescriptions.Where(api => api.RelativePath.EqualsTo(path.Key.TrimStart('/'))).ToList();
 
                 foreach (var apiDescription in apiDescriptions)

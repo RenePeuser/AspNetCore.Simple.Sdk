@@ -65,7 +65,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
                               {
                                   return false;
                               }
-
+                              
+                              // ToDo: Workaround, if no version is set V1 and no Version means the same for tags
                               return apiVersionAttribute.Versions.Any(version => version == selectedVersion);
                           }).ToImmutableList();
         }

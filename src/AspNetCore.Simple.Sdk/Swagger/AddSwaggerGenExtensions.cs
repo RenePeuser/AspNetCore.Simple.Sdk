@@ -30,12 +30,20 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
     public record SwaggerInfos
     {
-        // only [] cause of configuration does not support IImmutableList
+        /// <summary>
+        /// You can define swagger document infos per version you have. For each version use on <see cref="SwaggerInfo"/>
+        /// </summary>
         public SwaggerInfo[] SwaggerInfosByVersion { get; init; } = Array.Empty<SwaggerInfo>();
 
+        /// <summary>
+        /// Controls if any path without correct api version will be ignored or not
+        /// </summary>
         public bool IgnoreNonVersionedPath { get; init; }
 
-        public string PathToIgnore { get; set; } = string.Empty;
+        /// <summary>
+        /// You can configure multiple path semi comma separated which path should be ignored
+        /// </summary>
+        public string PathToIgnore { get; init; } = string.Empty;
     }
 
     public record SwaggerInfo
@@ -53,7 +61,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public string ContactName { get; init; } = string.Empty;
 
         public string ContactEmail { get; init; } = string.Empty;
-
+        
         public bool WithServerInfo { get; init; }
 
         public string? ContactUrl { get; init; }

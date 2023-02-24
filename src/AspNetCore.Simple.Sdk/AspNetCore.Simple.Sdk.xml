@@ -136,6 +136,21 @@
             <param name="b">The maximum value.</param>
             <returns>Random value between <paramref name="a"/> and <paramref name="b"/></returns>
         </member>
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.SwaggerInfosByVersion">
+            <summary>
+            You can define swagger document infos per version you have. For each version use on <see cref="T:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo"/>
+            </summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.IgnoreNonVersionedPath">
+            <summary>
+            Controls if any path without correct api version will be ignored or not
+            </summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.PathToIgnore">
+            <summary>
+            You can configure multiple path semi comma separated which path should be ignored
+            </summary>
+        </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo.Id">
             <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#215"> guideline 215</a>.</summary>
         </member>
