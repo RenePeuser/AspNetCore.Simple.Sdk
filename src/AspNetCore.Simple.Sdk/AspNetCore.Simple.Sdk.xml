@@ -141,9 +141,9 @@
             You can define swagger document infos per version you have. For each version use on <see cref="T:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo"/>
             </summary>
         </member>
-        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.IgnoreNonVersionedPath">
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.IncludeOnlyVersionedPaths">
             <summary>
-            Controls if any path without correct api version will be ignored or not
+            Controls that only path´s with a version are included version.
             </summary>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.PathToIgnore">

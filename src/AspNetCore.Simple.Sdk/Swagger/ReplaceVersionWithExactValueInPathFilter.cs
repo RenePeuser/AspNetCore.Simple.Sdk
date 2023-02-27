@@ -48,7 +48,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     var versionInfo = apiDescription.ActionDescriptor.EndpointMetadata.FirstOrDefaultOfType<ApiVersionAttribute>();
 
                     // New feature if path without version should be ignored we do not list it any more
-                    if (versionInfo.IsNull() && _swaggerInfos.IgnoreNonVersionedPath)
+                    if (versionInfo.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
                     {
                         continue;
                     }

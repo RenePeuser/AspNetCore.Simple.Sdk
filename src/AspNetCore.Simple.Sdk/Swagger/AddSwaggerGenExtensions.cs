@@ -36,9 +36,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public SwaggerInfo[] SwaggerInfosByVersion { get; init; } = Array.Empty<SwaggerInfo>();
 
         /// <summary>
-        /// Controls if any path without correct api version will be ignored or not
+        /// Controls that only path´s with a version are included version.
         /// </summary>
-        public bool IgnoreNonVersionedPath { get; init; }
+        public bool IncludeOnlyVersionedPaths { get; init; }
 
         /// <summary>
         /// You can configure multiple path semi comma separated which path should be ignored
