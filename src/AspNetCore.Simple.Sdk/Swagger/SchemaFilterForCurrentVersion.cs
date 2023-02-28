@@ -63,6 +63,18 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 // We have to check if full qualified type names are matching
                 var key = keyValue.Key.ToUpperInvariant();
 
+                // New feature we can configure paths which we do not want in swagger
+                if (_pathToIgnore.Any(path => key.Contains(path.ToUpperInvariant())))
+                {
+                    return false;
+                }
+
+                // If not caller owned namespace we accept all versions
+                if (key.Contains(assemblyRootName).IsFalse())
+                {
+                    return true;
+                }
+
                 // We detect the type from swagger to find matching controller to where it will be used
                 var matchingType = controllerAndTypes.FirstOrDefault(controllerInfo => controllerInfo.Types.Any(t => t.FullName!.ToUpperInvariant() == key));
                 if (matchingType.IsNull())
@@ -74,19 +86,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 if (_swaggerInfos.IncludeOnlyVersionedPaths && matchingType.HasVersion.IsFalse())
                 {
                     return false;
-                }
-
-
-                // New feature we can configure paths which we do not want in swagger
-                if (_pathToIgnore.Any(path => key.Contains(path.ToUpperInvariant())))
-                {
-                    return false;
-                }
-
-                // If not caller owned namespace we accept all versions
-                if (key.Contains(assemblyRootName).IsFalse())
-                {
-                    return true;
                 }
 
                 // No version return
