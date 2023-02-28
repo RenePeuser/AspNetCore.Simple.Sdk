@@ -18,12 +18,14 @@ namespace AspNetCore.Simple.Sdk.Swagger
     public sealed class OAuth2Filter : IDocumentFilter
     {
         private readonly Auth0 _auth0Settings;
+        private readonly SwaggerInfos _swaggerInfos;
         private const string TargetOauth2SecuritySchemeName = "oauth2";
 
         // Ctor must be public for DI, even if the class itself is internal.
-        public OAuth2Filter(Auth0 auth0Settings)
+        public OAuth2Filter(Auth0 auth0Settings, SwaggerInfos swaggerInfos)
         {
             _auth0Settings = auth0Settings;
+            _swaggerInfos = swaggerInfos;
         }
 
         void IDocumentFilter.Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
@@ -48,6 +50,11 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     if (controllerActionDescriptor.IsNull())
                     {
                         return false;
+                    }
+
+                    if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
+                    {
+                        return true;
                     }
 
                     var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
