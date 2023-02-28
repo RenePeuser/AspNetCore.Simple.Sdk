@@ -14,6 +14,13 @@ namespace AspNetCore.Simple.Sdk.Swagger
     /// <summary>Ensures that each tag defined on the operation level also exists on the root level of the OpenAPI Json document.</summary>
     public class RootLevelTagsFilter : IDocumentFilter
     {
+        private readonly SwaggerInfos _swaggerInfos;
+
+        public RootLevelTagsFilter(SwaggerInfos swaggerInfos)
+        {
+            _swaggerInfos = swaggerInfos;
+        }
+
         void IDocumentFilter.Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             var selectedVersion = swaggerDoc.Info.Version.ToApiVersion();
@@ -29,17 +36,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
             swaggerDoc.Tags.AddRange(missingDocTags);
         }
 
-        private static ImmutableArray<OpenApiTag> GetAllOpenApiTags(ImmutableList<ApiDescription> apiDescriptionsVersionBased, ImmutableArray<string> existingDocTagNames)
+        private ImmutableArray<OpenApiTag> GetAllOpenApiTags(ImmutableList<ApiDescription> apiDescriptionsVersionBased, ImmutableArray<string> existingDocTagNames)
         {
-            return apiDescriptionsVersionBased.SelectMany(desc =>
-                                              {
-                                                  var controllerActionDesriptor = desc.ActionDescriptor.As<ControllerActionDescriptor>();
-                                                  if (controllerActionDesriptor.IsNotNull())
-                                                  {
-
-                                                  }
-                                                  return desc.ActionDescriptor.EndpointMetadata;
-                                              })
+            return apiDescriptionsVersionBased.SelectMany(desc => desc.ActionDescriptor.EndpointMetadata)
                                               .OfType<SwaggerOperationAttribute>()
                                               .SelectMany(op => op.Tags)
                                               .Distinct()
@@ -49,15 +48,21 @@ namespace AspNetCore.Simple.Sdk.Swagger
                                               .ToImmutableArray();
         }
 
-        private static ImmutableList<ApiDescription> GetApiDescriptionsForSelectedVersion(DocumentFilterContext context, ApiVersion selectedVersion)
+        private ImmutableList<ApiDescription> GetApiDescriptionsForSelectedVersion(DocumentFilterContext context, ApiVersion selectedVersion)
         {
             return context.ApiDescriptions
                           .Where(desc =>
                           {
+
                               var controllerActionDescriptor = desc.ActionDescriptor.As<ControllerActionDescriptor>();
                               if (controllerActionDescriptor.IsNull())
                               {
                                   return false;
+                              }
+
+                              if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
+                              {
+                                  return true;
                               }
 
                               var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
@@ -65,7 +70,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                               {
                                   return false;
                               }
-                              
+
                               // ToDo: Workaround, if no version is set V1 and no Version means the same for tags
                               return apiVersionAttribute.Versions.Any(version => version == selectedVersion);
                           }).ToImmutableList();
