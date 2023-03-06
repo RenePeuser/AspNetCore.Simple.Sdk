@@ -41,7 +41,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
             swaggerDoc.Tags.AddRange(missingDocTags);
         }
 
-        private ImmutableArray<OpenApiTag> GetAllOpenApiTags(ImmutableList<ApiDescription> apiDescriptionsVersionBased, ImmutableArray<string> existingDocTagNames)
+        private IImmutableList<OpenApiTag> GetAllOpenApiTags(ImmutableList<ApiDescription> apiDescriptionsVersionBased, ImmutableArray<string> existingDocTagNames)
         {
             return apiDescriptionsVersionBased.SelectMany(desc => desc.ActionDescriptor.EndpointMetadata)
                                               .OfType<SwaggerOperationAttribute>()
@@ -50,7 +50,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                                               .Where(optTag => optTag.IsNotNullOrWhiteSpace())
                                               .Except(existingDocTagNames)
                                               .Select(missingDocTagName => new OpenApiTag { Name = missingDocTagName })
-                                              .ToImmutableArray();
+                                              .ToImmutableList();
         }
 
         private ImmutableList<ApiDescription> GetApiDescriptionsForSelectedVersion(DocumentFilterContext context, ApiVersion selectedVersion)
@@ -72,28 +72,34 @@ namespace AspNetCore.Simple.Sdk.Swagger
                                   return false;
                               }
 
-                              // 3. If all versions and non versions allowed we return true to show all
-                              if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
-                              {
-                                  return true;
-                              }
-
-                              // 4. If only version path are allowed we have to check if version placeholder exists
-                              if(allPaths.All(path => path.Contains("{version}").IsFalse()))
-                              {
-                                  return false;
-                              }
-
-                              // 6. Now we have to check if version attribute exi
+                              // 3. Now we have to check if version attribute exi
                               var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
                               if (apiVersionAttribute.IsNull())
                               {
                                   return false;
                               }
 
-                              // 6. Then we have to check if the current selected version fits the controller, because we only want to show version
+                              // 4. Then we have to check if the current selected version fits the controller, because we only want to show version
                               //    specific controller, routes, tags and schemas
-                              return apiVersionAttribute.Versions.Any(version => version == selectedVersion);
+                              if (apiVersionAttribute.Versions.Any(version => version == selectedVersion).IsFalse())
+                              {
+                                  return false;
+                              }
+
+                              // 5. If all versions and non versions allowed we return true to show all
+                              if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
+                              {
+                                  return true;
+                              }
+
+                              // 6. If only version path are allowed we have to check if version placeholder exists
+                              if(allPaths.All(path => path.Contains("{version}").IsFalse()))
+                              {
+                                  return false;
+                              }
+
+                              return false;
+
                           }).ToImmutableList();
         }
 
