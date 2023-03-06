@@ -35,6 +35,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
         {
             foreach (var path in swaggerDoc.Paths)
             {
+                // Include only version path = true means only path with versions
+                if (_swaggerInfos.IncludeOnlyVersionedPaths && path.ToString().DoesNotContain("{version}"))
+                {
+                    continue;
+                }
+
                 // If a part of path should be ignored we ignore them
                 if (_pathsToIgnore.Any(pathToIgnore => path.Key.Contains(pathToIgnore)))
                 {

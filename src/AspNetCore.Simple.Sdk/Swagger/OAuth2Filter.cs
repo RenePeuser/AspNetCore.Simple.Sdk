@@ -7,6 +7,7 @@ using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -20,12 +21,14 @@ namespace AspNetCore.Simple.Sdk.Swagger
         private readonly Auth0 _auth0Settings;
         private readonly SwaggerInfos _swaggerInfos;
         private const string TargetOauth2SecuritySchemeName = "oauth2";
+        private string[] _pathToIgnore;
 
         // Ctor must be public for DI, even if the class itself is internal.
         public OAuth2Filter(Auth0 auth0Settings, SwaggerInfos swaggerInfos)
         {
             _auth0Settings = auth0Settings;
             _swaggerInfos = swaggerInfos;
+            _pathToIgnore = swaggerInfos.PathToIgnore.Split(";", StringSplitOptions.RemoveEmptyEntries);
         }
 
         void IDocumentFilter.Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
@@ -48,6 +51,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 {
                     var controllerActionDescriptor = desc.ActionDescriptor.As<ControllerActionDescriptor>();
                     if (controllerActionDescriptor.IsNull())
+                    {
+                        return false;
+                    }
+
+                    var allPaths = GetAllPaths(controllerActionDescriptor).ToImmutableList();
+                    if (_pathToIgnore.Any(pathToIgnore => allPaths.Any(path => path.Contains(pathToIgnore))))
                     {
                         return false;
                     }
@@ -141,6 +150,31 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     ClientCredentials = targetOAuth2Flow
                 }
             };
+        }
+
+        private IEnumerable<string> GetAllPaths(ControllerActionDescriptor controllerActionDescriptor)
+        {
+            var controllerBasePaths = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttributes<RouteAttribute>();
+            foreach (var controllerBasePath in controllerBasePaths)
+            {
+                yield return controllerBasePath.Template;
+            }
+
+            var controllerMethods = controllerActionDescriptor.ControllerTypeInfo.GetMethods();
+            var methodRouteAttributes = controllerMethods.SelectMany(method => method.GetCustomAttributes<RouteAttribute>());
+            foreach (var methodRouteAttribute in methodRouteAttributes)
+            {
+                yield return methodRouteAttribute.Template;
+            }
+
+            var httpAttributes = controllerMethods.SelectMany(method => method.GetCustomAttributes<HttpMethodAttribute>());
+            foreach (var httpMethodAttribute in httpAttributes)
+            {
+                if (httpMethodAttribute.Template.IsNotNull())
+                {
+                    yield return httpMethodAttribute.Template;
+                }
+            }
         }
     }
 }
