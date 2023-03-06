@@ -61,7 +61,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public string ContactName { get; init; } = string.Empty;
 
         public string ContactEmail { get; init; } = string.Empty;
-        
+
         public bool WithServerInfo { get; init; }
 
         public string? ContactUrl { get; init; }

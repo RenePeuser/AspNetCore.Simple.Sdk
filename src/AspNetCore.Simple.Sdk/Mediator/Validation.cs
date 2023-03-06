@@ -20,9 +20,6 @@ namespace AspNetCore.Simple.Sdk.Mediator
     }
 
 
-    
-
-
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
         private readonly IServiceProvider _serviceProvider;

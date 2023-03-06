@@ -18,7 +18,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
     public class RootLevelTagsFilter : IDocumentFilter
     {
         private readonly SwaggerInfos _swaggerInfos;
-        private string[] _pathToIgnore;
+        private readonly string[] _pathToIgnore;
 
         public RootLevelTagsFilter(SwaggerInfos swaggerInfos)
         {
@@ -93,7 +93,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                               }
 
                               // 6. If only version path are allowed we have to check if version placeholder exists
-                              if(allPaths.All(path => path.Contains("{version}").IsFalse()))
+                              if (allPaths.All(path => path.Contains("{version}").IsFalse()))
                               {
                                   return false;
                               }
