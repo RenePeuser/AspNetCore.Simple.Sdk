@@ -7,6 +7,7 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
         string Serialize<T>(T source);
 
         T? Deserialize<T>(string json);
+
         object? Deserialize(string json, Type responseType);
     }
 }

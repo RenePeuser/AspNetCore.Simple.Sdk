@@ -13,9 +13,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
                 return;
             }
 
-            services.AddSingletonIfNotExists<IErrorHandlingStrategy, ErrorHandlingStrategy>();
-
-            services.AddSingletonIfNotExists<ErrorHandlingMiddleware>();
+            services.AddErrorHandlingMiddleware();
 
             services.AddSecurityProblemExceptionHandler();
             services.AddProblemDetailsExceptionHandler();

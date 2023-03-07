@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace AspNetCore.Simple.Sdk.Mediator
             }
 
             RegisteredMediators.AddOrUpdate(assembly.FullName!, assembly, (_, __) => assembly);
-            services.AddMediatR(assembly);
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
         }
     }
 
@@ -68,6 +69,14 @@ namespace AspNetCore.Simple.Sdk.Mediator
                                                            CancellationToken cancellationToken = default)
         {
             return mediator.Send(request, cancellationToken);
+
+        }
+
+        public static IAsyncEnumerable<TResponse> SendAsync<TResponse>(this IMediator mediator,
+                                                           IStreamRequest<TResponse> request,
+                                                           CancellationToken cancellationToken = default)
+        {
+            return mediator.CreateStream(request, cancellationToken);
 
         }
 

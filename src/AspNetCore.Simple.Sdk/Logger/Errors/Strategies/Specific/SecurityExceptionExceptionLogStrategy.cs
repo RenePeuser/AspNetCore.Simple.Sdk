@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
@@ -17,9 +19,11 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
 
         protected override ErrorLogInfo GetErrorLogFrom(HttpContext httpContext, SecurityProblemException exception)
         {
-            return new ErrorLogInfo(exception.ProblemDetails.Detail ?? "n.A", exception.ProblemDetails.Title ?? "n.A",
+            return new ErrorLogInfo(string.Empty,
+                                    exception.ProblemDetails.Detail ?? "n.A", exception.ProblemDetails.Title ?? "n.A",
                                     exception.StackTrace?.Split(Environment.NewLine) ?? Enumerable.Empty<string>(),
-                                    httpContext.Request.GetQueryRequestInfo().ToImmutableDictionary(k => k.key, v => v.value));
+                                    httpContext.Request.GetQueryRequestInfo().ToImmutableDictionary(k => k.key, v => v.value),
+                                    new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
         }
     }
 }
