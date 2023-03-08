@@ -21,7 +21,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
         private readonly Auth0 _auth0Settings;
         private readonly SwaggerInfos _swaggerInfos;
         private const string TargetOauth2SecuritySchemeName = "oauth2";
-        private string[] _pathToIgnore;
+        private readonly string[] _pathToIgnore;
 
         // Ctor must be public for DI, even if the class itself is internal.
         public OAuth2Filter(Auth0 auth0Settings, SwaggerInfos swaggerInfos)
@@ -49,55 +49,30 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 .ApiDescriptions
                 .Where(desc =>
                 {
-                    // 1. Must be an controller action descriptor otherwise no checks can be done
                     var controllerActionDescriptor = desc.ActionDescriptor.As<ControllerActionDescriptor>();
                     if (controllerActionDescriptor.IsNull())
                     {
                         return false;
                     }
 
-                    // 2. Detect all path exists on the controller to check path to ignore
-                    var allPaths = GetAllPaths(controllerActionDescriptor).ToImmutableList();
-                    if (_pathToIgnore.Any(pathToIgnore => allPaths.Any(path => path.Contains(pathToIgnore))))
+                    if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
                     {
-                        return false;
+                        return true;
                     }
 
-                    // 3. Now we have to check if version attribute exi
                     var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
                     if (apiVersionAttribute.IsNull())
                     {
                         return false;
                     }
 
-                    // 4. Then we have to check if the current selected version fits the controller, because we only want to show version
-                    //    specific controller, routes, tags and schemas
-                    if (apiVersionAttribute.Versions.Any(version => version == selectedVersion).IsFalse())
-                    {
-                        return false;
-                    }
-
-                    // 5. If all versions and non versions allowed we return true to show all
-                    if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
-                    {
-                        return true;
-                    }
-
-                    // 6. If only version path are allowed we have to check if version placeholder exists
-                    if (allPaths.All(path => path.Contains("{version}").IsFalse()))
-                    {
-                        return false;
-                    }
-
-                    return false;
+                    return apiVersionAttribute.Versions.Any(version => version == selectedVersion);
                 })
-                .Select(sourceApi => new
-                {
-                    RelativePath = sourceApi.RelativePath?.Replace("{version}", swaggerDoc.Info.Version) ?? string.Empty,
-                    sourceApi.HttpMethod,  // null meaning "all HTTP methods"
-                    // Applying FirstOrDefault is o.k., because OAuth2ScopeAttribute has AllowMultiple = false.
-                    OAuth2Scope = sourceApi.ActionDescriptor.EndpointMetadata.OfType<OAuth2ScopeAttribute>().FirstOrDefault()?.Scope
-                })
+                .Select(sourceApi => new Test(sourceApi.RelativePath?.Replace("{version}", swaggerDoc.Info.Version) ?? string.Empty,
+                                              sourceApi.HttpMethod,  // null meaning "all HTTP methods"
+                                                                     // Applying FirstOrDefault is o.k., because OAuth2ScopeAttribute has AllowMultiple = false.
+                                              sourceApi.ActionDescriptor.EndpointMetadata.OfType<OAuth2ScopeAttribute>().FirstOrDefault()?.Scope))
+
                 .Where(sourceOp => sourceOp.OAuth2Scope.IsNotNullOrEmpty())
                 .GroupBy(sourceOp => sourceOp.RelativePath.Replace("{version}", swaggerDoc.Info.Version))
                 .ToImmutableDictionary(sourceOpGrp => sourceOpGrp.Key, sourceOpGrp => sourceOpGrp.ToImmutableArray());
@@ -147,6 +122,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
             if (distinctTargetOAuth2Scopes.Count == 0) { swaggerDoc.SecurityRequirements.Add(new() { [targetOAuth2SecurityScheme] = ImmutableArray<string>.Empty }); }
         }
 
+        internal sealed record Test(string RelativePath, string? HttpMethod, string? OAuth2Scope);
+
         private static OpenApiSecurityScheme CreateOpenApiSecurityScheme(string targetOauth2SecuritySchemeName, OpenApiOAuthFlow targetOAuth2Flow)
         {
             return new OpenApiSecurityScheme
@@ -168,6 +145,60 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 }
             };
         }
+
+        //private IImmutableList<ApiDescription> GetAllVersionDependentApiDescriptions(OpenApiDocument swaggerDoc, DocumentFilterContext documentFilterContext)
+        //{
+        //    var selectedVersion = swaggerDoc.Info.Version.ToApiVersion();
+
+        //    var oauth2ScopedSourceOpsPerRelativePath = documentFilterContext
+        //                                               .ApiDescriptions
+        //                                               .Where(desc =>
+        //                                               {
+        //                                                   // 1. Must be an controller action descriptor otherwise no checks can be done
+        //                                                   var controllerActionDescriptor = desc.ActionDescriptor.As<ControllerActionDescriptor>();
+        //                                                   if (controllerActionDescriptor.IsNull())
+        //                                                   {
+        //                                                       return false;
+        //                                                   }
+
+        //                                                   // 2. Detect all path exists on the controller to check path to ignore
+        //                                                   var allPaths = GetAllPaths(controllerActionDescriptor).ToImmutableList();
+        //                                                   if (_pathToIgnore.Any(pathToIgnore => allPaths.Any(path => path.Contains(pathToIgnore))))
+        //                                                   {
+        //                                                       return false;
+        //                                                   }
+
+        //                                                   // 3. Now we have to check if version attribute exi
+        //                                                   var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
+        //                                                   if (apiVersionAttribute.IsNull())
+        //                                                   {
+        //                                                       return false;
+        //                                                   }
+
+        //                                                   // 4. Then we have to check if the current selected version fits the controller, because we only want to show version
+        //                                                   //    specific controller, routes, tags and schemas
+        //                                                   if (apiVersionAttribute.Versions.Any(version => version == selectedVersion).IsFalse())
+        //                                                   {
+        //                                                       return false;
+        //                                                   }
+
+        //                                                   // 5. If all versions and non versions allowed we return true to show all
+        //                                                   if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
+        //                                                   {
+        //                                                       return true;
+        //                                                   }
+
+        //                                                   // 6. If only version path are allowed we have to check if version placeholder exists
+        //                                                   if (allPaths.All(path => path.Contains("{version}").IsFalse()))
+        //                                                   {
+        //                                                       return false;
+        //                                                   }
+
+        //                                                   return false;
+        //                                               }).ToImmutableList();
+
+        //    return oauth2ScopedSourceOpsPerRelativePath;
+        //}
 
         private IEnumerable<string> GetAllPaths(ControllerActionDescriptor controllerActionDescriptor)
         {

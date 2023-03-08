@@ -40,22 +40,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
             // - to unique identify the types we need to know each controllers, routes and types
             // - then we can compare full qualified name to detect if this is to ignore or not.
             var controllers = _callingAssembly.DefinedTypes.Where(type => typeof(ControllerBase).IsAssignableFrom(type)).ToImmutableList();
-            var controllerAndTypes = controllers.Select(controller =>
-            {
-                var methods = controller.DeclaredMethods;
-                var types = methods.SelectMany(method => method.GetParameters().Concat(method.ReturnParameter)).Select(parameter => parameter.ParameterType).ToImmutableList();
-                var allGenericTypes = types.SelectMany(t => t.GetAllTypesFromGenericType()).ToImmutableList();
-                var allTypes = GetAllSubTypes(types.Concat(allGenericTypes).ToImmutableList(), new List<string>()).ToImmutableList();
-                var hasVersion = HasVersion(controller);
-                return new
-                {
-                    Controller = controller,
-                    Types = allTypes,
-                    HasVersion = hasVersion,
-                };
-            }).ToImmutableList();
-
-
+            var controllerAndTypes = controllers.Select(controller => controller.GetAllTypesForController());
             var assemblyRootName = _callingAssembly.GetName().Name!.ToUpperInvariant();
             var currentVersionSpecificSchema = swaggerDoc.Components.Schemas.Where(keyValue =>
             {
@@ -112,48 +97,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
             // Add needed and version specific schemas
             swaggerDoc.Components.Schemas.ClearAndAddRange(currentVersionSpecificSchema);
-        }
-
-        private bool HasVersion(TypeInfo typeInfo)
-        {
-            //  [ApiVersionNeutral]
-            if (typeInfo.HasCustomAttribute<ApiVersionNeutralAttribute>())
-            {
-                return false;
-            }
-
-            return typeInfo.HasCustomAttribute<ApiVersionAttribute>();
-        }
-
-        private IEnumerable<Type> GetAllSubTypes(IImmutableList<Type> types, List<string> alreadyFound)
-        {
-            foreach (var type in types)
-            {
-                if (alreadyFound.Contains(type.FullName!))
-                {
-                    continue;
-                }
-
-                // we are not interested in system types or any type from microsoft
-                if (type.IsSystemType() || type.FullName!.Contains("Microsoft."))
-                {
-                    continue;
-                }
-
-                var properties = type.GetProperties().Select(p => p.PropertyType).ToImmutableList();
-                var genericArguments = properties.SelectMany(p => p.GetGenericArguments());
-                var allPropertyTypes = properties.Concat(genericArguments).Where(p => p.FullName.NotEqualsTo(type.FullName)).ToImmutableList(); // to avoid recursion to infinity
-
-                var subTypes = GetAllSubTypes(allPropertyTypes, alreadyFound).ToImmutableList();
-                foreach (var subType in subTypes)
-                {
-                    alreadyFound.Add(subType.FullName!);
-                    yield return subType;
-                }
-
-                alreadyFound.Add(type.FullName!);
-                yield return type;
-            }
         }
 
         [GeneratedRegex("([V])\\d")]
