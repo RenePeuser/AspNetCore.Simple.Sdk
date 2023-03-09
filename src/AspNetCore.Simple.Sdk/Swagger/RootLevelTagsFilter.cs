@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using AspNetCore.Simple.Sdk.Extensions;
@@ -63,36 +62,43 @@ namespace AspNetCore.Simple.Sdk.Swagger
                                   return false;
                               }
 
-                              // 2. Detect all path exists on the controller to check path to ignore
-                              var allPaths = GetAllPaths(controllerActionDescriptor).ToImmutableList();
-
-                              // 3. Now we have to check if version attribute exi
-                              var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
-                              if (apiVersionAttribute.IsNull())
-                              {
-                                  return false;
-                              }
-
-                              // 4. Then we have to check if the current selected version fits the controller, because we only want to show version
-                              //    specific controller, routes, tags and schemas
-                              if (apiVersionAttribute.Versions.Any(version => version == selectedVersion).IsFalse())
-                              {
-                                  return false;
-                              }
-
-                              // 5. If all versions and non versions allowed we return true to show all
+                              // 2. If all versions and non versions allowed we return true to show all
                               if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
                               {
                                   return true;
                               }
 
-                              // 6. If only version path are allowed we have to check if version placeholder exists
+                              // Since here only exact version matched are allowed
+
+                              // 3. Detect all path exists on the controller to check path to ignore
+                              var allPaths = GetAllPaths(controllerActionDescriptor).ToImmutableList();
                               if (allPaths.All(path => path.Contains("{version}").IsFalse()))
                               {
                                   return false;
                               }
 
-                              return false;
+                              // 4. Now we have to check if version attribute exi
+                              var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
+                              var apiVersionNeutral = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionNeutralAttribute>();
+
+                              // 5. If neutral api version then it will shown in all version documents
+                              if (apiVersionAttribute.IsNull() && apiVersionNeutral.IsNotNull())
+                              {
+                                  return true;
+                              }
+
+                              // 6. Now we check if version match selected version document
+                              if (apiVersionAttribute.IsNotNull())
+                              {
+                                  // 4. Then we have to check if the current selected version fits the controller, because we only want to show version
+                                  //    specific controller, routes, tags and schemas
+                                  if (apiVersionAttribute.Versions.Any(version => version == selectedVersion).IsFalse())
+                                  {
+                                      return false;
+                                  }
+                              }
+
+                              return true;
 
                           }).ToImmutableList();
         }
