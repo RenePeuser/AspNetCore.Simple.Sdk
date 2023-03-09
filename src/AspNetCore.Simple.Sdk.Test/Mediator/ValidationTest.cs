@@ -51,7 +51,7 @@ namespace AspNetCore.Simple.Sdk.Test.Mediator
         public ValidationTest()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddMediatR(typeof(ValidationTest));
+            serviceCollection.AddMediator(typeof(ValidationTest));
             serviceCollection.AddValidationBehavior();
             serviceCollection.AddSingletonIfNotExists<IServiceProvider, ServiceProvider>();
             serviceCollection.AddGetPersonByNameValidator();

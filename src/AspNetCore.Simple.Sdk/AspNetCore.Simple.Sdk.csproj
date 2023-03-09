@@ -51,7 +51,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
         <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.3" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Polly" Version="7.2.3" />
         <PackageReference Include="StackExchange.Redis" Version="2.6.96" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
