@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Security.Authentication;
@@ -12,11 +13,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
-    internal static class AddDefaultExceptionHandlerExtension
+    public static class AddDefaultExceptionHandlerExtension
     {
         public static void AddDefaultExceptionHandler(this IServiceCollection services)
         {
             services.AddSingletonIfNotExists<ISpecificErrorHandler, DefaultExceptionHandler>();
+        }
+
+        public static void RemoveDefaultExceptionHandler(this IServiceCollection services)
+        {
+            var defaultExceptionHandlers = services.Where(serviceRegistration => serviceRegistration.ImplementationType == typeof(DefaultExceptionHandler));
+            services.RemoveRange(defaultExceptionHandlers);
         }
     }
 

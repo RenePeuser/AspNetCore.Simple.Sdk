@@ -10,7 +10,7 @@ namespace AspNetCore.Simple.Sdk.Mediator
     {
         public static void AddValidationBehavior(this IServiceCollection services)
         {
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddMediatorPipelineBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         }
     }
 
