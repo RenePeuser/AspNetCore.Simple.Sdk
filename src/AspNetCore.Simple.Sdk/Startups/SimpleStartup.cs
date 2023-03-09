@@ -25,6 +25,16 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Startups
 {
+    public static class AddBasePathExtension
+    {
+        public static void AddBasePath(this IServiceCollection services, PathString pathString)
+        {
+            services.AddSingletonIfNotExists(new BasePath(pathString));
+        }
+    }
+
+    public record BasePath(PathString Value);
+
     public abstract class SimpleStartup
     {
         private Lazy<AutoRegistration> _lazyAutoRegistration = new();
@@ -74,8 +84,8 @@ namespace AspNetCore.Simple.Sdk.Startups
         // This method gets called by the runtime if there is no explicit "Production configure method.
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddMediator(Assembly);
             services.AddValidationBehavior();
+            services.AddBasePath(BasePath);
 
             services.AddControllers();
             services.AddQuerySecurityFilter();
@@ -85,6 +95,8 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddHttpClient();
             services.AddErrorHandling();
             services.AddErrorLogging();
+
+            services.AddApiVersionProvider();
 
             services.AddApiVersioningSimplified();
             services.AddJsonSerializer();

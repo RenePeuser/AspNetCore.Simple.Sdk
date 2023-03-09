@@ -14,12 +14,10 @@ namespace AspNetCore.Simple.Sdk.Swagger
     public class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
     {
         private readonly SwaggerInfos _swaggerInfos;
-        private readonly IImmutableList<string> _pathsToIgnore;
 
         public ReplaceVersionWithExactValueInPathFilter(SwaggerInfos swaggerInfos)
         {
             _swaggerInfos = swaggerInfos;
-            _pathsToIgnore = _swaggerInfos.PathToIgnore.Split(";", StringSplitOptions.RemoveEmptyEntries).ToImmutableList();
         }
 
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
@@ -37,12 +35,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
             {
                 // Include only version path = true means only path with versions
                 if (_swaggerInfos.IncludeOnlyVersionedPaths && path.ToString().DoesNotContain("{version}"))
-                {
-                    continue;
-                }
-
-                // If a part of path should be ignored we ignore them
-                if (_pathsToIgnore.Any(pathToIgnore => path.Key.Contains(pathToIgnore)))
                 {
                     continue;
                 }

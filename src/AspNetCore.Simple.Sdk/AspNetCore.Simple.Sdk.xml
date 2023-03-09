@@ -146,11 +146,6 @@
             Controls that only path´s with a version are included version.
             </summary>
         </member>
-        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.PathToIgnore">
-            <summary>
-            You can configure multiple path semi comma separated which path should be ignored
-            </summary>
-        </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo.Id">
             <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#215"> guideline 215</a>.</summary>
         </member>
@@ -179,15 +174,20 @@
             This query provides all Swagger documents in a c# object oriented structure to work with.
             </summary>
             <param name="Startup">The type of your startup.cs</param>
+            <param name="Client">The Http client which was setup for the test environment.</param>
         </member>
         <member name="M:AspNetCore.Simple.Sdk.Swagger.GetAllSwaggerVersionDocuments.#ctor(System.Type,System.Net.Http.HttpClient)">
             <summary>
             This query provides all Swagger documents in a c# object oriented structure to work with.
             </summary>
             <param name="Startup">The type of your startup.cs</param>
+            <param name="Client">The Http client which was setup for the test environment.</param>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.GetAllSwaggerVersionDocuments.Startup">
             <summary>The type of your startup.cs</summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.GetAllSwaggerVersionDocuments.Client">
+            <summary>The Http client which was setup for the test environment.</summary>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Swagger.OAuth2Filter">
             <summary>Adds OAuth 2.0 security definitions and requirements. Required scopes are determined by the presence of the

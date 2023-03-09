@@ -40,10 +40,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
         /// </summary>
         public bool IncludeOnlyVersionedPaths { get; init; }
 
-        /// <summary>
-        /// You can configure multiple path semi comma separated which path should be ignored
-        /// </summary>
-        public string PathToIgnore { get; init; } = string.Empty;
     }
 
     public record SwaggerInfo

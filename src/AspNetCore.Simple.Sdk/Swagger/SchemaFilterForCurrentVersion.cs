@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -17,13 +16,11 @@ namespace AspNetCore.Simple.Sdk.Swagger
         private static readonly Regex VersionRegex = GetVersionRegex();
         private readonly Assembly _callingAssembly;
         private readonly SwaggerInfos _swaggerInfos;
-        private readonly IImmutableList<string> _pathToIgnore;
 
         public SchemaFilterForCurrentVersion(Assembly callingAssembly, SwaggerInfos swaggerInfos)
         {
             _callingAssembly = callingAssembly;
             _swaggerInfos = swaggerInfos;
-            _pathToIgnore = swaggerInfos.PathToIgnore.Split(";", StringSplitOptions.RemoveEmptyEntries).ToImmutableList();
         }
 
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
@@ -47,12 +44,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 // Problem to detect type we can not expect that controller and type folders are in the sam sub strcture
                 // We have to check if full qualified type names are matching
                 var key = keyValue.Key.ToUpperInvariant();
-
-                // New feature we can configure paths which we do not want in swagger
-                if (_pathToIgnore.Any(path => key.Contains(path.ToUpperInvariant())))
-                {
-                    return false;
-                }
 
                 // If not caller owned namespace we accept all versions
                 if (key.Contains(assemblyRootName).IsFalse())

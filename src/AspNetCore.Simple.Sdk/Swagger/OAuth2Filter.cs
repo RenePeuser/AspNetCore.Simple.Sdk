@@ -7,7 +7,6 @@ using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -21,14 +20,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
         private readonly Auth0 _auth0Settings;
         private readonly SwaggerInfos _swaggerInfos;
         private const string TargetOauth2SecuritySchemeName = "oauth2";
-        private readonly string[] _pathToIgnore;
 
         // Ctor must be public for DI, even if the class itself is internal.
         public OAuth2Filter(Auth0 auth0Settings, SwaggerInfos swaggerInfos)
         {
             _auth0Settings = auth0Settings;
             _swaggerInfos = swaggerInfos;
-            _pathToIgnore = swaggerInfos.PathToIgnore.Split(";", StringSplitOptions.RemoveEmptyEntries);
         }
 
         void IDocumentFilter.Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
@@ -144,85 +141,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     ClientCredentials = targetOAuth2Flow
                 }
             };
-        }
-
-        //private IImmutableList<ApiDescription> GetAllVersionDependentApiDescriptions(OpenApiDocument swaggerDoc, DocumentFilterContext documentFilterContext)
-        //{
-        //    var selectedVersion = swaggerDoc.Info.Version.ToApiVersion();
-
-        //    var oauth2ScopedSourceOpsPerRelativePath = documentFilterContext
-        //                                               .ApiDescriptions
-        //                                               .Where(desc =>
-        //                                               {
-        //                                                   // 1. Must be an controller action descriptor otherwise no checks can be done
-        //                                                   var controllerActionDescriptor = desc.ActionDescriptor.As<ControllerActionDescriptor>();
-        //                                                   if (controllerActionDescriptor.IsNull())
-        //                                                   {
-        //                                                       return false;
-        //                                                   }
-
-        //                                                   // 2. Detect all path exists on the controller to check path to ignore
-        //                                                   var allPaths = GetAllPaths(controllerActionDescriptor).ToImmutableList();
-        //                                                   if (_pathToIgnore.Any(pathToIgnore => allPaths.Any(path => path.Contains(pathToIgnore))))
-        //                                                   {
-        //                                                       return false;
-        //                                                   }
-
-        //                                                   // 3. Now we have to check if version attribute exi
-        //                                                   var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
-        //                                                   if (apiVersionAttribute.IsNull())
-        //                                                   {
-        //                                                       return false;
-        //                                                   }
-
-        //                                                   // 4. Then we have to check if the current selected version fits the controller, because we only want to show version
-        //                                                   //    specific controller, routes, tags and schemas
-        //                                                   if (apiVersionAttribute.Versions.Any(version => version == selectedVersion).IsFalse())
-        //                                                   {
-        //                                                       return false;
-        //                                                   }
-
-        //                                                   // 5. If all versions and non versions allowed we return true to show all
-        //                                                   if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
-        //                                                   {
-        //                                                       return true;
-        //                                                   }
-
-        //                                                   // 6. If only version path are allowed we have to check if version placeholder exists
-        //                                                   if (allPaths.All(path => path.Contains("{version}").IsFalse()))
-        //                                                   {
-        //                                                       return false;
-        //                                                   }
-
-        //                                                   return false;
-        //                                               }).ToImmutableList();
-
-        //    return oauth2ScopedSourceOpsPerRelativePath;
-        //}
-
-        private IEnumerable<string> GetAllPaths(ControllerActionDescriptor controllerActionDescriptor)
-        {
-            var controllerBasePaths = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttributes<RouteAttribute>();
-            foreach (var controllerBasePath in controllerBasePaths)
-            {
-                yield return controllerBasePath.Template;
-            }
-
-            var controllerMethods = controllerActionDescriptor.ControllerTypeInfo.GetMethods();
-            var methodRouteAttributes = controllerMethods.SelectMany(method => method.GetCustomAttributes<RouteAttribute>());
-            foreach (var methodRouteAttribute in methodRouteAttributes)
-            {
-                yield return methodRouteAttribute.Template;
-            }
-
-            var httpAttributes = controllerMethods.SelectMany(method => method.GetCustomAttributes<HttpMethodAttribute>());
-            foreach (var httpMethodAttribute in httpAttributes)
-            {
-                if (httpMethodAttribute.Template.IsNotNull())
-                {
-                    yield return httpMethodAttribute.Template;
-                }
-            }
         }
     }
 }

@@ -18,12 +18,10 @@ namespace AspNetCore.Simple.Sdk.Swagger
     public class RootLevelTagsFilter : IDocumentFilter
     {
         private readonly SwaggerInfos _swaggerInfos;
-        private readonly string[] _pathToIgnore;
 
         public RootLevelTagsFilter(SwaggerInfos swaggerInfos)
         {
             _swaggerInfos = swaggerInfos;
-            _pathToIgnore = _swaggerInfos.PathToIgnore.Split(";", StringSplitOptions.RemoveEmptyEntries);
         }
 
         void IDocumentFilter.Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
@@ -67,10 +65,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                               // 2. Detect all path exists on the controller to check path to ignore
                               var allPaths = GetAllPaths(controllerActionDescriptor).ToImmutableList();
-                              if (_pathToIgnore.Any(pathToIgnore => allPaths.Any(path => path.Contains(pathToIgnore))))
-                              {
-                                  return false;
-                              }
 
                               // 3. Now we have to check if version attribute exi
                               var apiVersionAttribute = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
