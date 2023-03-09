@@ -13,11 +13,6 @@ namespace AspNetCore.Simple.Sdk.Mediator
     {
         internal static readonly ConcurrentDictionary<string, Assembly> RegisteredMediators = new();
 
-        public static void AddMediator<TImplementation>(this IServiceCollection services, Type type) where TImplementation : class
-        {
-            services.AddMediator(typeof(TImplementation).Assembly);
-        }
-
         public static void AddMediatorPipelineBehavior(this IServiceCollection services, Type serviceType, Type implementation)
         {
             services.AddTransient(serviceType, implementation);
