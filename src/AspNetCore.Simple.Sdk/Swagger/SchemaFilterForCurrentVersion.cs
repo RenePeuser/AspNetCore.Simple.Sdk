@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -83,7 +82,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     return false;
                 }
 
-                return key.Contains(normalizedVersion.ToUpperInvariant());
+                var result = key.Contains(normalizedVersion.ToUpperInvariant());
+                return result;
             }).ToList();
 
             // Add needed and version specific schemas

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
+using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -15,6 +14,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
     {
         private readonly SwaggerInfos _swaggerInfos;
 
+        // Absolutly worst hack ever - no words for
+        internal static ApiVersion SelectedApiVersion { get; private set; } = new ApiVersion(1, 0);
+
         public ReplaceVersionWithExactValueInPathFilter(SwaggerInfos swaggerInfos)
         {
             _swaggerInfos = swaggerInfos;
@@ -22,6 +24,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
+            // Amazing hack, thanks that swashbuckle is not able to detect unique paths absolutely amazing
+            SelectedApiVersion = context.DocumentName.ToApiVersion();
+
             var collectPathInfos = CollectInfos(swaggerDoc, context).Distinct(item => item.key).ToList();
             var newPath = new OpenApiPaths();
             collectPathInfos.ForEach(path => newPath.Add(path.key, path.openApiPathItem));

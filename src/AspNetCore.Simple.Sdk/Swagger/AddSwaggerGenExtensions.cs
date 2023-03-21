@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -65,7 +66,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public string Version { get; init; } = "1.0";
     }
 
-    public static class AddSwaggerGenExtensions
+    public static partial class AddSwaggerGenExtensions
     {
         public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
         {
@@ -79,15 +80,36 @@ namespace AspNetCore.Simple.Sdk.Swagger
             services.AddSwaggerGen(options =>
             {
                 options.DocInclusionPredicate((_, _) => true);
-                options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                 options.AddSwaggerGrouping();
                 options.SupportNonNullableReferenceTypes();
 
                 options.OperationFilter<RemoveVersionParameterFilter>();
+
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();
                 options.DocumentFilter<SchemaFilterForCurrentVersion>();
+
+                options.ResolveConflictingActions(apiDescriptions =>
+                {
+                    var exactApiDescription = apiDescriptions.FirstOrDefault(apiDescription =>
+                    {
+                        var apiVersionAttribute = apiDescription.ActionDescriptor.EndpointMetadata.OfType<ApiVersionAttribute>().ToImmutableList();
+                        if (apiVersionAttribute.IsEmpty())
+                        {
+                            return false;
+                        }
+
+                        if (apiVersionAttribute.Count > 1)
+                        {
+                            return false;
+                        }
+
+                        return apiVersionAttribute[0].Versions[0] == ReplaceVersionWithExactValueInPathFilter.SelectedApiVersion;
+                    });
+
+                    return exactApiDescription;
+                });
 
                 // ToDo: think about next version strategy how to switch 
                 if (configuration.TryGetSettings<Auth0>(out _))
