@@ -84,7 +84,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.SupportNonNullableReferenceTypes();
 
                 options.OperationFilter<RemoveVersionParameterFilter>();
-
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();
