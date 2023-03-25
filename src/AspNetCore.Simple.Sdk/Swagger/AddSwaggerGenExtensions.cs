@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
@@ -66,7 +67,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public string Version { get; init; } = "1.0";
     }
 
-    public static partial class AddSwaggerGenExtensions
+    internal sealed record SwaggerUi
+    {
+        internal static ApiVersion SelectedVersion { get; set; } = new ApiVersion(1, 0); //Exception cause swagger do not provide at specific scope the selected document
+    }
+
+    public static class AddSwaggerGenExtensions
     {
         public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
         {
@@ -82,6 +88,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.DocInclusionPredicate((_, _) => true);
                 options.AddSwaggerGrouping();
                 options.SupportNonNullableReferenceTypes();
+
+                // This have to come first !!
+                options.OperationFilter<SetSelectedDocumentFilter>();
 
                 options.OperationFilter<RemoveVersionParameterFilter>();
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
@@ -104,7 +113,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                             return false;
                         }
 
-                        return apiVersionAttribute[0].Versions[0] == ReplaceVersionWithExactValueInPathFilter.SelectedApiVersion;
+                        return apiVersionAttribute[0].Versions[0] == SwaggerUi.SelectedVersion;
                     });
 
                     return exactApiDescription;
@@ -159,8 +168,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
             {
                 // Fallback no infos if nothing was found
                 Debug.WriteLine($"No specific swagger info was found for api version: {apiVersion}. Please check your appsettings.json, environment variables for a correct declaration to get swagger infos per version");
-                var sample = new SwaggerInfos() { SwaggerInfosByVersion = new SwaggerInfo[] { new SwaggerInfo() } }.ToJson();
-                Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize(JToken.Parse(sample).ToString(Formatting.Indented)));
+                var sample = new SwaggerInfos { SwaggerInfosByVersion = new[] { new SwaggerInfo() } }.ToJson();
+                Debug.WriteLine(JsonSerializer.Serialize(JToken.Parse(sample).ToString(Formatting.Indented)));
                 versionSpecificSwaggerInfo = new SwaggerInfo();
             }
 

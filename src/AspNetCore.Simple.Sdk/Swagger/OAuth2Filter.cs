@@ -28,7 +28,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
             _swaggerInfos = swaggerInfos;
         }
 
-        void IDocumentFilter.Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             var selectedVersion = swaggerDoc.Info.Version.ToApiVersion();
 

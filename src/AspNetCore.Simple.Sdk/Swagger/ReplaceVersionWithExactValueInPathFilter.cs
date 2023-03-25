@@ -13,12 +13,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
-    public class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
+    internal sealed class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
     {
         private readonly SwaggerInfos _swaggerInfos;
-
-        // Absolutly worst hack ever - no words for
-        internal static ApiVersion SelectedApiVersion { get; private set; } = new ApiVersion(1, 0);
 
         public ReplaceVersionWithExactValueInPathFilter(SwaggerInfos swaggerInfos)
         {
@@ -28,9 +25,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             // Amazing hack, thanks that swashbuckle is not able to detect unique paths absolutely amazing
-            SelectedApiVersion = context.DocumentName.ToApiVersion();
+            SwaggerUi.SelectedVersion = context.DocumentName.ToApiVersion();
 
-            var collectPathInfos = CollectInfos(swaggerDoc, context, SelectedApiVersion).Distinct(item => item.key).ToList();
+            var collectPathInfos = CollectInfos(swaggerDoc, context, SwaggerUi.SelectedVersion).Distinct(item => item.key).ToList();
             var newPath = new OpenApiPaths();
             collectPathInfos.ForEach(path => newPath.Add(path.key, path.openApiPathItem));
             swaggerDoc.Paths = newPath;
@@ -55,16 +52,16 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     var controller = apiDescription.ActionDescriptor.As<ControllerActionDescriptor>();
                     if (controller.IsNull())
                     {
-                        throw new ProblemDetailsException("Unexpected ApiDesciption type");
+                        throw new ProblemDetailsException("Unexpected ApiDescription type");
                     }
 
-                    var apiVesion = controller.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
-                    if (apiVesion.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
+                    var apiVersion = controller.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
+                    if (apiVersion.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
                     {
                         continue;
                     }
 
-                    if (apiVesion?.Versions[0] != selectedApiVersion)
+                    if (apiVersion?.Versions[0] != selectedApiVersion)
                     {
                         continue;
                     }
