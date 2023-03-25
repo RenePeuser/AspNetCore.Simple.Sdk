@@ -91,12 +91,13 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                 // This have to come first !!
                 options.OperationFilter<SetSelectedDocumentFilter>();
-
                 options.OperationFilter<RemoveVersionParameterFilter>();
+
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();
                 options.DocumentFilter<SchemaFilterForCurrentVersion>();
+
 
                 options.ResolveConflictingActions(apiDescriptions =>
                 {
@@ -116,7 +117,18 @@ namespace AspNetCore.Simple.Sdk.Swagger
                         return apiVersionAttribute[0].Versions[0] == SwaggerUi.SelectedVersion;
                     });
 
-                    return exactApiDescription;
+                    if (exactApiDescription.IsNull())
+                    {
+                        Console.WriteLine(@$"Swagger path could not be identified. 
+Please check that your version for your documents are still available, do not delete older versions.
+Current selected swagger version: '{SwaggerUi.SelectedVersion}'
+{apiDescriptions.Select(desc => $"- {desc.HttpMethod} {desc.RelativePath}").Flatten(Environment.NewLine)}");
+                    }
+
+
+                    return exactApiDescription.IsNull() ? apiDescriptions.First() : exactApiDescription;
+
+                    // return exactApiDescription;
                 });
 
                 // ToDo: think about next version strategy how to switch 
