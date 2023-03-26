@@ -115,8 +115,18 @@ namespace AspNetCore.Simple.Sdk.Extensions
                     continue;
                 }
 
+                if (type.FullName.IsNull())
+                {
+                    continue;
+                }
+
                 // we are not interested in system types or any type from microsoft
-                if (type.IsSystemType() || type.FullName!.Contains("Microsoft."))
+                if (type.IsSystemType())
+                {
+                    continue;
+                }
+
+                if (type.FullName.Contains("Microsoft."))
                 {
                     continue;
                 }
