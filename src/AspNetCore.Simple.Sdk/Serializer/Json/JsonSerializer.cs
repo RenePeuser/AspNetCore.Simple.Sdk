@@ -10,7 +10,11 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
         public JsonSerializer()
         {
-            _serializeOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() } };
+            _serializeOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true, 
+                Converters = { new JsonStringEnumConverter() }
+            };
         }
 
         public string Serialize<T>(T source)

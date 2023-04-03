@@ -148,7 +148,6 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
                 // EnumSchemaFilter conflicts with ExtensibleEnumFilter. Use one or the other.
                 // options.SchemaFilter<EnumSchemaFilter>();
                 options.SchemaFilter<ExtensibleEnumFilter>();
-
                 options.ParameterFilter<ExtensibleEnumFilter>();
                 options.EnableAnnotations();  // necessary to include the SwaggerOperationAttribute.OperationIds in the Swagger Json
 
