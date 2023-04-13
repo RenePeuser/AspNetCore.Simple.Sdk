@@ -37,7 +37,7 @@ namespace AspNetCore.Simple.Sdk.Cors
                 if (controllerActionDescriptor is null)
                 {
                     throw new ProblemDetailsException("Middleware is used in wrong order at startup, or you missing [HttpOptions] at your target route",
-                                                     "Please check error details for more",
+                                                      "Please check error details for more",
                                                       ("Middleware", $"Please check the order of the {nameof(OptionsMiddleware)}. It must be used before the `app.UseEndPoints(..);`"),
                                                       ("Endpoint", $"Please check that your endpoint: {controllerActionDescriptor?.ActionName} have attribute set: [HttpOptions({controllerActionDescriptor?.ActionName})]"));
                 }

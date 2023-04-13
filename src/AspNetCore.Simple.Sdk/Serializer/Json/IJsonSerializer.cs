@@ -6,8 +6,12 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
     {
         string Serialize<T>(T source);
 
-        T? Deserialize<T>(string json);
+        T Deserialize<T>(string json);
 
-        object? Deserialize(string json, Type responseType);
+        T? DeserializeOrDefault<T>(string json, T? defaultValue = default);
+
+        object Deserialize<T>(string json, Type responseType);
+
+        object? DeserializeOrDefault(string json, Type responseType, object? defaultValue = default);
     }
 }

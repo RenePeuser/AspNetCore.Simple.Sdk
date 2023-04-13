@@ -8,5 +8,6 @@
         <WarningsAsErrors>Nullable</WarningsAsErrors>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     </PropertyGroup>
 </Project>
