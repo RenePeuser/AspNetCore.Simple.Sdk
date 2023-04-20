@@ -3,15 +3,18 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
+using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Serializer.Json
 {
     public class JsonSerializer : IJsonSerializer
     {
+        private readonly ILogger<JsonSerializer> _logger;
         private readonly JsonSerializerOptions _serializeOptions;
 
-        public JsonSerializer()
+        public JsonSerializer(ILogger<JsonSerializer> logger)
         {
+            _logger = logger;
             _serializeOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
@@ -22,6 +25,19 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
         public string Serialize<T>(T source)
         {
             return System.Text.Json.JsonSerializer.Serialize(source, _serializeOptions);
+        }
+
+        public string? SerializeOrDefault<T>(T source, string? defaultValue = default)
+        {
+            try
+            {
+                return System.Text.Json.JsonSerializer.Serialize(source, _serializeOptions);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return defaultValue;
+            }
         }
 
         public T Deserialize<T>(string json)
