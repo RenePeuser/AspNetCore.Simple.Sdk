@@ -55,15 +55,15 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
             return deserializeResult;
         }
 
-        public T? DeserializeOrDefault<T>(string json, T? defaultValue = default(T))
+        public T? DeserializeOrDefault<T>(string json, T? defaultValue = default)
         {
             var deserializeResult = System.Text.Json.JsonSerializer.Deserialize<T>(json, _serializeOptions);
             return deserializeResult ?? defaultValue;
         }
 
-        public object Deserialize<T>(string json, Type responseType)
+        public object Deserialize<T>(string json, Type returnType)
         {
-            var deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, responseType, _serializeOptions);
+            var deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, returnType, _serializeOptions);
             if (deserializeResult.IsNull())
             {
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
@@ -76,9 +76,9 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
             return deserializeResult;
         }
 
-        public object? DeserializeOrDefault(string json, Type responseType, object? defaultValue = default)
+        public object? DeserializeOrDefault(string json, Type returnType, object? defaultValue = default)
         {
-            var deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, responseType, _serializeOptions);
+            var deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, returnType, _serializeOptions);
             return deserializeResult ?? defaultValue;
         }
     }

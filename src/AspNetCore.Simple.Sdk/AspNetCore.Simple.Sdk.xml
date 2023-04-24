@@ -136,6 +136,133 @@
             <param name="b">The maximum value.</param>
             <returns>Random value between <paramref name="a"/> and <paramref name="b"/></returns>
         </member>
+        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.Serialize``1(``0)">
+            <summary>
+            Converts the provided value into a <see cref="T:System.String"/>.
+            </summary>
+            <typeparam name="T">The type of the value to serialize.</typeparam>
+            <returns>A <see cref="T:System.String"/> representation of the value.</returns>
+            <param name="source">The source to convert.</param>
+            <exception cref="T:System.NotSupportedException">
+            There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
+            for <typeparamref name="T"/> or its serializable members.
+            </exception>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.SerializeOrDefault``1(``0,System.String)">
+            <summary>
+            Converts the provided value into a <see cref="T:System.String"/>.
+            </summary>
+            <typeparam name="T">The type of the value to serialize.</typeparam>
+            <returns>A <see cref="T:System.String"/> representation of the value.</returns>
+            <param name="source">The source to convert.</param>
+            <param name="defaultValue">A optional default value if result will be <see langword="null"/> you can define alternative return value..</param>
+            <exception cref="T:System.NotSupportedException">
+            There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
+            for <typeparamref name="T"/> or its serializable members.
+            </exception>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.Deserialize``1(System.String)">
+             <summary>
+             Parses the text representing a single JSON value into a <typeparamref name="T"/>.
+             </summary>
+             <typeparam name="T">The type to deserialize the JSON value into.</typeparam>
+             <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
+             <param name="json">JSON text to parse.</param>
+             <exception cref="T:System.ArgumentNullException">
+             <paramref name="json"/> is <see langword="null"/>.
+             </exception>
+             <exception cref="T:System.Text.Json.JsonException">
+             The JSON is invalid.
+            
+             -or-
+            
+             <typeparamref name="T" /> is not compatible with the JSON.
+            
+             -or-
+            
+             There is remaining data in the string beyond a single JSON value.</exception>
+             <exception cref="T:System.NotSupportedException">
+             There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
+             for <typeparamref name="T"/> or its serializable members.
+             </exception>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.DeserializeOrDefault``1(System.String,``0)">
+             <summary>
+             Parses the text representing a single JSON value into a <typeparamref name="T"/>.
+             </summary>
+             <typeparam name="T">The type to deserialize the JSON value into.</typeparam>
+             <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
+             <param name="json">JSON text to parse.</param>
+             <param name="defaultValue">A optional default value if result will be <see langword="null"/> you can define alternative return value..</param>
+             <exception cref="T:System.ArgumentNullException">
+             <paramref name="json"/> is <see langword="null"/>.
+             </exception>
+             <exception cref="T:System.Text.Json.JsonException">
+             The JSON is invalid.
+            
+             -or-
+            
+             <typeparamref name="T" /> is not compatible with the JSON.
+            
+             -or-
+            
+             There is remaining data in the string beyond a single JSON value.</exception>
+             <exception cref="T:System.NotSupportedException">
+             There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
+             for <typeparamref name="T"/> or its serializable members.
+             </exception>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.Deserialize``1(System.String,System.Type)">
+             <summary>
+             Parses the text representing a single JSON value into a <paramref name="returnType"/>.
+             </summary>
+             <returns>A <paramref name="returnType"/> representation of the JSON value.</returns>
+             <param name="json">JSON text to parse.</param>
+             <param name="returnType">The type of the object to convert to and return.</param>
+             <exception cref="T:System.ArgumentNullException">
+             <paramref name="json"/> or <paramref name="returnType"/> is <see langword="null"/>.
+             </exception>
+             <exception cref="T:System.Text.Json.JsonException">
+             The JSON is invalid.
+            
+             -or-
+            
+             <paramref name="returnType"/> is not compatible with the JSON.
+            
+             -or-
+            
+             There is remaining data in the string beyond a single JSON value.</exception>
+             <exception cref="T:System.NotSupportedException">
+             There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
+             for <paramref name="returnType"/> or its serializable members.
+             </exception>
+        </member>
+        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.DeserializeOrDefault(System.String,System.Type,System.Object)">
+             <summary>
+             Parses the text representing a single JSON value into a <paramref name="returnType"/>.
+             </summary>
+             <returns>A <paramref name="returnType"/> representation of the JSON value.</returns>
+             <param name="json">JSON text to parse.</param>
+             <param name="returnType">The type of the object to convert to and return.</param>
+             <param name="defaultValue">A optional default value if result will be <see langword="null"/> you can define alternative return value..</param>
+             <exception cref="T:System.ArgumentNullException">
+             <paramref name="json"/> or <paramref name="returnType"/> is <see langword="null"/>.
+             </exception>
+             <exception cref="T:System.Text.Json.JsonException">
+             The JSON is invalid.
+            
+             -or-
+            
+             <paramref name="returnType"/> is not compatible with the JSON.
+            
+             -or-
+            
+             There is remaining data in the string beyond a single JSON value.</exception>
+             <exception cref="T:System.NotSupportedException">
+             There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
+             for <paramref name="returnType"/> or its serializable members.
+             </exception>
+        </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.SwaggerInfosByVersion">
             <summary>
             You can define swagger document infos per version you have. For each version use on <see cref="T:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo"/>
