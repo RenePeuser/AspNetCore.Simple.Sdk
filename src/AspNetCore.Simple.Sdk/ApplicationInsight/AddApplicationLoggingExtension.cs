@@ -72,8 +72,8 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
             services.AddTelemetryClient(configuration);
             services.AddTelemetryProcessors(configuration);
-            services.AddTelemetryInitializers();
-            services.AddTelemetryLoggingBehavior();
+            services.AddTelemetryInitializers(configuration);
+            services.AddTelemetryLoggingBehavior(configuration);
         }
 
         internal static void AddTelemetryClient(this IServiceCollection services, IConfiguration configuration)
@@ -97,7 +97,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                                                   "Please configure you application insights settings correctly and define the connection string as well",
                                                   ("Sample", new ApplicationInsightsSettings().ToJson()));
             }
-            
+
             services.AddApplicationInsightsTelemetry(options =>
             {
                 options.EnableAdaptiveSampling = false;
@@ -112,15 +112,15 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
             services.AddTraceTelemetryFilter(configuration);
         }
 
-        internal static void AddTelemetryInitializers(this IServiceCollection services)
+        internal static void AddTelemetryInitializers(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddRequestBodyInitializer();
-            services.AddBetterLoggingBehavior();
+            services.AddBetterLoggingBehavior(configuration);
         }
 
-        internal static void AddTelemetryLoggingBehavior(this IServiceCollection services)
+        internal static void AddTelemetryLoggingBehavior(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddBetterLoggingBehavior();
+            services.AddBetterLoggingBehavior(configuration);
         }
     }
 }

@@ -7,13 +7,14 @@ using AspNetCore.Simple.Sdk.Mediator;
 using Extensions.Pack;
 using MediatR;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ApplicationInsight
 {
     public static class AddLoggingBehaviorExtension
     {
-        public static void AddBetterLoggingBehavior(this IServiceCollection services)
+        public static void AddBetterLoggingBehavior(this IServiceCollection services, IConfiguration configuration)
         {
             // If Telemetry client already registered go out.
             if (services.IsAlreadyRegistered<ITelemetryClientAdapter>())
@@ -21,7 +22,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                 return;
             }
 
-            services.AddTelemetryClientAdapter();
+            services.AddTelemetryClientAdapter(configuration);
             services.AddLoggingHelper();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
