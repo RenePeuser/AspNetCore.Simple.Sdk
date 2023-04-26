@@ -7,20 +7,21 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ApplicationInsight
 {
     public static class AddTelemetryClientAdapterExtension
     {
-        public static void AddTelemetryClientAdapter(this IServiceCollection services)
+        public static void AddTelemetryClientAdapter(this IServiceCollection services, IConfiguration configuration)
         {
             if (services.IsAlreadyRegistered<ITelemetryClientAdapter>())
             {
                 return;
             }
 
-            services.AddTelemetryClient();
+            services.AddTelemetryClient(configuration);
 
             services.AddSingletonIfNotExists<ITelemetryClientAdapter, TelemetryClientAdapter>();
         }

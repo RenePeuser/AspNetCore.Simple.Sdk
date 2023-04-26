@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors;
+using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Configuration;
@@ -43,7 +44,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
     public record ApplicationInsightsSettings
     {
-        public string InstrumentationKey { get; init; } = "00000000000000000000000";
+        public string ConnectionString { get; init; } = "InstrumentationKey=00000000-0000-0000-0000-000000000000;";
 
         public EventTelemetryFilterSettings EventTelemetryFilterSettings { get; init; } = new EventTelemetryFilterSettings();
 
@@ -69,21 +70,39 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                 return;
             }
 
-            services.AddTelemetryClient();
+            services.AddTelemetryClient(configuration);
             services.AddTelemetryProcessors(configuration);
             services.AddTelemetryInitializers();
             services.AddTelemetryLoggingBehavior();
         }
 
-        internal static void AddTelemetryClient(this IServiceCollection services)
+        internal static void AddTelemetryClient(this IServiceCollection services, IConfiguration configuration)
         {
+            // Only if configuration is available
+            if (configuration.TryGetSettings<ApplicationInsightsSettings>(out _).IsFalse())
+            {
+                return;
+            }
+
             // If Telemetry client already registered go out.
             if (services.IsAlreadyRegistered<TelemetryClient>())
             {
                 return;
             }
 
-            services.AddApplicationInsightsTelemetry(options => options.EnableAdaptiveSampling = false);
+            var applicationInsightSettings = configuration.GetSettings<ApplicationInsightsSettings>();
+            if (applicationInsightSettings.ConnectionString.IsNullOrWhiteSpace())
+            {
+                throw new ProblemDetailsException("Missing connection string for ApplicationInsights",
+                                                  "Please configure you application insights settings correctly and define the connection string as well",
+                                                  ("Sample", new ApplicationInsightsSettings().ToJson()));
+            }
+            
+            services.AddApplicationInsightsTelemetry(options =>
+            {
+                options.EnableAdaptiveSampling = false;
+                options.ConnectionString = applicationInsightSettings.ConnectionString;
+            });
         }
 
         internal static void AddTelemetryProcessors(this IServiceCollection services, IConfiguration configuration)
