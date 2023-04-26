@@ -8,7 +8,9 @@ namespace AspNetCore.Simple.Sdk.Caching
         public CacheInfo CacheInfo { get; init; } = new();
     }
 
-    public record CacheInfo(bool ObjectFromCache = false, string CacheKey = "");
+    public record CacheInfo(bool ObjectFromCache = false,
+                            string CacheKey = "",
+                            TimeSpan CacheTime = default);
 
     public interface ICachingService
     {

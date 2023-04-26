@@ -106,7 +106,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             // If object comes from cache, we will attach cache info what is needed
             if (cachedObject is not null)
             {
-                return cachedObject with { CacheInfo = new CacheInfo(true, key) };
+                return cachedObject with { CacheInfo = new CacheInfo(true, key, cachingTime) };
             }
 
             // If object was not in the cache, or it was invalid or structure changed we overwrite the cache and return newest value.
@@ -133,7 +133,7 @@ namespace AspNetCore.Simple.Sdk.Caching
         {
             var item = await itemFactory().ConfigureAwait(false);
             await SetAsync(key, item, cachingTime).ConfigureAwait(false);
-            return item with { CacheInfo = new CacheInfo(false, key) };
+            return item with { CacheInfo = new CacheInfo(false, key, cachingTime) };
         }
 
         private Task SetAsync<T>(string key, T value, TimeSpan cachingTime)
