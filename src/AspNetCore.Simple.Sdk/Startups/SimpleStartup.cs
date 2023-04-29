@@ -88,7 +88,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddBasePath(BasePath);
 
             services.AddControllers();
-            services.AddQuerySecurityFilter();
+            services.AddQuerySecurityFilter(Configuration);
             services.AddJsonContentNegotiation();
 
             services.AddSingleton(typeof(Assembly), Assembly);
