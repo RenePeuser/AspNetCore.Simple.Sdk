@@ -107,6 +107,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             _redisRetryPolicy = Policy.Handle<RedisConnectionException>()
                                       .Or<SocketException>()
                                       .Or<ObjectDisposedException>()
+                                      .Or<RedisException>()
                                       .WaitAndRetryAsync(redisSettings.ConnectRetry, GetSleepDuration, RetryOnError);
         }
 
