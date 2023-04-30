@@ -10,7 +10,8 @@ namespace AspNetCore.Simple.Sdk.Caching
 
     public record CacheInfo(bool ObjectFromCache = false,
                             string CacheKey = "",
-                            TimeSpan CacheTime = default);
+                            TimeSpan CacheTime = default,
+                            DateTime ExpirationDateTimeUtc = default);
 
     public interface ICachingService
     {

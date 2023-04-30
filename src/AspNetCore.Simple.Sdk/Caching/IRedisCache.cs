@@ -133,7 +133,12 @@ namespace AspNetCore.Simple.Sdk.Caching
         {
             var item = await itemFactory().ConfigureAwait(false);
             await SetAsync(key, item, cachingTime).ConfigureAwait(false);
-            return item with { CacheInfo = new CacheInfo(false, key, cachingTime) };
+
+            var expirationDateTimeUtc = await _redisConnection.ExecuteAsync(database => Task.FromResult(database.KeyExpireTime(key))).ConfigureAwait(false);
+            return item with
+            {
+                CacheInfo = new CacheInfo(false, key, cachingTime, expirationDateTimeUtc ?? default)
+            };
         }
 
         private Task SetAsync<T>(string key, T value, TimeSpan cachingTime)
