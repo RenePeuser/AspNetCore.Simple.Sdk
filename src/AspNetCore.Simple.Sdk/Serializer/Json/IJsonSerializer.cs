@@ -3,6 +3,7 @@ using System.Text.Json;
 
 namespace AspNetCore.Simple.Sdk.Serializer.Json
 {
+
     public interface IJsonSerializer
     {
         /// <summary>
