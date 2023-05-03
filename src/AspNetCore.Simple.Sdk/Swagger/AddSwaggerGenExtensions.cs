@@ -24,9 +24,11 @@ namespace AspNetCore.Simple.Sdk.Swagger
     {
         public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
         {
-            var swaggerInfo = configuration.GetSetting<SwaggerInfos>() ?? new SwaggerInfos();
+            services.AddSwaggerInfos(configuration);
 
-            services.AddSingletonIfNotExists(swaggerInfo);
+            var swaggerInfos = configuration.GetSettings<SwaggerInfos>();
+
+            services.AddSingletonIfNotExists(swaggerInfos);
 
             var apiVersionProvider = new ApiVersionProvider();
             var allApiVersions = apiVersionProvider.GetAllApiVersions(assembly);
@@ -36,7 +38,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.DocInclusionPredicate((_, _) => true);
                 options.AddSwaggerGrouping();
                 options.SupportNonNullableReferenceTypes();
-                
+
                 // This have to come first !!
                 options.OperationFilter<RemoveVersionParameterFilter>();
                 options.DocumentFilter<SetSelectedDocumentFilter>();
@@ -108,7 +110,7 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
 
                 foreach (var apiVersion in allApiVersions)
                 {
-                    var openApiInfo = GetVersionSpecificApiInfo(swaggerInfo, apiVersion);
+                    var openApiInfo = GetVersionSpecificApiInfo(swaggerInfos, apiVersion);
 
                     options.SwaggerDoc($"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}", openApiInfo);
                 }
