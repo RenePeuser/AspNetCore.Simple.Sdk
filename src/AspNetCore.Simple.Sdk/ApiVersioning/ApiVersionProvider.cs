@@ -21,7 +21,7 @@ namespace AspNetCore.Simple.Sdk.ApiVersioning
         IImmutableList<ApiVersion> GetAllApiVersions(Assembly assemblies);
     }
 
-    internal sealed class ApiVersionProvider : IApiVersionProvider
+    public sealed class ApiVersionProvider : IApiVersionProvider
     {
         private readonly AssemblyTypeProvider _assemblyTypeProvider;
 
