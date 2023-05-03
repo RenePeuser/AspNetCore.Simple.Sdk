@@ -138,7 +138,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             var item = await itemFactory().ConfigureAwait(false);
             await SetAsync(key, item, cachingTime).ConfigureAwait(false);
 
-            var expirationDateTimeUtc = _cacheSettings.WithExpirationDateTimeUtc ? await _redisConnection.ExecuteAsync(database => Task.FromResult(database.KeyExpireTime(key))).ConfigureAwait(false) : default;
+            var expirationDateTimeUtc = _cacheSettings.WithExpirationDateTimeUtc ? await _redisConnection.ExecuteAsync(database => database.KeyExpireTimeAsync(key)).ConfigureAwait(false) : default;
             return item with
             {
                 CacheInfo = new CacheInfo(false, key, cachingTime, expirationDateTimeUtc ?? default)
