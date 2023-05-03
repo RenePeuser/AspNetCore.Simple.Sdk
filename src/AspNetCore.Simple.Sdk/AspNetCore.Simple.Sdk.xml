@@ -263,22 +263,6 @@
              for <paramref name="returnType"/> or its serializable members.
              </exception>
         </member>
-        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.SwaggerInfosByVersion">
-            <summary>
-            You can define swagger document infos per version you have. For each version use on <see cref="T:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo"/>
-            </summary>
-        </member>
-        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.IncludeOnlyVersionedPaths">
-            <summary>
-            Controls that only path´s with a version are included version.
-            </summary>
-        </member>
-        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo.Id">
-            <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#215"> guideline 215</a>.</summary>
-        </member>
-        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo.Audience">
-            <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#219"> guideline 219</a>.</summary>
-        </member>
         <member name="T:AspNetCore.Simple.Sdk.Swagger.EnumSchemaFilter">
             <summary>A schema filter that removes, in the generated Json, the numeric member values from the <see langword="enum"/>s definitions and
             and replaces them with the <see langword="string"/> member names. However, the data type of the referencing parameters and properties
@@ -333,6 +317,22 @@
             ○ Match a Unicode digit.<br/>
             </code>
             </remarks>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo.Id">
+            <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#215"> guideline 215</a>.</summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo.Audience">
+            <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#219"> guideline 219</a>.</summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.SwaggerInfosByVersion">
+            <summary>
+            You can define swagger document infos per version you have. For each version use on <see cref="T:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo"/>
+            </summary>
+        </member>
+        <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.IncludeOnlyVersionedPaths">
+            <summary>
+            Controls that only path´s with a version are included version.
+            </summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.GetVersionRegex_0">
             <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the GetVersionRegex method.</summary>

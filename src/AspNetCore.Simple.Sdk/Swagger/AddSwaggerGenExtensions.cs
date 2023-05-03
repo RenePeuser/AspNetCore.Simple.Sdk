@@ -20,58 +20,6 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
-
-    public static class Audiences
-    {
-        public static string ComponentInternal => "component-internal";
-        public static string BusinessUnitInternal => "business-unit-internal";
-        public static string CompanyInternal => "company-internal";
-        public static string ExternalPartner => "external-partner";
-        public static string ExternalPublic => "external-public";
-    }
-
-    public record SwaggerInfos
-    {
-        /// <summary>
-        /// You can define swagger document infos per version you have. For each version use on <see cref="SwaggerInfo"/>
-        /// </summary>
-        public SwaggerInfo[] SwaggerInfosByVersion { get; init; } = Array.Empty<SwaggerInfo>();
-
-        /// <summary>
-        /// Controls that only path´s with a version are included version.
-        /// </summary>
-        public bool IncludeOnlyVersionedPaths { get; init; }
-
-    }
-
-    public record SwaggerInfo
-    {
-        /// <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#215"> guideline 215</a>.</summary>
-        public Guid? Id { get; init; }
-
-        /// <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#219"> guideline 219</a>.</summary>
-        public string Audience { get; init; } = string.Empty;
-
-        public string Title { get; init; } = string.Empty;
-
-        public string Description { get; init; } = string.Empty;
-
-        public string ContactName { get; init; } = string.Empty;
-
-        public string ContactEmail { get; init; } = string.Empty;
-
-        public bool WithServerInfo { get; init; }
-
-        public string? ContactUrl { get; init; }
-
-        public string Version { get; init; } = "1.0";
-    }
-
-    internal sealed record SwaggerUi
-    {
-        internal static ApiVersion SelectedVersion { get; set; } = new ApiVersion(1, 0); //Exception cause swagger do not provide at specific scope the selected document
-    }
-
     public static class AddSwaggerGenExtensions
     {
         public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
@@ -88,16 +36,14 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.DocInclusionPredicate((_, _) => true);
                 options.AddSwaggerGrouping();
                 options.SupportNonNullableReferenceTypes();
-
+                
                 // This have to come first !!
-                options.OperationFilter<SetSelectedDocumentFilter>();
                 options.OperationFilter<RemoveVersionParameterFilter>();
-
+                options.DocumentFilter<SetSelectedDocumentFilter>();
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();
                 options.DocumentFilter<SchemaFilterForCurrentVersion>();
-
 
                 options.ResolveConflictingActions(apiDescriptions =>
                 {
@@ -117,16 +63,25 @@ namespace AspNetCore.Simple.Sdk.Swagger
                         return apiVersionAttribute[0].Versions[0] == SwaggerUi.SelectedVersion;
                     });
 
+                    var invalidDescription = apiDescriptions.First();
+
                     if (exactApiDescription.IsNull())
                     {
                         Console.WriteLine(@$"Swagger path could not be identified. 
 Please check that your version for your documents are still available, do not delete older versions.
 Current selected swagger version: '{SwaggerUi.SelectedVersion}'
 {apiDescriptions.Select(desc => $"- {desc.HttpMethod} {desc.RelativePath}").Flatten(Environment.NewLine)}");
+
+                        // so dirty, if it was refreshed we reset the list so evil
+                        if (SwaggerUi.InvalidApiDescriptions.Contains(invalidDescription))
+                        {
+                            SwaggerUi.InvalidApiDescriptions.Clear();
+                        }
+
+                        SwaggerUi.InvalidApiDescriptions.Add(invalidDescription);
                     }
 
-
-                    return exactApiDescription.IsNull() ? apiDescriptions.First() : exactApiDescription;
+                    return exactApiDescription.IsNull() ? invalidDescription : exactApiDescription;
 
                     // return exactApiDescription;
                 });

@@ -13,7 +13,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
-    internal sealed class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
+    public sealed class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
     {
         private readonly SwaggerInfos _swaggerInfos;
 
