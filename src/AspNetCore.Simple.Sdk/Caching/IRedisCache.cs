@@ -67,6 +67,7 @@ namespace AspNetCore.Simple.Sdk.Caching
 
             services.AddSingletonIfNotExists<IRedisConnection>(redisConnection);
             services.AddSingletonIfNotExists<ICachingService, RedisCache>();
+            services.AddCacheSettings(configuration);
         }
     }
 
@@ -75,13 +76,16 @@ namespace AspNetCore.Simple.Sdk.Caching
     {
         private readonly IRedisConnection _redisConnection;
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly CacheSettings _cacheSettings;
         private readonly TimeSpan _defaultTimInCache = TimeSpan.FromHours(1);
 
         public RedisCache(IRedisConnection redisConnection,
-                          IJsonSerializer jsonSerializer)
+                          IJsonSerializer jsonSerializer,
+                          CacheSettings cacheSettings)
         {
             _redisConnection = redisConnection;
             _jsonSerializer = jsonSerializer;
+            _cacheSettings = cacheSettings;
         }
 
         public Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> itemFactory, bool useCache) where T : CachableObject
@@ -134,7 +138,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             var item = await itemFactory().ConfigureAwait(false);
             await SetAsync(key, item, cachingTime).ConfigureAwait(false);
 
-            var expirationDateTimeUtc = await _redisConnection.ExecuteAsync(database => Task.FromResult(database.KeyExpireTime(key))).ConfigureAwait(false);
+            var expirationDateTimeUtc = _cacheSettings.WithExpirationDateTimeUtc ? await _redisConnection.ExecuteAsync(database => Task.FromResult(database.KeyExpireTime(key))).ConfigureAwait(false) : default;
             return item with
             {
                 CacheInfo = new CacheInfo(false, key, cachingTime, expirationDateTimeUtc ?? default)
