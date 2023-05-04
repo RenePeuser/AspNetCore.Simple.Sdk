@@ -42,11 +42,22 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
         public T Deserialize<T>(string json)
         {
-            var deserializeResult = System.Text.Json.JsonSerializer.Deserialize<T>(json, _serializeOptions);
+            T? deserializeResult = default(T);
+            string errorMessage = string.Empty;
+            try
+            {
+                deserializeResult = System.Text.Json.JsonSerializer.Deserialize<T>(json, _serializeOptions);
+            }
+            catch (Exception e)
+            {
+                errorMessage = e.Message;
+            }
+
             if (deserializeResult.IsNull())
             {
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
                                                   $"Could not deserialize your json string into expected type: {typeof(T).Name}",
+                                                  ("Exception", errorMessage),
                                                   ("Json string", json),
                                                   ("Type", typeof(T).Name),
                                                   ("Type Fullname", typeof(T).FullName ?? string.Empty));
@@ -57,17 +68,36 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
         public T? DeserializeOrDefault<T>(string json, T? defaultValue = default)
         {
-            var deserializeResult = System.Text.Json.JsonSerializer.Deserialize<T>(json, _serializeOptions);
-            return deserializeResult ?? defaultValue;
+            try
+            {
+                var deserializeResult = System.Text.Json.JsonSerializer.Deserialize<T>(json, _serializeOptions);
+                return deserializeResult;
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
         }
 
         public object Deserialize<T>(string json, Type returnType)
         {
-            var deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, returnType, _serializeOptions);
+            object? deserializeResult = default(T);
+            string errorMessage = string.Empty;
+            try
+            {
+                deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, returnType, _serializeOptions);
+            }
+            catch (Exception e)
+            {
+                errorMessage = e.Message;
+            }
+
+
             if (deserializeResult.IsNull())
             {
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
                                                   $"Could not deserialize your json string into expected type: {typeof(T).Name}",
+                                                  ("Exception", errorMessage),
                                                   ("Json string", json),
                                                   ("Type", typeof(T).Name),
                                                   ("Type Fullname", typeof(T).FullName ?? string.Empty));
@@ -78,8 +108,15 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
         public object? DeserializeOrDefault(string json, Type returnType, object? defaultValue = default)
         {
-            var deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, returnType, _serializeOptions);
-            return deserializeResult ?? defaultValue;
+            try
+            {
+                var deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, returnType, _serializeOptions);
+                return deserializeResult;
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
         }
     }
 }
