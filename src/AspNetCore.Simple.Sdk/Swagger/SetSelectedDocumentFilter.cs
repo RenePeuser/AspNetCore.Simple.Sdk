@@ -4,9 +4,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
-    public class SetSelectedDocumentFilter : IDocumentFilter
+    public class SetSelectedDocumentOperationFilter : IOperationFilter
     {
-        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             SwaggerUi.SelectedVersion = context.DocumentName.ToApiVersion();
         }

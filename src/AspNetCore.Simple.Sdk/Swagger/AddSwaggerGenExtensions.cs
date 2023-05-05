@@ -40,8 +40,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.SupportNonNullableReferenceTypes();
 
                 // This have to come first !!
+                options.OperationFilter<SetSelectedDocumentOperationFilter>();
                 options.OperationFilter<RemoveVersionParameterFilter>();
-                options.DocumentFilter<SetSelectedDocumentFilter>();
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();

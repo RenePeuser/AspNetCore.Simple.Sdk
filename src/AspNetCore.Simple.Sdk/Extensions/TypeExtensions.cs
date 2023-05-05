@@ -50,7 +50,14 @@ namespace AspNetCore.Simple.Sdk.Extensions
             var controller = type;
 
             var methods = controller.DeclaredMethods.ToImmutableList();
-            var types = methods.SelectMany(method => method.GetParameters().Concat(method.ReturnParameter)).Select(parameter => parameter.ParameterType).ToImmutableList();
+            var produceResponseTypes = methods.SelectMany(m => m.GetCustomAttributes<ProducesResponseTypeAttribute>()).Select(attribute => attribute.Type).ToImmutableList();
+
+            var types = methods.SelectMany(method => method.GetParameters().Concat(method.ReturnParameter))
+                               .Select(parameter => parameter.ParameterType)
+                               .Concat(produceResponseTypes)
+                               .DistinctBy(t => t.FullName)
+                               .ToImmutableList();
+
             var allGenericTypes = types.SelectMany(t => t.GetAllTypesFromGenericType()).ToImmutableList();
             var allTypes = GetAllSubTypes(types.Concat(allGenericTypes).ToImmutableList(), new List<string>()).ToImmutableList();
             var hasVersion = HasVersion(controller);
