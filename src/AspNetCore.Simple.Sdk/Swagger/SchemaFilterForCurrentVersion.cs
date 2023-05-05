@@ -58,7 +58,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 }
 
                 // We detect the type from swagger to find matching controller to where it will be used
-                var matchingType = controllerAndTypes.FirstOrDefault(controllerInfo => controllerInfo.Types.Any(t => t.FullName!.ToUpperInvariant() == key));
+
+                var matchingType = controllerAndTypes.FirstOrDefault(controllerInfo => controllerInfo.Types.Any(t => t.ToString().ToUpperInvariant() == key));
                 if (matchingType.IsNull())
                 {
                     return false;
