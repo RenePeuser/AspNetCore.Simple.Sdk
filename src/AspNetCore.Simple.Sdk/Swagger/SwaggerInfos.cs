@@ -6,15 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
-    public static class AddSwaggerInfosExtension
-    {
-        public static void AddSwaggerInfos(this IServiceCollection services, IConfiguration configuration)
-        {
-            var swaggerInfos = configuration.GetSetting<SwaggerInfos>() ?? new SwaggerInfos();
+    //public static class AddSwaggerInfosExtension
+    //{
+    //    public static void AddSwaggerInfos(this IServiceCollection services, IConfiguration configuration)
+    //    {
+    //        var swaggerInfos = configuration.GetSetting<SwaggerInfos>() ?? new SwaggerInfos();
 
-            services.AddSingletonIfNotExists(swaggerInfos);
-        }
-    }
+    //        services.AddSingletonIfNotExists(swaggerInfos);
+    //    }
+    //}
 
     public record SwaggerInfos
     {

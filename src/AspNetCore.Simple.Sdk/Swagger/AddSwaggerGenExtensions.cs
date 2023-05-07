@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.ApiVersioning;
@@ -11,22 +10,23 @@ using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
     public static class AddSwaggerGenExtensions
     {
-        public static void AddSwaggerGenSimplified(this IServiceCollection services, Assembly assembly, IConfiguration configuration)
+        public static void AddSwaggerGenSimplified(this IServiceCollection services,
+                                                   Assembly assembly,
+                                                   IConfiguration configuration,
+                                                   ILogger logger)
         {
-            services.AddSwaggerInfos(configuration);
-
-            var swaggerInfos = configuration.GetSettings<SwaggerInfos>();
+            var swaggerInfos = configuration.GetSetting<SwaggerInfos>() ?? Swagger.GetDefaultSwaggerInfos(logger, new ApiVersion(1, 0));
 
             services.AddSingletonIfNotExists(swaggerInfos);
 
@@ -69,7 +69,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                     if (exactApiDescription.IsNull())
                     {
-                        Console.WriteLine(@$"Swagger path could not be identified. 
+                        logger.LogError(@$"Swagger path could not be identified. 
 Please check that your version for your documents are still available, do not delete older versions.
 Current selected swagger version: '{SwaggerUi.SelectedVersion}'
 {apiDescriptions.Select(desc => $"- {desc.HttpMethod} {desc.RelativePath}").Flatten(Environment.NewLine)}");
@@ -110,7 +110,7 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
 
                 foreach (var apiVersion in allApiVersions)
                 {
-                    var openApiInfo = GetVersionSpecificApiInfo(swaggerInfos, apiVersion);
+                    var openApiInfo = GetVersionSpecificApiInfo(swaggerInfos, apiVersion, logger);
 
                     options.SwaggerDoc($"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}", openApiInfo);
                 }
@@ -124,7 +124,7 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
             });
         }
 
-        private static OpenApiInfo GetVersionSpecificApiInfo(SwaggerInfos swaggerInfos, ApiVersion apiVersion)
+        private static OpenApiInfo GetVersionSpecificApiInfo(SwaggerInfos swaggerInfos, ApiVersion apiVersion, ILogger logger)
         {
             var versionSpecificSwaggerInfo = swaggerInfos.SwaggerInfosByVersion.FirstOrDefault(swagger =>
             {
@@ -134,11 +134,8 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
 
             if (versionSpecificSwaggerInfo.IsNull())
             {
-                // Fallback no infos if nothing was found
-                Debug.WriteLine($"No specific swagger info was found for api version: {apiVersion}. Please check your appsettings.json, environment variables for a correct declaration to get swagger infos per version");
-                var sample = new SwaggerInfos { SwaggerInfosByVersion = new[] { new SwaggerInfo() } }.ToJson();
-                Debug.WriteLine(JsonSerializer.Serialize(JToken.Parse(sample).ToString(Formatting.Indented)));
-                versionSpecificSwaggerInfo = new SwaggerInfo();
+                var defaultSwaggerInfos = Swagger.GetDefaultSwaggerInfos(logger, apiVersion);
+                versionSpecificSwaggerInfo = defaultSwaggerInfos.SwaggerInfosByVersion.First();
             }
 
             var infoExtension = GetExtensionInfo(versionSpecificSwaggerInfo).ToDictionary(item => item.key, item => item.openApiExtension);
@@ -171,6 +168,36 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
             {
                 yield return ("x-audience", new OpenApiString(swaggerInfo.Audience));
             }
+        }
+    }
+
+    internal static class Swagger
+    {
+        internal static SwaggerInfos GetDefaultSwaggerInfos(ILogger logger, ApiVersion apiVersion)
+        {
+            // Fallback no infos if nothing was found
+            logger.LogError($"No specific swagger info was found for api version: {apiVersion}. Please check your appsettings.json, environment variables for a correct declaration to get swagger infos per version");
+            var swaggerInfo = new SwaggerInfo
+            {
+                Audience = "company-internal",
+                ContactEmail = "max.mustermann@hotmail.de",
+                ContactName = "Max Mustermann",
+                ContactUrl = "https://www.google.de",
+                Description = "This is a very cool API V1",
+                Id = Guid.NewGuid(),
+                Title = "Cool API V1",
+                Version = "1"
+            };
+
+            var swaggerInfos = new SwaggerInfos
+            {
+                SwaggerInfosByVersion = new[] { swaggerInfo }
+            };
+
+            var message = $"{JToken.Parse(swaggerInfos.ToJson()).ToString(Formatting.Indented)}";
+            logger.LogInformation(message);
+
+            return swaggerInfos;
         }
     }
 }

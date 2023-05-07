@@ -2,16 +2,21 @@
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
     public static class UseSwaggerSimplifiedExtension
     {
-        public static void UseSwaggerSimplified(this IApplicationBuilder app, IConfiguration configuration, string basePath)
+        public static void UseSwaggerSimplified(this IApplicationBuilder app,
+                                                IConfiguration configuration,
+                                                string basePath,
+                                                ILogger logger)
         {
-            var swaggerInfo = configuration.GetSetting<SwaggerInfos>() ?? new();
+            var swaggerInfo = configuration.GetSetting<SwaggerInfos>() ?? Swagger.GetDefaultSwaggerInfos(logger, new ApiVersion(1, 0));
 
             var routeTemplate = basePath.IsNullOrWhiteSpace() ?
                 $"/swagger/{{documentName}}/swagger.json" :

@@ -113,7 +113,7 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddRedisCache(Configuration, Logger);
 
-            services.AddSwaggerGenSimplified(Assembly, Configuration);
+            services.AddSwaggerGenSimplified(Assembly, Configuration, Logger);
 
             services.AddAzureBlobStorage(Configuration);
             services.AddAzureBlobStorageFactory();
@@ -136,10 +136,10 @@ namespace AspNetCore.Simple.Sdk.Startups
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public virtual void Configure(IApplicationBuilder app)
         {
-            app.UseSwaggerSimplified(Configuration, BasePath);
-            app.UseSwaggerUiSimplified(Assembly, BasePath);
-
             app.UsePathBase(BasePath);
+
+            app.UseSwaggerSimplified(Configuration, BasePath, Logger);
+            app.UseSwaggerUiSimplified(Assembly, BasePath);
 
             app.UseErrorHandling();
 
