@@ -19,7 +19,10 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 var allApiVersions = new ApiVersionProvider().GetAllApiVersions(assemblies);
                 foreach (var apiVersion in allApiVersions)
                 {
-                    c.SwaggerEndpoint($"{prefix}{trimmedPath}/swagger/v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}/swagger.json", $"V{apiVersion.MajorVersion}.{apiVersion.MinorVersion}");
+                    var url = $"{prefix}{trimmedPath}/swagger/v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}/swagger.json";
+                    var name = $"V{apiVersion.MajorVersion}.{apiVersion.MinorVersion}";
+
+                    c.SwaggerEndpoint(url, name);
                 }
             });
         }
