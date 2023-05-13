@@ -84,8 +84,9 @@ namespace AspNetCore.Simple.Sdk.Startups
         // This method gets called by the runtime if there is no explicit "Production configure method.
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddValidationBehavior();
             services.AddBasePath(BasePath);
+            services.AddMediator(Assembly);
+            services.AddValidationBehavior();
 
             services.AddControllers();
             services.AddQuerySecurityFilter(Configuration);
@@ -95,9 +96,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddHttpClient();
             services.AddErrorHandling();
             services.AddErrorLogging();
-
             services.AddApiVersionProvider();
-
             services.AddApiVersioningSimplified();
             services.AddJsonSerializer();
             services.AddCorsSettings(Configuration);
@@ -136,10 +135,10 @@ namespace AspNetCore.Simple.Sdk.Startups
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public virtual void Configure(IApplicationBuilder app)
         {
-            app.UsePathBase(BasePath);
-
             app.UseSwaggerSimplified(Configuration, BasePath, Logger);
             app.UseSwaggerUiSimplified(Assembly, BasePath);
+
+            app.UsePathBase(BasePath);
 
             app.UseErrorHandling();
 
@@ -152,6 +151,8 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // app.UseOptions();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers().RequireAuthorization(); });
         }

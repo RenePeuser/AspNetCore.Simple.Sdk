@@ -10,6 +10,7 @@ using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Mediator;
 using AspNetCore.Simple.Sdk.Startups;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -41,7 +42,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
             var apiVersionInfos = await FetchAllSwaggerDocuments(apiVersions).ToListAsync(cancellationToken).ConfigureAwait(false);
 
             return apiVersionInfos.ToImmutableList();
-            
+
             async IAsyncEnumerable<OpenApiDocument> FetchAllSwaggerDocuments(IImmutableList<ApiVersion> apiVersions)
             {
                 foreach (var apiVersion in apiVersions)

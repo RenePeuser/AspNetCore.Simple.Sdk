@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -32,11 +31,11 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 return;
             }
 
-            var allTypesToIgnore = SwaggerUi.InvalidApiDescriptions;
-            var alltypeToIgnore = SwaggerUi.InvalidApiDescriptions.Select(description => description.ActionDescriptor.Cast<ControllerActionDescriptor>().ControllerTypeInfo.GetAllTypesForController())
-                                                                  .SelectMany(item => item.Types)
-                                                                  .Distinct()
-                                                                  .ToImmutableList();
+            //var allTypesToIgnore = SwaggerUi.InvalidApiDescriptions;
+            //var alltypeToIgnore = SwaggerUi.InvalidApiDescriptions.Select(description => description.ActionDescriptor.Cast<ControllerActionDescriptor>().ControllerTypeInfo.GetAllTypesForController())
+            //                                                      .SelectMany(item => item.Types)
+            //                                                      .Distinct()
+            //                                                      .ToImmutableList();
 
             // Brand new to know which schemas have to be ignored we have to do following steps:
             // - here we have only the path => namespaces of classes
