@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
+    public static class AddErrorLogStrategyExtension
+    {
+        public static void AddErrorLogStrategy(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<IErrorLogStrategy, ErrorLogStrategy>();
+        }
+    }
+
     public class ErrorLogStrategy : IErrorLogStrategy
     {
         private readonly IEnumerable<ISpecificErrorLogStrategy> _specificErrorLogStrategies;

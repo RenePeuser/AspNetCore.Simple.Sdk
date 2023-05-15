@@ -7,10 +7,25 @@ using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Serializer.Json;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
+    public static class AddDefaultExceptionExceptionLogStrategyExtension
+    {
+        public static void AddDefaultExceptionExceptionLogStrategy(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<ISpecificErrorLogStrategy, DefaultExceptionExceptionLogStrategy>();
+        }
+
+        public static void RemoveDefaultExceptionExceptionLogStrategy(this IServiceCollection services)
+        {
+            var defaultExceptionHandlers = services.Where(serviceRegistration => serviceRegistration.ImplementationType == typeof(DefaultExceptionExceptionLogStrategy));
+            services.RemoveRange(defaultExceptionHandlers);
+        }
+    }
+
     public class DefaultExceptionExceptionLogStrategy : ExceptionLogStrategy<Exception>
     {
         public DefaultExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger<DefaultExceptionExceptionLogStrategy> logger) : base(jsonSerializer, logger)

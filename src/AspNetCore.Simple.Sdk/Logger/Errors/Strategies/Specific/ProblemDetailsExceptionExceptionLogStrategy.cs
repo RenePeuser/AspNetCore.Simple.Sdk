@@ -6,11 +6,21 @@ using System.Linq;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using AspNetCore.Simple.Sdk.Serializer.Json;
+using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
+    public static class AddProblemDetailsExceptionExceptionLogStrategyExtension
+    {
+        public static void AddProblemDetailsExceptionExceptionLogStrategy(this IServiceCollection services)
+        {
+            services.AddSingletonIfNotExists<ISpecificErrorLogStrategy, ProblemDetailsExceptionExceptionLogStrategy>();
+        }
+    }
+
     public class ProblemDetailsExceptionExceptionLogStrategy : ExceptionLogStrategy<ProblemDetailsException>
     {
         public ProblemDetailsExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger<ProblemDetailsExceptionExceptionLogStrategy> logger) : base(jsonSerializer, logger)
