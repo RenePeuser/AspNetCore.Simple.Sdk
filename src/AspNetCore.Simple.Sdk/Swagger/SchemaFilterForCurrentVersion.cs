@@ -42,7 +42,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
             // - to unique identify the types we need to know each controllers, routes and types
             // - then we can compare full qualified name to detect if this is to ignore or not.
             var controllers = _callingAssembly.DefinedTypes.Where(type => typeof(ControllerBase).IsAssignableFrom(type)).ToImmutableList();
-            var controllerAndTypes = controllers.Select(controller => controller.GetAllTypesForController());
+            var controllerAndTypes = controllers.Select(controller => controller.GetAllTypesForController()).ToImmutableList();
             var assemblyRootName = _callingAssembly.GetName().Name!.ToUpperInvariant();
             var currentVersionSpecificSchema = swaggerDoc.Components.Schemas.Where(keyValue =>
             {

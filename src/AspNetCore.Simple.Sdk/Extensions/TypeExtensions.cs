@@ -58,8 +58,9 @@ namespace AspNetCore.Simple.Sdk.Extensions
                                .DistinctBy(t => t.FullName)
                                .ToImmutableList();
 
-            var allGenericTypes = types.SelectMany(t => t.GetAllTypesFromGenericType()).ToImmutableList();
-            var allTypes = GetAllSubTypes(types.Concat(allGenericTypes).ToImmutableList(), new List<string>()).ToImmutableList();
+            var allGenericTypes = types.SelectMany(t => t.GetAllTypesFromGenericType()).DistinctBy(t => t.FullName).ToImmutableList();
+            var typesToUse = types.Concat(allGenericTypes).DistinctBy(t => t.FullName).ToImmutableList();
+            var allTypes = GetAllSubTypes(typesToUse, new List<string>()).ToImmutableList();
             var hasVersion = HasVersion(controller);
 
             return new ControllerTypesInfo(controller, allTypes, hasVersion);
@@ -139,7 +140,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
                 }
 
                 var properties = type.GetProperties().Select(p => p.PropertyType).ToImmutableList();
-                var genericArguments = properties.SelectMany(p => p.GetGenericArguments());
+                var genericArguments = properties.SelectMany(p => p.GetAllGenericArguments()).ToImmutableList();
                 var allPropertyTypes = properties.Concat(genericArguments).Where(p => p.FullName.NotEqualsTo(type.FullName)).ToImmutableList(); // to avoid recursion to infinity
 
                 var subTypes = GetAllSubTypes(allPropertyTypes, alreadyFound).ToImmutableList();
