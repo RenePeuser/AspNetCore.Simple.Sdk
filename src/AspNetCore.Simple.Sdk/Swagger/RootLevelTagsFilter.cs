@@ -40,14 +40,16 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
         private IImmutableList<OpenApiTag> GetAllOpenApiTags(ImmutableList<ApiDescription> apiDescriptionsVersionBased, ImmutableArray<string> existingDocTagNames)
         {
-            return apiDescriptionsVersionBased.SelectMany(desc => desc.ActionDescriptor.EndpointMetadata)
-                                              .OfType<SwaggerOperationAttribute>()
-                                              .SelectMany(op => op.Tags)
-                                              .Distinct()
-                                              .Where(optTag => optTag.IsNotNullOrWhiteSpace())
-                                              .Except(existingDocTagNames)
-                                              .Select(missingDocTagName => new OpenApiTag { Name = missingDocTagName })
-                                              .ToImmutableList();
+            var controllerActionDescriptor = apiDescriptionsVersionBased.Select(apiDescription => apiDescription.ActionDescriptor).OfType<ControllerActionDescriptor>().ToImmutableList();
+            var swaggerOperationAttributes = controllerActionDescriptor.SelectMany(descriptor => descriptor.EndpointMetadata).OfType<SwaggerOperationAttribute>().ToImmutableList();
+            var tags = swaggerOperationAttributes.Where(attribute => attribute.Tags.IsNotNull()).SelectMany(swaggerOperation => swaggerOperation.Tags).Distinct().ToImmutableList();
+
+            var openApiTags = tags.Where(optTag => optTag.IsNotNullOrWhiteSpace())
+                                 .Except(existingDocTagNames)
+                                 .Select(missingDocTagName => new OpenApiTag { Name = missingDocTagName })
+                                 .ToImmutableList();
+
+            return openApiTags;
         }
 
         private ImmutableList<ApiDescription> GetApiDescriptionsForSelectedVersion(DocumentFilterContext context, ApiVersion selectedVersion)
