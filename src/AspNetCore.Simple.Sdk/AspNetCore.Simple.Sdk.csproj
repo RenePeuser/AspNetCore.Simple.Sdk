@@ -22,6 +22,7 @@
         <OutputType>Library</OutputType>
         <AssemblyName>AspNetCore.Simple.Sdk</AssemblyName>
         <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
     </PropertyGroup>
 
     <!--Property group settings for source link !-->
@@ -67,6 +68,7 @@
             <Pack>True</Pack>
             <PackagePath></PackagePath>
         </None>
+        <None Include="..\..\readme.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
