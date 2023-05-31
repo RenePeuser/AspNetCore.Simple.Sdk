@@ -16,6 +16,11 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         }
     }
 
+    public interface IErrorLogStrategy
+    {
+        void Handle(HttpContext context, Exception exception);
+    }
+
     public class ErrorLogStrategy : IErrorLogStrategy
     {
         private readonly IEnumerable<ISpecificErrorLogStrategy> _specificErrorLogStrategies;

@@ -27,7 +27,9 @@ namespace AspNetCore.Simple.Sdk.Extensions
                     var bearerToken = header.Value.FirstOrDefault()?.Split().Last() ?? string.Empty;
                     var token = handler.ReadJwtToken(bearerToken);
 
-                    yield return (HeaderNames.Authorization, token.Payload.ToDictionary(item => item.Key, item => item.Value).ToJson());
+                    var dictionary = token.Payload.ToDictionary(item => item.Key, item => item.Value);
+
+                    yield return (HeaderNames.Authorization, dictionary.ToJson());
                 }
                 else
                 {

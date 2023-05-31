@@ -17,6 +17,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docu", "Docu", "{19C19E0F-E9C6-4435-A154-73D8C121BB97}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		docu\startup.md = docu\startup.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CICD", "CICD", "{4D9765E5-B6E0-4A85-BED5-7F9095BB5F03}"
