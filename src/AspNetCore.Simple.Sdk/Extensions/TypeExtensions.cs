@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using AspNetCore.Simple.Sdk.ErrorHandling;
@@ -139,18 +140,20 @@ namespace AspNetCore.Simple.Sdk.Extensions
                     continue;
                 }
 
+                alreadyFound.Add(type.FullName!);
+
                 var properties = type.GetProperties().Select(p => p.PropertyType).ToImmutableList();
                 var genericArguments = properties.SelectMany(p => p.GetAllGenericArguments()).ToImmutableList();
                 var allPropertyTypes = properties.Concat(genericArguments).Where(p => p.FullName.NotEqualsTo(type.FullName)).ToImmutableList(); // to avoid recursion to infinity
 
                 var subTypes = GetAllSubTypes(allPropertyTypes, alreadyFound).ToImmutableList();
+
                 foreach (var subType in subTypes)
                 {
                     alreadyFound.Add(subType.FullName!);
                     yield return subType;
                 }
 
-                alreadyFound.Add(type.FullName!);
                 yield return type;
             }
         }
