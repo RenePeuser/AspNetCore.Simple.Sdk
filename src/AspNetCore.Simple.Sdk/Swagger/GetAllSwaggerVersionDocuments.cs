@@ -10,7 +10,6 @@ using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Mediator;
 using AspNetCore.Simple.Sdk.Startups;
 using Extensions.Pack;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -54,9 +53,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                         throw new ProblemDetailsException("Fetching swagger json was not successful, please check console error output for existing errors");
                     }
 
-
                     var swaggerJson = await swaggerResponse.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-                    var content = await swaggerResponse.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
                     var openApiDocument = new OpenApiStreamReader().Read(swaggerJson, out _);
 

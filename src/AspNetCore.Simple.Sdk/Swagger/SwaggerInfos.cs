@@ -28,6 +28,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
         /// </summary>
         public bool IncludeOnlyVersionedPaths { get; init; }
 
-        public bool WithServerInfo { get; init; }
+        public bool WithServerInfo { get; init; } = true;
     }
 }

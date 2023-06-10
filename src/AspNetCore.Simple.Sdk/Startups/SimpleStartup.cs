@@ -138,12 +138,12 @@ namespace AspNetCore.Simple.Sdk.Startups
             app.UseSwaggerSimplified(Configuration, BasePath, Logger);
             app.UseSwaggerUiSimplified(Assembly, BasePath);
 
-            app.UsePathBase(BasePath);
-
             app.UseErrorHandling();
 
             app.UseErrorLogging();
             app.UseHttpsRedirection();
+
+            app.UsePathBase(BasePath);
 
             app.UseRouting();
 
