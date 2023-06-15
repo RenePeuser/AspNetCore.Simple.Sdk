@@ -43,6 +43,19 @@ namespace AspNetCore.Simple.Sdk.Mediator
                 cfg.RegisterServicesFromAssembly(assembly);
             });
         }
+
+        /// <summary>
+        /// Registers an Mediator pipeline behavior just by its implementation type like: CachingBehavior&lt;,&gt;
+        /// </summary>
+        /// <code>
+        /// services.AddOpenPipelineBehavior(typeof(CachingBehavior&lt;,&gt;));
+        /// </code>
+        /// <param name="services">The service collection to register your services.</param>
+        /// <param name="behaviorType">The implementation type of your behavior</param>
+        public static void AddOpenPipelineBehavior(this IServiceCollection services, Type behaviorType)
+        {
+            services.AddTransient(typeof(IPipelineBehavior<,>), behaviorType);
+        }
     }
 
     /// <summary>
