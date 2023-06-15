@@ -14,13 +14,13 @@ namespace AspNetCore.Simple.Sdk.Mediator
         }
     }
 
-    public interface IRequestValidator<in TRequest> where TRequest : IBaseRequest
+    public interface IRequestValidator<in TRequest> where TRequest : notnull
     {
         Task ValidateAsync(TRequest request);
     }
 
 
-    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {
         private readonly IServiceProvider _serviceProvider;
 
