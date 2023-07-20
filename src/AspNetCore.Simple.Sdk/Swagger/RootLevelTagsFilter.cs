@@ -74,7 +74,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                               // 3. Detect all path exists on the controller to check path to ignore
                               var allPaths = GetAllPaths(controllerActionDescriptor).ToImmutableList();
-                              if (allPaths.All(path => path.Contains("{version}").IsFalse()))
+                              if (allPaths.All(path => path.Contains("{version:apiVersion}").IsFalse()))
                               {
                                   return false;
                               }

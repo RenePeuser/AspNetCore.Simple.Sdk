@@ -16,12 +16,12 @@ namespace AspNetCore.Simple.Sdk.Cors
         /// <summary>
         /// Provides a list of allowed origins sources
         /// </summary>
-        public IImmutableList<string> Origins { get; init; } = ImmutableList.Create<string>("*");
+        public IImmutableList<string> Origins { get; init; } = "*".AsImmutableList();
 
         /// <summary>
         /// Provides the list of allowed CORS headers
         /// </summary>
-        public IImmutableList<string> Headers { get; init; } = ImmutableList.Create<string>("Origin, X-Requested-With, Content-Type, Accept");
+        public IImmutableList<string> Headers { get; init; } = ImmutableList.Create("Origin, X-Requested-With, Content-Type, Accept");
 
         /// <summary>
         /// Provides if CORS credentials are allowed
