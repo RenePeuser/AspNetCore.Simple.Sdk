@@ -1,7 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using Azure.Storage.Blobs;
@@ -54,23 +56,32 @@ namespace AspNetCore.Simple.Sdk.Storage
 
     public interface IAzureBlobStorage
     {
-        Task<BlobClient> AddOrUpdateBlobAsync(string containerName, string fileName, string content);
+        Task<BlobClient> AddOrUpdateBlobAsync(string containerName,
+                                              string fileName,
+                                              string content,
+                                              CancellationToken cancellationToken = default);
 
-        Task<BlobClient> AddOrUpdateBlobAsync(string containerName, InMemoryFileAsByteArray inMemoryFileAsByteArray);
+        Task<BlobClient> AddOrUpdateBlobAsync(string containerName,
+                                              InMemoryFileAsByteArray inMemoryFileAsByteArray,
+                                              CancellationToken cancellationToken = default);
 
-        Task<BlobClient?> GetBlobAsync(string containerName, string fileName);
+        Task<BlobClient?> GetBlobClientAsync(string containerName,
+                                             string fileName,
+                                             CancellationToken cancellationToken = default);
 
-        Task DeleteBlobAsync(string containerName, string fileName);
+        Task<T?> GetFromJsonAsync<T>(string containerName, string fileName, CancellationToken cancellationToken = default);
 
-        IAsyncEnumerable<BlobContainerClient> GetAllContainerAsync();
+        Task DeleteBlobAsync(string containerName, string fileName, CancellationToken cancellationToken = default);
 
-        Task<BlobContainerClient> GetOrAddContainerAsync(string containerName);
+        IAsyncEnumerable<BlobContainerClient> GetAllContainerAsync(CancellationToken cancellationToken = default);
 
-        Task<BlobContainerClient?> FirstOrDefaultAsync(string containerName);
+        Task<BlobContainerClient> GetOrAddContainerAsync(string containerName, CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(string containerName);
+        Task<BlobContainerClient?> FirstOrDefaultAsync(string containerName, CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(BlobContainerClient container);
+        Task DeleteAsync(string containerName, CancellationToken cancellationToken = default);
+
+        Task DeleteAsync(BlobContainerClient container, CancellationToken cancellationToken = default);
     }
 
     internal sealed class AzureBlobStorage : IAzureBlobStorage
@@ -84,21 +95,21 @@ namespace AspNetCore.Simple.Sdk.Storage
             _blobServiceClient = new BlobServiceClient(storageSettings.ConnectionString);
         }
 
-        public Task<BlobClient> AddOrUpdateBlobAsync(string containerName, string fileName, string content)
+        public Task<BlobClient> AddOrUpdateBlobAsync(string containerName, string fileName, string content, CancellationToken cancellationToken = default)
         {
             var inMemoryFile = new InMemoryFileAsByteArray(Encoding.UTF8.GetBytes(content), fileName);
-            return AddOrUpdateBlobAsync(containerName, inMemoryFile);
+            return AddOrUpdateBlobAsync(containerName, inMemoryFile, cancellationToken);
         }
 
-        public async Task<BlobClient> AddOrUpdateBlobAsync(string containerName, InMemoryFileAsByteArray inMemoryFileAsByteArray)
+        public async Task<BlobClient> AddOrUpdateBlobAsync(string containerName, InMemoryFileAsByteArray inMemoryFileAsByteArray, CancellationToken cancellationToken = default)
         {
-            var container = await GetOrAddContainerAsync(containerName).ConfigureAwait(false);
+            var container = await GetOrAddContainerAsync(containerName, cancellationToken).ConfigureAwait(false);
             return await container.AddOrUpdateAsync(inMemoryFileAsByteArray).ConfigureAwait(false);
         }
 
-        public async Task<BlobClient?> GetBlobAsync(string containerName, string fileName)
+        public async Task<BlobClient?> GetBlobClientAsync(string containerName, string fileName, CancellationToken cancellationToken = default)
         {
-            var container = await FirstOrDefaultAsync(containerName).ConfigureAwait(false);
+            var container = await FirstOrDefaultAsync(containerName, cancellationToken).ConfigureAwait(false);
             if (container.IsNull())
             {
                 return null;
@@ -107,36 +118,54 @@ namespace AspNetCore.Simple.Sdk.Storage
             return container.GetBlobClient(fileName);
         }
 
-        public async Task DeleteBlobAsync(string containerName, string fileName)
+        public async Task<T?> GetFromJsonAsync<T>(string containerName, string fileName, CancellationToken cancellationToken = default)
         {
-            var container = await FirstOrDefaultAsync(containerName).ConfigureAwait(false);
+            var container = await FirstOrDefaultAsync(containerName, cancellationToken).ConfigureAwait(false);
             if (container.IsNull())
             {
-                var allContainers = await GetAllContainerAsync().ToListAsync().ConfigureAwait(false);
+                return default;
+            }
+
+            var blobClient = container.GetBlobClient(fileName);
+            var fileContent = await blobClient.DownloadContentAsync(cancellationToken).ConfigureAwait(false);
+            if (fileContent.HasValue.IsFalse())
+            {
+                return default;
+            }
+
+            return fileContent.Value.Content.ToObjectFromJson<T>();
+        }
+
+        public async Task DeleteBlobAsync(string containerName, string fileName, CancellationToken cancellationToken = default)
+        {
+            var container = await FirstOrDefaultAsync(containerName, cancellationToken).ConfigureAwait(false);
+            if (container.IsNull())
+            {
+                var allContainers = await GetAllContainerAsync(cancellationToken).ToListAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
                 throw new ProblemDetailsException("Could not delete expected file because the storage container for does not exists",
                                                   $"The container: '{containerName}' which should contains the file: '{fileName}' does not exists",
                                                   ("Available Containers", allContainers.Select(c => c.Name).ToJson()));
             }
         }
 
-        public IAsyncEnumerable<BlobContainerClient> GetAllContainerAsync()
+        public IAsyncEnumerable<BlobContainerClient> GetAllContainerAsync(CancellationToken cancellationToken = default)
         {
-            return GetAllAsync();
+            return GetAllAsync(cancellationToken);
         }
 
-        public async Task<BlobContainerClient> GetOrAddContainerAsync(string containerName)
+        public async Task<BlobContainerClient> GetOrAddContainerAsync(string containerName, CancellationToken cancellationToken = default)
         {
-            var container = await FirstOrDefaultAsync(containerName).ConfigureAwait(false) ??
-                            await _blobServiceClient.CreateBlobContainerAsync(containerName).ConfigureAwait(false);
+            var container = await FirstOrDefaultAsync(containerName, cancellationToken).ConfigureAwait(false) ??
+                            await _blobServiceClient.CreateBlobContainerAsync(containerName, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return container;
         }
 
-        public async IAsyncEnumerable<BlobContainerClient> GetAllAsync()
+        public async IAsyncEnumerable<BlobContainerClient> GetAllAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var blobServiceClient = new BlobServiceClient(_storageSettings.ConnectionString);
-            var containers = blobServiceClient.GetBlobContainersAsync();
-            var asyncEnumerator = containers.GetAsyncEnumerator();
+            var containers = blobServiceClient.GetBlobContainersAsync(cancellationToken: cancellationToken);
+            var asyncEnumerator = containers.GetAsyncEnumerator(cancellationToken);
             try
             {
                 while (await asyncEnumerator.MoveNextAsync().ConfigureAwait(false))
@@ -151,11 +180,11 @@ namespace AspNetCore.Simple.Sdk.Storage
             }
         }
 
-        public async Task<BlobContainerClient?> FirstOrDefaultAsync(string containerName)
+        public async Task<BlobContainerClient?> FirstOrDefaultAsync(string containerName, CancellationToken cancellationToken = default)
         {
             var blobServiceClient = new BlobServiceClient(_storageSettings.ConnectionString);
-            var containers = blobServiceClient.GetBlobContainersAsync();
-            var asyncEnumerator = containers.GetAsyncEnumerator();
+            var containers = blobServiceClient.GetBlobContainersAsync(cancellationToken: cancellationToken);
+            var asyncEnumerator = containers.GetAsyncEnumerator(cancellationToken);
             try
             {
                 while (await asyncEnumerator.MoveNextAsync().ConfigureAwait(false))
@@ -175,14 +204,14 @@ namespace AspNetCore.Simple.Sdk.Storage
             return null;
         }
 
-        public Task DeleteAsync(string containerName)
+        public Task DeleteAsync(string containerName, CancellationToken cancellationToken = default)
         {
-            return _blobServiceClient.DeleteBlobContainerAsync(containerName);
+            return _blobServiceClient.DeleteBlobContainerAsync(containerName, cancellationToken: cancellationToken);
         }
 
-        public Task DeleteAsync(BlobContainerClient container)
+        public Task DeleteAsync(BlobContainerClient container, CancellationToken cancellationToken = default)
         {
-            return _blobServiceClient.DeleteBlobContainerAsync(container.Name);
+            return _blobServiceClient.DeleteBlobContainerAsync(container.Name, cancellationToken: cancellationToken);
         }
     }
 }
