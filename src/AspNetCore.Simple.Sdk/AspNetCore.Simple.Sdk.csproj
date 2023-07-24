@@ -50,7 +50,7 @@
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.5" />
+        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.6" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Polly" Version="7.2.4" />
