@@ -1,10 +1,12 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AspNetCore.Simple.Sdk.ApplicationInsight;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using Azure.Storage.Blobs;
 using Extensions.Pack;
@@ -45,11 +47,17 @@ namespace AspNetCore.Simple.Sdk.Storage
 
     internal sealed class AzureBlobStorageFactory : IAzureBlobStorageFactory
     {
+        private readonly ITelemetryClientAdapter _telemetryClientAdapter;
         private readonly ConcurrentDictionary<string, IAzureBlobStorage> _bloStorageClients = new();
+
+        public AzureBlobStorageFactory(ITelemetryClientAdapter telemetryClientAdapter)
+        {
+            _telemetryClientAdapter = telemetryClientAdapter;
+        }
 
         public IAzureBlobStorage CreateFrom(string connectionString)
         {
-            return _bloStorageClients.GetOrAdd(connectionString, key => new AzureBlobStorage(new StorageSettings { ConnectionString = key }));
+            return _bloStorageClients.GetOrAdd(connectionString, key => new AzureBlobStorage(new StorageSettings { ConnectionString = key }, _telemetryClientAdapter));
         }
     }
 
@@ -87,11 +95,14 @@ namespace AspNetCore.Simple.Sdk.Storage
     internal sealed class AzureBlobStorage : IAzureBlobStorage
     {
         private readonly StorageSettings _storageSettings;
+        private readonly ITelemetryClientAdapter _telemetryClientAdapter;
         private readonly BlobServiceClient _blobServiceClient;
 
-        public AzureBlobStorage(StorageSettings storageSettings)
+        public AzureBlobStorage(StorageSettings storageSettings,
+                                ITelemetryClientAdapter telemetryClientAdapter)
         {
             _storageSettings = storageSettings;
+            _telemetryClientAdapter = telemetryClientAdapter;
             _blobServiceClient = new BlobServiceClient(storageSettings.ConnectionString);
         }
 
@@ -139,7 +150,18 @@ namespace AspNetCore.Simple.Sdk.Storage
                 return default;
             }
 
-            return fileContent.Value.Content.ToObjectFromJson<T>();
+            try
+            {
+                return fileContent.Value.Content.ToObjectFromJson<T>();
+            }
+            catch (Exception e)
+            {
+                _telemetryClientAdapter.TrackException(e,
+                                                       ("Container", containerName),
+                                                       ("File", fileName),
+                                                       ("Json", fileContent.Value.Content.ToString()));
+                return default;
+            }
         }
 
         public async Task DeleteBlobAsync(string containerName, string fileName, CancellationToken cancellationToken = default)
