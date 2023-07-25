@@ -127,6 +127,12 @@ namespace AspNetCore.Simple.Sdk.Storage
             }
 
             var blobClient = container.GetBlobClient(fileName);
+            var exists = await blobClient.ExistsAsync(cancellationToken).ConfigureAwait(false);
+            if (exists.HasValue && exists.Value.IsFalse())
+            {
+                return default;
+            }
+
             var fileContent = await blobClient.DownloadContentAsync(cancellationToken).ConfigureAwait(false);
             if (fileContent.HasValue.IsFalse())
             {
