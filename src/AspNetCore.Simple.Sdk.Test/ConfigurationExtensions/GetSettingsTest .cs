@@ -30,11 +30,10 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         }
 
         [TestMethod]
-        public void Should_Be_Able_To_Fetch_Settings_Directly_By_Typename_With_Settings_Postfix()
+        [ExpectedException(typeof(MissingSettingsException<DummySettings>))]
+        public void Should_Not_Be_Able_To_Fetch_Settings_Directly_By_Typename_With_Settings_Postfix()
         {
-            var settings = Configuration.GetSettings<DummySettings>();
-
-            settings.Should().NotBeNull();
+            Configuration.GetSettings<DummySettings>();
         }
 
         [TestMethod]
