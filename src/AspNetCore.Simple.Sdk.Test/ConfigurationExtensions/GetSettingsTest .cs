@@ -45,6 +45,14 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         }
 
         [TestMethod]
+        public void Should_Be_Able_To_Fetch_Settings_By_Its_Matching_Type_Name()
+        {
+            var settings = Configuration.GetSettings<Dummy>();
+
+            settings.Should().NotBeNull();
+        }
+
+        [TestMethod]
         public void Should_Be_Able_To_Fetch_Settings_With_Correct_Content()
         {
             var settings = Configuration.GetSettings<DummySettings>(nameof(Dummy));
