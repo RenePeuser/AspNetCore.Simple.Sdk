@@ -115,7 +115,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddSwaggerGenSimplified(Assembly, Configuration, Logger);
 
             services.AddAzureBlobStorage(Configuration);
-            services.AddAzureBlobStorageFactory();
+            services.AddAzureBlobStorageFactory(Configuration);
 
             services.AddApplicationInsights(Configuration);
 

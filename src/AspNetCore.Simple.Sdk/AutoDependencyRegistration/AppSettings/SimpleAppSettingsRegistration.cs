@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Extensions.Pack;
@@ -14,7 +13,6 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         private readonly IServiceCollection _serviceCollection;
         private readonly IConfiguration _configuration;
         private readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-        private readonly IEnumerable<string> SettingsPostFixToReplace = new[] { "Settings", "Setting" };
 
         public SimpleAppSettingsRegistration(LifetimeDetector lifetimeDetector, IServiceCollection serviceCollection, IConfiguration configuration)
         {

@@ -78,10 +78,9 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
         internal static void AddTelemetryClient(this IServiceCollection services, IConfiguration configuration)
         {
-            // Only if configuration is available
-            if (configuration.TryGetSettings<ApplicationInsightsSettings>(out _).IsFalse())
+            if (configuration.TryGetSettings<ApplicationInsightsSettings>(out var settings).IsFalse())
             {
-                return;
+                settings = new ApplicationInsightsSettings();
             }
 
             // If Telemetry client already registered go out.
@@ -90,8 +89,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                 return;
             }
 
-            var applicationInsightSettings = configuration.GetSettings<ApplicationInsightsSettings>();
-            if (applicationInsightSettings.ConnectionString.IsNullOrWhiteSpace())
+            if (settings.ConnectionString.IsNullOrWhiteSpace())
             {
                 throw new ProblemDetailsException("Missing connection string for ApplicationInsights",
                                                   "Please configure you application insights settings correctly and define the connection string as well",
@@ -101,7 +99,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
             services.AddApplicationInsightsTelemetry(options =>
             {
                 options.EnableAdaptiveSampling = false;
-                options.ConnectionString = applicationInsightSettings.ConnectionString;
+                options.ConnectionString = settings.ConnectionString;
             });
         }
 

@@ -34,8 +34,10 @@ namespace AspNetCore.Simple.Sdk.Storage
 
     public static class AddAzureBlobStorageFactoryExtension
     {
-        public static void AddAzureBlobStorageFactory(this IServiceCollection services)
+        public static void AddAzureBlobStorageFactory(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTelemetryClientAdapter(configuration);
+
             services.AddSingletonIfNotExists<IAzureBlobStorageFactory, AzureBlobStorageFactory>();
         }
     }
