@@ -16,7 +16,7 @@
         <Copyright>Copyright 2021 (c) Rene Peuser. All rights reserved.</Copyright>
         <PackageProjectUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</PackageProjectUrl>
         <RepositoryUrl>https://renepeuser.visualstudio.com/AspNetCore.Simple.Sdk</RepositoryUrl>
-        <PackageReleaseNotes>Bugfix null object exception swagger operation tags if they are not used</PackageReleaseNotes>
+        <PackageReleaseNotes>Configuration settings have to fit exactly class name because of fall backs and Environment variables.</PackageReleaseNotes>
         <PackageTags>C#;.NetCore;Asp.NetCore;NetCore;ASPNetCore;Swagger;Swashbuckle;OpenAPI;ErrorHandling;ErrorLogging;Middleware;Startup.cs;</PackageTags>
         <PackageId>AspNetCore.Simple.Sdk</PackageId>
         <OutputType>Library</OutputType>
