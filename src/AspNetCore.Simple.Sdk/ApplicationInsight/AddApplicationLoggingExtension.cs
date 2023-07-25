@@ -20,9 +20,9 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
             if (configuration.TryGetSettings<ApplicationInsightsSettings>(out var applicationInsightsSettings))
             {
-                var eventTelemetryNamesToIgnore = configuration.GetSection("ApplicationInsights:EventTelemetryFilterSettings:NamesToIgnore").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
-                var requestTelemetryNamesToIgnore = configuration.GetSection("ApplicationInsights:RequestTelemetryFilterSettings:NamesToIgnore").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
-                var traceTelemetryNamesToIgnore = configuration.GetSection("ApplicationInsights:TraceTelemetryFilterSettings:NamesToIgnore").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var eventTelemetryNamesToIgnore = configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.EventTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.EventTelemetryFilterSettings.NamesToIgnore)}").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var requestTelemetryNamesToIgnore = configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.RequestTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.RequestTelemetryFilterSettings.NamesToIgnore)}").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var traceTelemetryNamesToIgnore = configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.TraceTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.TraceTelemetryFilterSettings.NamesToIgnore)}").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
 
                 applicationInsightsSettings = applicationInsightsSettings with
                 {
