@@ -39,6 +39,10 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                 services.AddSingletonIfNotExists(applicationInsightsSettings.RequestTelemetryFilterSettings);
                 services.AddSingletonIfNotExists(applicationInsightsSettings.TraceTelemetryFilterSettings);
             }
+            else
+            {
+                services.AddSingletonIfNotExists(new ApplicationInsightsSettings());
+            }
         }
     }
 
@@ -58,11 +62,18 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
     {
         internal static void AddApplicationInsights(this IServiceCollection services, IConfiguration configuration)
         {
-            // Only if configuration is available
+            // Configure AddApplicationInsightsSettings
+            services.AddApplicationInsightsSettings(configuration);
+
+            // Only if configuration is available then we continue here
             if (configuration.TryGetSettings<ApplicationInsightsSettings>(out _).IsFalse())
             {
                 return;
             }
+
+            services.AddTelemetryProcessors(configuration);
+            services.AddTelemetryInitializers(configuration);
+            services.AddTelemetryLoggingBehavior(configuration);
 
             // If Telemetry client already registered go out.
             if (services.IsAlreadyRegistered<TelemetryClient>())
@@ -71,9 +82,6 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
             }
 
             services.AddTelemetryClient(configuration);
-            services.AddTelemetryProcessors(configuration);
-            services.AddTelemetryInitializers(configuration);
-            services.AddTelemetryLoggingBehavior(configuration);
         }
 
         internal static void AddTelemetryClient(this IServiceCollection services, IConfiguration configuration)

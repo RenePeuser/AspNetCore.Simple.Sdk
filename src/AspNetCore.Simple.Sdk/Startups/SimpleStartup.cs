@@ -105,6 +105,8 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddOAuthAuthentication(Configuration);
 
+            services.AddApplicationInsights(Configuration);
+
             // Activate mediator for current assembly and calling once
             services.AddMediator();
             services.AddMediator(Assembly);
@@ -116,8 +118,6 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddAzureBlobStorage(Configuration);
             services.AddAzureBlobStorageFactory(Configuration);
-
-            services.AddApplicationInsights(Configuration);
 
             AutoConfigureServices(GetAutoRegistration(services, Configuration));
         }

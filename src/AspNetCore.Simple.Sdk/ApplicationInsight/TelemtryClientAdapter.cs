@@ -9,6 +9,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.ApplicationInsight
 {
@@ -18,6 +19,14 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         {
             if (services.IsAlreadyRegistered<ITelemetryClientAdapter>())
             {
+                return;
+            }
+
+
+            // If no ApplicationInsightsSettings available, then activate logger :) 
+            if (configuration.TryGetSettings<ApplicationInsightsSettings>(out _).IsFalse())
+            {
+                services.AddSingletonIfNotExists<ITelemetryClientAdapter, NoTelemetryAdapter>();
                 return;
             }
 
@@ -104,5 +113,76 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         void TrackEvent(string eventName, params (string key, string? value)[] details);
         void TrackMetric(string name, double value, params (string key, string? value)[] details);
         void TrackEvent(EventTelemetry eventTelemetry);
+    }
+
+    internal sealed class NoTelemetryAdapter : ITelemetryClientAdapter
+    {
+        private readonly ILogger<NoTelemetryAdapter> _logger;
+
+        public NoTelemetryAdapter(ILogger<NoTelemetryAdapter> logger)
+        {
+            _logger = logger;
+        }
+
+        public void TrackInformation(string message, params (string key, string? value)[] details)
+        {
+            _logger.LogInformation(message, details);
+        }
+
+        public void TrackError(string message, params (string key, string? value)[] details)
+        {
+            _logger.LogError(message, details);
+        }
+
+        public void TrackException(string message, params (string key, string? value)[] details)
+        {
+            _logger.LogError(message, details);
+        }
+
+        public void TrackException(string message, Exception exception, params (string key, string? value)[] details)
+        {
+            _logger.LogError(message, details);
+        }
+
+        public void TrackException(Exception exception, params (string key, string? value)[] details)
+        {
+            _logger.LogError(exception.Message, details);
+        }
+
+        public void TrackTrace(string message, params (string key, string? value)[] details)
+        {
+            _logger.LogInformation(message, details);
+        }
+
+        public IOperationHolder<T> StartOperation<T>(Activity activity) where T : OperationTelemetry, new()
+        {
+            return new NoOperation<T>();
+        }
+
+        public void TrackEvent(string eventName, params (string key, string? value)[] details)
+        {
+            _logger.LogInformation(eventName, details);
+        }
+
+        public void TrackMetric(string name, double value, params (string key, string? value)[] details)
+        {
+            _logger.LogInformation(name, details);
+        }
+
+        public void TrackEvent(EventTelemetry eventTelemetry)
+        {
+            _logger.LogInformation(eventTelemetry.Name);
+        }
+    }
+
+
+    public record NoOperation<T> : IOperationHolder<T>
+    {
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+
+        public T Telemetry { get; init; } = default!;
     }
 }
