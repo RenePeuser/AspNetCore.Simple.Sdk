@@ -15,9 +15,11 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
         public JsonSerializer(ILogger<JsonSerializer> logger)
         {
             _logger = logger;
+
             _serializeOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
                 Converters = { new JsonStringEnumConverter() }
             };
         }
@@ -42,8 +44,8 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
         public T Deserialize<T>(string json)
         {
-            T? deserializeResult = default(T);
-            string errorMessage = string.Empty;
+            T? deserializeResult = default;
+            var errorMessage = string.Empty;
             try
             {
                 deserializeResult = System.Text.Json.JsonSerializer.Deserialize<T>(json, _serializeOptions);
@@ -82,7 +84,7 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
         public object Deserialize<T>(string json, Type returnType)
         {
             object? deserializeResult = default(T);
-            string errorMessage = string.Empty;
+            var errorMessage = string.Empty;
             try
             {
                 deserializeResult = System.Text.Json.JsonSerializer.Deserialize(json, returnType, _serializeOptions);
