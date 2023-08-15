@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using Extensions.Pack;
 using Microsoft.ApplicationInsights;
@@ -117,10 +116,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
         internal static void AddTelemetryProcessors(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddEventTelemetryFilter(configuration);
-            services.AddRequestTelemetryFilter(configuration);
-            services.AddTraceTelemetryFilter(configuration);
-            services.AddDependencyTelemetryFilter(configuration);
+            services.AddTelemetryFilter(configuration);
         }
 
         internal static void AddTelemetryInitializers(this IServiceCollection services, IConfiguration configuration)
