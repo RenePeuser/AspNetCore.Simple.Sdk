@@ -51,9 +51,9 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
                         return;
                     }
                 }
-            }
 
-            _telemetryProcessor.Process(item);
+                _telemetryProcessor.Process(item);
+            }
         }
     }
 }

@@ -8,38 +8,38 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
 {
-    internal static class AddRequestTelemetryFilterExtension
+    internal static class AddDependencyTelemetryFilterExtension
     {
-        public static void AddRequestTelemetryFilter(this IServiceCollection services, IConfiguration configuration)
+        public static void AddDependencyTelemetryFilter(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddApplicationInsightsSettings(configuration);
 
-            services.AddApplicationInsightsTelemetryProcessor<RequestTelemetryFilter>();
+            services.AddApplicationInsightsTelemetryProcessor<DependencyTelemetryFilter>();
         }
     }
 
-    public record RequestTelemetryFilterSettings
+    public record DependencyTelemetryFilterSettings
     {
         public string[] NamesToIgnore { get; init; } = Array.Empty<string>();
     }
 
-    internal sealed class RequestTelemetryFilter : ITelemetryProcessor
+    internal sealed class DependencyTelemetryFilter : ITelemetryProcessor
     {
         private readonly ITelemetryProcessor _telemetryProcessor;
-        private readonly RequestTelemetryFilterSettings _requestTelemetryFilterSettings;
+        private readonly DependencyTelemetryFilterSettings _eventTelemetrySettings;
 
         // next will point to the next TelemetryProcessor in the chain.
-        public RequestTelemetryFilter(ITelemetryProcessor telemetryProcessor, RequestTelemetryFilterSettings requestTelemetryFilterSettings)
+        public DependencyTelemetryFilter(ITelemetryProcessor telemetryProcessor, DependencyTelemetryFilterSettings eventTelemetrySettings)
         {
             _telemetryProcessor = telemetryProcessor;
-            _requestTelemetryFilterSettings = requestTelemetryFilterSettings;
+            _eventTelemetrySettings = eventTelemetrySettings;
         }
 
         public void Process(ITelemetry item)
         {
-            if (item is RequestTelemetry requestTelemetry)
+            if (item is DependencyTelemetry dependencyTelemetry)
             {
-                if (_requestTelemetryFilterSettings.NamesToIgnore.Any(name => requestTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase)))
+                if (_eventTelemetrySettings.NamesToIgnore.Any(name => dependencyTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase)))
                 {
                     return;
                 }
