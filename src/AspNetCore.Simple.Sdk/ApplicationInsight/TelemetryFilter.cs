@@ -5,6 +5,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.ApplicationInsight
 {
@@ -66,7 +67,8 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         {
             if (item is DependencyTelemetry dependencyTelemetry)
             {
-                if (_dependencyTelemetryFilterSettings.NamesToIgnore.Any(name => dependencyTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase)))
+                if (_dependencyTelemetryFilterSettings.NamesToIgnore.Any(name => dependencyTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase) ||
+                                                                                 dependencyTelemetry.Data.Contains(name, StringComparison.OrdinalIgnoreCase)))
                 {
                     return;
                 }
