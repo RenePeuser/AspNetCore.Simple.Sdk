@@ -26,21 +26,24 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
     internal sealed class DependencyTelemetryFilter : ITelemetryProcessor
     {
         private readonly ITelemetryProcessor _telemetryProcessor;
-        private readonly DependencyTelemetryFilterSettings _eventTelemetrySettings;
+        private readonly DependencyTelemetryFilterSettings _dependencyTelemetryFilterSettings;
 
         // next will point to the next TelemetryProcessor in the chain.
-        public DependencyTelemetryFilter(ITelemetryProcessor telemetryProcessor, DependencyTelemetryFilterSettings eventTelemetrySettings)
+        public DependencyTelemetryFilter(ITelemetryProcessor telemetryProcessor,
+                                         DependencyTelemetryFilterSettings dependencyTelemetryFilterSettings)
         {
             _telemetryProcessor = telemetryProcessor;
-            _eventTelemetrySettings = eventTelemetrySettings;
+            _dependencyTelemetryFilterSettings = dependencyTelemetryFilterSettings;
         }
 
         public void Process(ITelemetry item)
         {
             if (item is DependencyTelemetry dependencyTelemetry)
             {
-                if (_eventTelemetrySettings.NamesToIgnore.Any(name => dependencyTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase)))
+                if (_dependencyTelemetryFilterSettings.NamesToIgnore.Any(name => dependencyTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase) ||
+                                                                                 dependencyTelemetry.Data.Contains(name, StringComparison.OrdinalIgnoreCase)))
                 {
+                    // We stop telemetry processing cause we want to filter out unexpected once.
                     return;
                 }
             }

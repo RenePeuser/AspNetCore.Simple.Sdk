@@ -75,10 +75,6 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                 return;
             }
 
-            services.AddTelemetryProcessors(configuration);
-            services.AddTelemetryInitializers(configuration);
-            services.AddTelemetryLoggingBehavior(configuration);
-
             // If Telemetry client already registered go out.
             if (services.IsAlreadyRegistered<TelemetryClient>())
             {
@@ -86,6 +82,9 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
             }
 
             services.AddTelemetryClient(configuration);
+            services.AddTelemetryProcessors(configuration);
+            services.AddTelemetryInitializers(configuration);
+            services.AddTelemetryLoggingBehavior(configuration);
         }
 
         internal static void AddTelemetryClient(this IServiceCollection services, IConfiguration configuration)
