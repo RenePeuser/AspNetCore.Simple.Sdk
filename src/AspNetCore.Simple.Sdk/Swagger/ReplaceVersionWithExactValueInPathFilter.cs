@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -49,6 +50,14 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                 foreach (var apiDescription in apiDescriptions)
                 {
+                    if (apiDescription.ActionDescriptor.IsNotNull() && apiDescription.ActionDescriptor.DisplayName.IsNotNull())
+                    {
+                        if (apiDescription.ActionDescriptor.DisplayName.Contains("translation", StringComparison.OrdinalIgnoreCase))
+                        {
+
+                        }
+                    }
+
                     var controller = apiDescription.ActionDescriptor.As<ControllerActionDescriptor>();
                     if (controller.IsNull())
                     {
@@ -66,12 +75,46 @@ namespace AspNetCore.Simple.Sdk.Swagger
                         continue;
                     }
 
+                    var baseRoutes = controller.ControllerTypeInfo.GetCustomAttributes<RouteAttribute>();
+                    var baseRouteLikeSwaggerPrepared = baseRoutes.Select(item => item.Template.Replace("v{version:apiVersion}", "/v{version}")).ToList();
 
-                    var httpMethods = controller.ControllerTypeInfo.DeclaredMethods.SelectMany(method => method.GetCustomAttributes<HttpMethodAttribute>())
-                                                .SelectMany(httpAttribute => httpAttribute.HttpMethods)
-                                                .ToImmutableList();
+                    var httpMethods = controller.ControllerTypeInfo.DeclaredMethods.SelectMany(method =>
+                    {
+                        var httpMethods = method.GetCustomAttributes<HttpMethodAttribute>();
 
+                        // first method only stuff
+                        var paths = httpMethods.Select(httpMethod =>
+                        {
+                            var subRouteByHttpAction = httpMethod.Template.IsNotNull() ? $"/{httpMethod.Template}" : string.Empty;
+                            return new HttpMethodInfo(httpMethod.HttpMethods.First(), subRouteByHttpAction);
+
+
+                        }).ToList();
+
+                        // check if route attribute is there
+                        var routeAttributes = method.GetCustomAttributes<RouteAttribute>() ?? new List<RouteAttribute>();
+                        if (routeAttributes.IsEmpty())
+                        {
+                            var pathWitoutRoutes = baseRouteLikeSwaggerPrepared.SelectMany(item => paths.Select(p => p with {Route = $"{item}/{p.Route}".Replace("//", "/").Replace("*", string.Empty).TrimEnd('/')}).ToList());
+                            return pathWitoutRoutes;
+                        }
+
+                        var routePaths = routeAttributes.Select(attribute => attribute.Template);
+
+                        var realPaths = routePaths.SelectMany(route =>
+                        {
+                            return paths.Select(p => new HttpMethodInfo(p.HttpMethod, $"{route}/{p.Route}"));
+                        }).ToList();
+
+
+                        var absolutePath = baseRouteLikeSwaggerPrepared.SelectMany(item => realPaths.Select(p => p with {Route = $"{item}/{p.Route}".TrimEnd('/')})).ToList();
+                        var trimSpecialCases = absolutePath.Select(p => p with { Route = p.Route.Replace("//", "/").Replace("*", string.Empty).TrimEnd('/') }).ToList();
+                        return trimSpecialCases;
+                    }).ToList();
                     var versionInfo = apiDescription.ActionDescriptor.EndpointMetadata.FirstOrDefaultOfType<ApiVersionAttribute>();
+
+
+                    httpMethods = httpMethods.Select(item => item with {Route = item.Route.Replace("//", "/")}).ToList();
 
                     // New feature if path without version should be ignored we do not list it any more
                     if (versionInfo.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
@@ -80,10 +123,13 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     }
 
                     var newOpenApiPathItem = path.Value;
+                    // Now we have to check if the real Http Action with the route is in the list
+
+                    var methodsRealExists = httpMethods.Where(httpMethod => httpMethod.Route.EqualsTo(path.Key.TrimEnd('/'))).ToList();
 
                     //// Remove those operations which the controller does not have
                     //// This is a evil part when using versioned swagger documents :/
-                    var operationToRemove = newOpenApiPathItem.Operations.Where(operation => httpMethods.Contains(operation.Key.ToString().ToUpperInvariant()).IsFalse()).ToImmutableList();
+                    var operationToRemove = newOpenApiPathItem.Operations.Where(item => methodsRealExists.Any(m => m.HttpMethod.ToUpperInvariant() == item.Key.ToInvariantString().ToUpperInvariant()).IsFalse()).ToImmutableList();
                     newOpenApiPathItem.Operations.RemoveRange(operationToRemove);
 
 
@@ -100,5 +146,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 }
             }
         }
+
+        internal sealed record HttpMethodInfo(string HttpMethod, string Route);
     }
 }
