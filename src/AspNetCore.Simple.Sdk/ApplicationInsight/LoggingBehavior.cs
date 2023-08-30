@@ -29,7 +29,8 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         }
     }
 
-    public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+
+    public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {
         private readonly LoggingHelper _loggingHelper;
         private readonly ITelemetryClientAdapter _telemetryClientAdapter;
