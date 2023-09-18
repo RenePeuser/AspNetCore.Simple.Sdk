@@ -1,5 +1,5 @@
 # Startup
-So for quick start you only have to derive from the oprimized startup class and you are ready to go
+So for quick start you only have to derive from the optimized startup class and you are ready to go
 
 ```
 Hint: The hold sample is inside this repo !
@@ -29,7 +29,9 @@ public class Startup : SimpleStartup
 ## Step 2: Documentation file
 Go sure that your xml file for documentation will be generate, to get a good swagger documentation 
 
-![](documentation-file.png)
+```xml
+<GenerateDocumentationFile>true</GenerateDocumentationFile>
+```
 
 ## Step 3: First controller
 Implement your first controller: (Here microsoft sample weahter app)

@@ -23,6 +23,7 @@
         <AssemblyName>AspNetCore.Simple.Sdk</AssemblyName>
         <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
         <PackageReadmeFile>readme.md</PackageReadmeFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <!--Property group settings for source link !-->
@@ -30,10 +31,6 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <DebugType>embedded</DebugType>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>.\AspNetCore.Simple.Sdk.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
