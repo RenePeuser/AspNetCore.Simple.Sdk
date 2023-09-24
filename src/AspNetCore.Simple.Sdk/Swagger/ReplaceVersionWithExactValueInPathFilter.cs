@@ -50,14 +50,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                 foreach (var apiDescription in apiDescriptions)
                 {
-                    if (apiDescription.ActionDescriptor.IsNotNull() && apiDescription.ActionDescriptor.DisplayName.IsNotNull())
-                    {
-                        if (apiDescription.ActionDescriptor.DisplayName.Contains("translation", StringComparison.OrdinalIgnoreCase))
-                        {
-
-                        }
-                    }
-
                     var controller = apiDescription.ActionDescriptor.As<ControllerActionDescriptor>();
                     if (controller.IsNull())
                     {
@@ -125,7 +117,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     var newOpenApiPathItem = path.Value;
                     // Now we have to check if the real Http Action with the route is in the list
 
-                    var methodsRealExists = httpMethods.Where(httpMethod => httpMethod.Route.EqualsTo(path.Key.TrimEnd('/'))).ToList();
+                    var methodsRealExists = httpMethods.Where(httpMethod => httpMethod.Route.Trim('/').EqualsTo(path.Key.Trim('/'))).ToList();
 
                     //// Remove those operations which the controller does not have
                     //// This is a evil part when using versioned swagger documents :/
