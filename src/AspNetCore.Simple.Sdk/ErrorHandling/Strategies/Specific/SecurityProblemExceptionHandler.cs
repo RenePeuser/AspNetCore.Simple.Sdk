@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System.Collections.Immutable;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Extensions.Pack;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,9 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
     {
         protected override async Task HandleAsync(HttpContext context, SecurityProblemException exception)
         {
+            var headers = context.Response.Headers.ToImmutableList();
             context.Response.Clear();
+            context.Response.Headers.AddRange(headers);
             context.Response.ContentType = MediaTypeNames.Application.Json;
             context.Response.StatusCode = exception.ProblemDetails.Status ?? StatusCodes.Status500InternalServerError;
 
