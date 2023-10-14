@@ -57,12 +57,15 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
             if (deserializeResult.IsNull())
             {
+                var securityCritical = typeof(T).GetCustomAttribute<SecurityCriticalJsonAttribute>();
+                var jsonString = securityCritical.IsNull() ? json : "SecurityCritical";
+
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
                                                   $"Could not deserialize your json string into expected type: {typeof(T).Name}",
                                                   ("Exception", errorMessage),
-                                                  ("Json string", json),
+                                                  ("JsonString", jsonString),
                                                   ("Type", typeof(T).Name),
-                                                  ("Type Fullname", typeof(T).FullName ?? string.Empty));
+                                                  ("TypeFullName", typeof(T).FullName ?? string.Empty));
             }
 
             return deserializeResult;
@@ -97,12 +100,15 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
             if (deserializeResult.IsNull())
             {
+                var securityCritical = typeof(T).GetCustomAttribute<SecurityCriticalJsonAttribute>();
+                var jsonString = securityCritical.IsNull() ? json : "SecurityCritical";
+
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
                                                   $"Could not deserialize your json string into expected type: {typeof(T).Name}",
                                                   ("Exception", errorMessage),
-                                                  ("Json string", json),
+                                                  ("JsonString", jsonString),
                                                   ("Type", typeof(T).Name),
-                                                  ("Type Fullname", typeof(T).FullName ?? string.Empty));
+                                                  ("TypeFullName", typeof(T).FullName ?? string.Empty));
             }
 
             return deserializeResult;

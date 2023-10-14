@@ -1,0 +1,9 @@
+﻿{
+  "title": "Could not deserialize your json string into expected type",
+  "status": 500,
+  "detail": "Could not deserialize your json string into expected type: ConnectionInfos",
+  "exception": "The JSON value could not be converted to AspNetCore.Simple.Sdk.Test.JsonSerializer.ConnectionInfos. Path: $ | LineNumber: 0 | BytePositionInLine: 1.",
+  "jsonString": "SecurityCritical",
+  "type": "ConnectionInfos",
+  "typeFullName": "AspNetCore.Simple.Sdk.Test.JsonSerializer.ConnectionInfos"
+}
