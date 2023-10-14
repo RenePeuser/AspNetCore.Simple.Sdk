@@ -57,15 +57,16 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
             if (deserializeResult.IsNull())
             {
-                var securityCritical = typeof(T).GetCustomAttribute<SecurityCriticalJsonAttribute>();
-                var jsonString = securityCritical.IsNull() ? json : "SecurityCritical";
+                var securityCritical = typeof(T).GetCustomAttribute<ShowJsonOnErrorAttribute>();
+                var jsonString = securityCritical.IsNotNull() ? json : "Hidden cause of security critical infos";
 
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
                                                   $"Could not deserialize your json string into expected type: {typeof(T).Name}",
                                                   ("Exception", errorMessage),
                                                   ("JsonString", jsonString),
                                                   ("Type", typeof(T).Name),
-                                                  ("TypeFullName", typeof(T).FullName ?? string.Empty));
+                                                  ("TypeFullName", typeof(T).FullName ?? string.Empty),
+                                                  ("Info", $"Add [{nameof(ShowJsonOnErrorAttribute)}] to your type to see json. But be careful of security critical infos"));
             }
 
             return deserializeResult;
@@ -100,15 +101,16 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
             if (deserializeResult.IsNull())
             {
-                var securityCritical = typeof(T).GetCustomAttribute<SecurityCriticalJsonAttribute>();
-                var jsonString = securityCritical.IsNull() ? json : "SecurityCritical";
+                var securityCritical = typeof(T).GetCustomAttribute<ShowJsonOnErrorAttribute>();
+                var jsonString = securityCritical.IsNotNull() ? json : "Hidden cause of security critical infos";
 
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
                                                   $"Could not deserialize your json string into expected type: {typeof(T).Name}",
                                                   ("Exception", errorMessage),
                                                   ("JsonString", jsonString),
                                                   ("Type", typeof(T).Name),
-                                                  ("TypeFullName", typeof(T).FullName ?? string.Empty));
+                                                  ("TypeFullName", typeof(T).FullName ?? string.Empty),
+                                                  ("Info", $"Add [{nameof(ShowJsonOnErrorAttribute)}] to your type to see json. But be careful of security critical infos"));
             }
 
             return deserializeResult;

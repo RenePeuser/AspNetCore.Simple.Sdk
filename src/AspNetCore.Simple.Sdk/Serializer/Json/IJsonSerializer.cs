@@ -4,7 +4,7 @@ using System.Text.Json;
 namespace AspNetCore.Simple.Sdk.Serializer.Json
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
-    public class SecurityCriticalJsonAttribute : Attribute
+    public class ShowJsonOnErrorAttribute : Attribute
     {
     }
 

@@ -1,6 +1,7 @@
 ﻿using System.Security;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Serializer.Json;
+using Extensions.Pack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,7 +19,9 @@ namespace AspNetCore.Simple.Sdk.Test.JsonSerializer
 
             var exception = Assert.ThrowsException<ProblemDetailsException>(() => serializer.Deserialize<SecuredConnectionInfos>(criticalJson));
 
-            Assert.AreEqual(exception.ProblemDetails.Extensions["jsonString"], "SecurityCritical");
+            var json = exception.ProblemDetails.ToJson();
+
+            Assert.AreEqual(exception.ProblemDetails.Extensions["jsonString"], "Hidden cause of security critical infos");
         }
 
         [TestMethod]
@@ -33,13 +36,14 @@ namespace AspNetCore.Simple.Sdk.Test.JsonSerializer
         }
     }
 
-    [SecurityCriticalJson]
     public class SecuredConnectionInfos
     {
         public string HostName { get; init; } = string.Empty;
         public string Password { get; init; } = string.Empty;
     }
 
+
+    [ShowJsonOnError]
     public class UnSecuredConnectionInfos
     {
         public string HostName { get; init; } = string.Empty;
