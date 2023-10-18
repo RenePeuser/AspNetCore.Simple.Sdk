@@ -88,16 +88,9 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
                     // return exactApiDescription;
                 });
 
-                // ToDo: think about next version strategy how to switch 
-                if (configuration.TryGetSettings<Auth0>(out _))
-                {
-                    options.DocumentFilter<OAuth2Filter>();
-                }
-                else
-                {
-                    options.AddBearerSecurityDefinition();
-                    options.AddBearerSecurityRequirement();
-                }
+                options.AddBearerSecurityDefinition();
+                options.AddBearerSecurityRequirement();
+
 
                 options.AddXmlComments(assembly);
                 options.CustomSchemaIds(type => type.ToString());
