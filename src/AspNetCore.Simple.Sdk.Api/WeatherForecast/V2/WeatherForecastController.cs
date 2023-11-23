@@ -15,7 +15,12 @@ namespace AspNetCore.Simple.Sdk.Api.WeatherForecast.V2
 
     public class SummariesProvider
     {
-        public IImmutableList<string> AllSummaries { get; } = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" }.ToImmutableList();
+        private static readonly IImmutableList<string> Summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" }.ToImmutableList();
+
+        public IImmutableList<string> GetAllSummaries()
+        {
+            return Summaries;
+        }
     }
 
     [AllowAnonymous]
@@ -41,7 +46,7 @@ namespace AspNetCore.Simple.Sdk.Api.WeatherForecast.V2
             {
                 Date = new DateTime(2021, 11, index),
                 TemperatureC = _weatherConfig.Temperature,
-                Summary = _summariesProvider.AllSummaries[index]
+                Summary = _summariesProvider.GetAllSummaries()[index]
             }).ToArray();
         }
     }
