@@ -5,7 +5,6 @@ using System.Reflection;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -111,23 +110,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
                                                                              ApiVersion selectedApiVersion)
         {
             // 1. Same group is important !
-            var sameGroup = apiDescriptions.Where(apiDescription =>
+            var versionBasedApiDescriptions = GetAllApiDescriptionsForSelectedVersion(apiDescriptions, selectedApiVersion).ToImmutableList();
+            var sameGroup = versionBasedApiDescriptions.Where(apiDescription =>
             {
-                var controller = apiDescription.ActionDescriptor.As<ControllerActionDescriptor>();
-                if (controller.IsNull())
-                {
-                    throw new ProblemDetailsException("Unexpected ApiDescription type");
-                }
-
-                var apiVersion = controller.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
-                if (apiVersion.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
+                if (apiDescriptions[0].GroupName.IsNull())
                 {
                     return true;
-                }
-
-                if (apiVersion?.Versions[0] != selectedApiVersion)
-                {
-                    return false;
                 }
 
                 return apiDescription.GroupName == apiDescriptions[0].GroupName;
@@ -194,6 +182,27 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
             return result;
         }
+
+        private IEnumerable<ApiDescription> GetAllApiDescriptionsForSelectedVersion(ImmutableList<ApiDescription> apiDescriptions,
+                                                                                      ApiVersion selectedApiVersion)
+        {
+
+            foreach (var apiDescription in apiDescriptions)
+            {
+                var controller = apiDescription.ActionDescriptor.As<ControllerActionDescriptor>();
+                if (controller.IsNull())
+                {
+                    throw new ProblemDetailsException("Unexpected ApiDescription type");
+                }
+
+                var apiVersion = controller.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
+                if (apiVersion?.Versions[0] == selectedApiVersion)
+                {
+                    yield return apiDescription;
+                }
+            }
+        }
+
 
         private IEnumerable<(string key, OpenApiPathItem openApiPathItem)> CollectInfos(OpenApiDocument swaggerDoc, DocumentFilterContext context, ApiVersion selectedApiVersion)
         {
