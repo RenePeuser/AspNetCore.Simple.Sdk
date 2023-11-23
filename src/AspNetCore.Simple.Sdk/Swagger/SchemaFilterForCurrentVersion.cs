@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -58,7 +59,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                 // We detect the type from swagger to find matching controller to where it will be used
 
-                var matchingType = controllerAndTypes.FirstOrDefault(controllerInfo => controllerInfo.Types.Any(t => t.ToString().ToUpperInvariant() == key));
+                var matchingType = controllerAndTypes.FirstOrDefault(controllerInfo => controllerInfo.Types.Any(t => t.ToString().ToUpperInvariant().EqualsTo(key)));
                 if (matchingType.IsNull())
                 {
                     return false;
@@ -77,7 +78,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 }
 
                 // if path contains current document name == 1.0 (Version)
-                if (key.Contains(context.DocumentName.ToUpperInvariant()))
+                if (key.Contains(context.DocumentName.ToUpperInvariant(), StringComparison.InvariantCulture))
                 {
                     return true;
                 }
@@ -89,7 +90,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     return false;
                 }
 
-                var result = key.Contains(normalizedVersion.ToUpperInvariant());
+                var result = key.Contains(normalizedVersion.ToUpperInvariant(), StringComparison.InvariantCulture);
                 return result;
             }).ToList();
 

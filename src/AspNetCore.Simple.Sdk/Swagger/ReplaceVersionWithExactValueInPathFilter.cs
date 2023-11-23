@@ -73,7 +73,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     }
 
                     var versionInfo = apiDescription.ActionDescriptor.EndpointMetadata.FirstOrDefaultOfType<ApiVersionAttribute>();
-                    
+
                     httpMethods = httpMethods.Select(item => item with { Route = item.Route.Replace("//", "/") }).ToImmutableList();
 
                     // New feature if path without version should be ignored we do not list it any more
@@ -89,7 +89,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
                     //// Remove those operations which the controller does not have
                     //// This is a evil part when using versioned swagger documents :/
-                    var operationToRemove = newOpenApiPathItem.Operations.Where(item => methodsRealExists.Any(m => m.HttpMethod.ToUpperInvariant() == item.Key.ToInvariantString().ToUpperInvariant()).IsFalse()).ToImmutableList();
+                    var operationToRemove = newOpenApiPathItem.Operations.Where(item => methodsRealExists.Any(m => m.HttpMethod.ToUpperInvariant().EqualsTo(item.Key.ToInvariantString().ToUpperInvariant())).IsFalse()).ToImmutableList();
                     newOpenApiPathItem.Operations.RemoveRange(operationToRemove);
 
 
