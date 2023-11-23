@@ -5,6 +5,7 @@ using System.Reflection;
 using AspNetCore.Simple.Sdk.ErrorHandling;
 using AspNetCore.Simple.Sdk.Extensions;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -51,7 +52,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 // filter all out which are not needed for current version
                 var apiDescriptions = context.ApiDescriptions.Where(api => api.RelativePath.EqualsTo(path.Key.TrimStart('/'))).ToImmutableList();
                 var httpMethods = GetAllVersionAndGroupSpecific(apiDescriptions, selectedApiVersion);
-
 
                 foreach (var apiDescription in apiDescriptions)
                 {
@@ -107,10 +107,32 @@ namespace AspNetCore.Simple.Sdk.Swagger
             }
         }
 
-        private IImmutableList<HttpMethodInfo> GetAllVersionAndGroupSpecific(ImmutableList<ApiDescription> apiDescriptions, ApiVersion selectedApiVersion)
+        private IImmutableList<HttpMethodInfo> GetAllVersionAndGroupSpecific(ImmutableList<ApiDescription> apiDescriptions,
+                                                                             ApiVersion selectedApiVersion)
         {
             // 1. Same group is important !
-            var sameGroup = apiDescriptions.Where(apiDescription => apiDescription.GroupName == apiDescriptions[0].GroupName).ToImmutableList();
+            var sameGroup = apiDescriptions.Where(apiDescription =>
+            {
+                var controller = apiDescription.ActionDescriptor.As<ControllerActionDescriptor>();
+                if (controller.IsNull())
+                {
+                    throw new ProblemDetailsException("Unexpected ApiDescription type");
+                }
+
+                var apiVersion = controller.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
+                if (apiVersion.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
+                {
+                    return true;
+                }
+
+                if (apiVersion?.Versions[0] != selectedApiVersion)
+                {
+                    return false;
+                }
+
+                return apiDescription.GroupName == apiDescriptions[0].GroupName;
+
+            }).ToImmutableList();
 
             // 2. Get controller infos
             var controllers = sameGroup.Select(api => api.ActionDescriptor.As<ControllerActionDescriptor>()).FilterNullObjects().ToImmutableList();
