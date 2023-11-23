@@ -161,6 +161,11 @@ dotnet_diagnostic.IDE0200.severity = suggestion
 dotnet_diagnostic.IDE0005.severity = silent
 csharp_style_prefer_primary_constructors = true:suggestion
 dotnet_diagnostic.IDE0290.severity = suggestion
+dotnet_diagnostic.IDE0300.severity = suggestion
+dotnet_diagnostic.IDE0301.severity = suggestion
+dotnet_diagnostic.IDE0302.severity = suggestion
+dotnet_diagnostic.IDE0303.severity = suggestion
+dotnet_diagnostic.IDE0304.severity = suggestion
 ###############################
 # VB Coding Conventions       #
 ###############################
