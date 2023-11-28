@@ -36,7 +36,7 @@ namespace AspNetCore.Simple.Sdk.CorrelationId
         {
             if (context.Request.Headers.ContainsKey(CorrelationIdHeader).IsFalse())
             {
-                context.Request.Headers.Add(CorrelationIdHeader, _correlationIdService.CreateId());
+                context.Request.Headers.Append(CorrelationIdHeader, _correlationIdService.CreateId());
             }
 
             await next(context).ConfigureAwait(false);

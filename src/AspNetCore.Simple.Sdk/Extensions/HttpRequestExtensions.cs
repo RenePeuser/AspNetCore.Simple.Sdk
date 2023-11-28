@@ -12,7 +12,7 @@ namespace AspNetCore.Simple.Sdk.Extensions
     {
         public static void AddAuthorization(this HttpRequest request, string authorization)
         {
-            request.Headers.Add(HeaderNames.Authorization, authorization);
+            request.Headers.Append(HeaderNames.Authorization, authorization);
         }
 
         public static IEnumerable<(string key, object value)> GetQueryRequestInfo(this HttpRequest httpRequest)
