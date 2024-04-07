@@ -44,6 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\AspNetCore.Simple.MsTest.Sdk\src\AspNetCore.Simple.MsTest.Sdk\AspNetCore.Simple.MsTest.Sdk.csproj" />
     <ProjectReference Include="..\AspNetCore.Simple.Sdk.Api\AspNetCore.Simple.Sdk.Api.csproj" />
     <ProjectReference Include="..\AspNetCore.Simple.Sdk\AspNetCore.Simple.Sdk.csproj" />
   </ItemGroup>

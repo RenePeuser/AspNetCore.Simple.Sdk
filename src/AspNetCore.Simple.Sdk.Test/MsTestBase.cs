@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using AspNetCore.Simple.MsTest.Sdk;
+using AspNetCore.Simple.Sdk.Api;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,12 +15,12 @@ namespace AspNetCore.Simple.Sdk.Test
         public static void AssemblyInitialize(TestContext _)
         {
             // Create this with new, is not a fault, the reason is to keep the test class more cleaner.
-            CustomWebApplicationFactory = new CustomWebApplicationFactory();
-            ServiceProvider = CustomWebApplicationFactory.Services;
-            Client = CustomWebApplicationFactory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+            ApiTestBase = new ApiTestBase<Startup>();
+            ServiceProvider = ApiTestBase.Services;
+            Client = ApiTestBase.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         }
 
-        protected static CustomWebApplicationFactory CustomWebApplicationFactory { get; set; } = null!;
+        protected static ApiTestBase<Startup> ApiTestBase { get; set; } = null!;
 
         protected static IServiceProvider ServiceProvider { get; private set; } = null!;
 
@@ -27,8 +29,8 @@ namespace AspNetCore.Simple.Sdk.Test
         [AssemblyCleanup]
         public static void AssemblyCleanup()
         {
-            CustomWebApplicationFactory?.Dispose();
-            Client?.Dispose();
+            ApiTestBase.Dispose();
+            Client.Dispose();
         }
     }
 }
