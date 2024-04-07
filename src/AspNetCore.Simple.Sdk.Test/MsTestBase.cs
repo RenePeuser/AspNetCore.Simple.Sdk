@@ -15,7 +15,7 @@ namespace AspNetCore.Simple.Sdk.Test
         public static void AssemblyInitialize(TestContext _)
         {
             // Create this with new, is not a fault, the reason is to keep the test class more cleaner.
-            ApiTestBase = new ApiTestBase<Startup>();
+            ApiTestBase = new ApiTestBase<Startup>("Development", (collection, configuration) => { });
             ServiceProvider = ApiTestBase.Services;
             Client = ApiTestBase.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         }
