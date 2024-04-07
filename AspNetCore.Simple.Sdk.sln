@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CICD", "CICD", "{4D9765E5-B
 		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Simple.Sdk.Test", "src\AspNetCore.Simple.Sdk.Test\AspNetCore.Simple.Sdk.Test.csproj", "{A8C86B7D-EBB5-483B-9591-20BF12F93BFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{48E65104-795C-4A90-82C3-F948E66F2CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48E65104-795C-4A90-82C3-F948E66F2CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48E65104-795C-4A90-82C3-F948E66F2CC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8C86B7D-EBB5-483B-9591-20BF12F93BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8C86B7D-EBB5-483B-9591-20BF12F93BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8C86B7D-EBB5-483B-9591-20BF12F93BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8C86B7D-EBB5-483B-9591-20BF12F93BFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
