@@ -2,7 +2,10 @@
 {
     public class SimpleService : ISimpleService
     {
-        public bool Invoke() => true;
+        public bool Invoke()
+        {
+            return true;
+        }
     }
 
     public interface ISimpleService

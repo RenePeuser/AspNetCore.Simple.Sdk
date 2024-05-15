@@ -63,5 +63,4 @@ namespace AspNetCore.Simple.Sdk.CorrelationId
             return Guid.NewGuid().ToString();
         }
     }
-
 }

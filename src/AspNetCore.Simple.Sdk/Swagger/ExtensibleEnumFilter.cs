@@ -42,6 +42,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 {
                     return;
                 }
+
                 type = underlyingType;
             }
 
@@ -54,14 +55,10 @@ namespace AspNetCore.Simple.Sdk.Swagger
             schema.Format = null;
 
             var openApiStrings = Enum
-                .GetNames(type)
-                .Select(name => new
-                {
-                    OriginalName = name,
-                    AttributedName = type.GetMember(name)[0].GetCustomAttributes(typeof(EnumMemberAttribute), false).OfType<EnumMemberAttribute>().FirstOrDefault()?.Value
-                })
-                .Select(nameSpec => nameSpec.AttributedName.IsNullOrWhiteSpace() ? nameSpec.OriginalName : nameSpec.AttributedName)
-                .Select(resolvedName => new OpenApiString(resolvedName));
+                                 .GetNames(type)
+                                 .Select(name => new { OriginalName = name, AttributedName = type.GetMember(name)[0].GetCustomAttributes(typeof(EnumMemberAttribute), false).OfType<EnumMemberAttribute>().FirstOrDefault()?.Value })
+                                 .Select(nameSpec => nameSpec.AttributedName.IsNullOrWhiteSpace() ? nameSpec.OriginalName : nameSpec.AttributedName)
+                                 .Select(resolvedName => new OpenApiString(resolvedName));
 
             var openApiArray = new OpenApiArray();
             openApiArray.AddRange(openApiStrings);

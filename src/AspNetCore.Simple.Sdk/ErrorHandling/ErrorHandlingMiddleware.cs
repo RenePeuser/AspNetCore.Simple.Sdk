@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
-
     public static class AddErrorHandlingMiddlewareExtension
     {
         public static void AddErrorHandlingMiddleware(this IServiceCollection services)

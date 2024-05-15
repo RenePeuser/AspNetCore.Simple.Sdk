@@ -39,13 +39,11 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface.Services
     [ServiceRegistration(ServiceLifetime.Scoped)]
     public class Strategy1 : IStrategy
     {
-
     }
 
     [ServiceRegistration(ServiceLifetime.Scoped)]
     public class Strategy2 : IStrategy
     {
-
     }
 
     public interface IStrategy

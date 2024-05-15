@@ -108,7 +108,10 @@ namespace AspNetCore.Simple.Sdk.Storage
             _blobServiceClient = new BlobServiceClient(storageSettings.ConnectionString);
         }
 
-        public Task<BlobClient> AddOrUpdateBlobAsync(string containerName, string fileName, string content, CancellationToken cancellationToken = default)
+        public Task<BlobClient> AddOrUpdateBlobAsync(string containerName,
+                                                     string fileName,
+                                                     string content,
+                                                     CancellationToken cancellationToken = default)
         {
             var inMemoryFile = new InMemoryFileAsByteArray(Encoding.UTF8.GetBytes(content), fileName);
             return AddOrUpdateBlobAsync(containerName, inMemoryFile, cancellationToken);
@@ -159,9 +162,9 @@ namespace AspNetCore.Simple.Sdk.Storage
             catch (Exception e)
             {
                 _telemetryClientAdapter.TrackException(e,
-                                                       ("Container", containerName),
-                                                       ("File", fileName),
-                                                       ("Json", fileContent.Value.Content.ToString()));
+                    ("Container", containerName),
+                    ("File", fileName),
+                    ("Json", fileContent.Value.Content.ToString()));
                 return default;
             }
         }
@@ -171,10 +174,10 @@ namespace AspNetCore.Simple.Sdk.Storage
             var container = await FirstOrDefaultAsync(containerName, cancellationToken).ConfigureAwait(false);
             if (container.IsNull())
             {
-                var allContainers = await GetAllContainerAsync(cancellationToken).ToListAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+                var allContainers = await GetAllContainerAsync(cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
                 throw new ProblemDetailsException("Could not delete expected file because the storage container for does not exists",
-                                                  $"The container: '{containerName}' which should contains the file: '{fileName}' does not exists",
-                                                  ("Available Containers", allContainers.Select(c => c.Name).ToJson()));
+                    $"The container: '{containerName}' which should contains the file: '{fileName}' does not exists",
+                    ("Available Containers", allContainers.Select(c => c.Name).ToJson()));
             }
         }
 

@@ -63,7 +63,6 @@ namespace AspNetCore.Simple.Sdk.Mediator
     /// </summary>
     public static class MediatorExtensions
     {
-
         /// <summary>
         /// Asynchronously send a request to a single handler
         /// </summary>
@@ -91,15 +90,13 @@ namespace AspNetCore.Simple.Sdk.Mediator
                                                            CancellationToken cancellationToken = default)
         {
             return mediator.Send(request, cancellationToken);
-
         }
 
         public static IAsyncEnumerable<TResponse> SendAsync<TResponse>(this IMediator mediator,
-                                                           IStreamRequest<TResponse> request,
-                                                           CancellationToken cancellationToken = default)
+                                                                       IStreamRequest<TResponse> request,
+                                                                       CancellationToken cancellationToken = default)
         {
             return mediator.CreateStream(request, cancellationToken);
-
         }
 
         /// <summary>

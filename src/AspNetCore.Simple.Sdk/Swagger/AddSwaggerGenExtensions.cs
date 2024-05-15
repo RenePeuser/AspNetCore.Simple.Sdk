@@ -98,7 +98,7 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
                 // options.SchemaFilter<EnumSchemaFilter>();
                 options.SchemaFilter<ExtensibleEnumFilter>();
                 options.ParameterFilter<ExtensibleEnumFilter>();
-                options.EnableAnnotations();  // necessary to include the SwaggerOperationAttribute.OperationIds in the Swagger Json
+                options.EnableAnnotations(); // necessary to include the SwaggerOperationAttribute.OperationIds in the Swagger Json
 
                 foreach (var apiVersion in allApiVersions)
                 {
@@ -107,12 +107,7 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
                     options.SwaggerDoc($"v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}", openApiInfo);
                 }
 
-                options.MapType<DateOnly>(() => new OpenApiSchema
-                {
-                    Type = "string",
-                    Format = "date",
-                    Example = new OpenApiString("2023-11-17")
-                });
+                options.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date", Example = new OpenApiString("2023-11-17") });
             });
         }
 
@@ -138,11 +133,8 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
                 Description = versionSpecificSwaggerInfo.Description,
                 Contact = new OpenApiContact
                 {
-                    Email = versionSpecificSwaggerInfo.ContactEmail,
-                    Name = versionSpecificSwaggerInfo.ContactName,
-                    Url = versionSpecificSwaggerInfo.ContactUrl is null ? null : new Uri(versionSpecificSwaggerInfo.ContactUrl)
+                    Email = versionSpecificSwaggerInfo.ContactEmail, Name = versionSpecificSwaggerInfo.ContactName, Url = versionSpecificSwaggerInfo.ContactUrl is null ? null : new Uri(versionSpecificSwaggerInfo.ContactUrl)
                 },
-
                 Extensions = infoExtension
             };
 
@@ -181,10 +173,7 @@ Current selected swagger version: '{SwaggerUi.SelectedVersion}'
                 Version = "1"
             };
 
-            var swaggerInfos = new SwaggerInfos
-            {
-                SwaggerInfosByVersion = new[] { swaggerInfo }
-            };
+            var swaggerInfos = new SwaggerInfos { SwaggerInfosByVersion = new[] { swaggerInfo } };
 
             var message = $"{JToken.Parse(swaggerInfos.ToJson()).ToString(Formatting.Indented)}";
             logger.LogInformation(message);

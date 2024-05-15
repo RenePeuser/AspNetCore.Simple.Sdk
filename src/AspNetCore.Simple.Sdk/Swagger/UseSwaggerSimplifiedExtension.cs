@@ -18,13 +18,10 @@ namespace AspNetCore.Simple.Sdk.Swagger
         {
             var swaggerInfo = configuration.GetSetting<SwaggerInfos>() ?? Swagger.GetDefaultSwaggerInfos(logger, new ApiVersion(1, 0));
 
-            var routeTemplate = basePath.IsNullOrWhiteSpace() ?
-                $"/swagger/{{documentName}}/swagger.json" :
-                $"{basePath}/swagger/{{documentName}}/swagger.json";
+            var routeTemplate = basePath.IsNullOrWhiteSpace() ? $"/swagger/{{documentName}}/swagger.json" : $"{basePath}/swagger/{{documentName}}/swagger.json";
 
             app.UseSwagger(c =>
             {
-
                 c.RouteTemplate = routeTemplate;
 
                 if (swaggerInfo.WithServerInfo)
@@ -35,7 +32,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
 #if !DEBUG
                     httpScheme = "https";
 #endif
-                        swaggerDoc.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"{httpScheme}://{httpReq.Host.Value}{basePath}" } };
+                        swaggerDoc.Servers = new List<OpenApiServer> { new() { Url = $"{httpScheme}://{httpReq.Host.Value}{basePath}" } };
                     });
                 }
             });

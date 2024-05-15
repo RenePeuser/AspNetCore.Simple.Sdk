@@ -13,6 +13,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             serviceCollection.AddSingletonIfNotExists<ICachingService, InMemoryCache>();
         }
     }
+
     internal sealed class InMemoryCache : ICachingService
     {
         private readonly IMemoryCache _memoryCache;
@@ -52,13 +53,9 @@ namespace AspNetCore.Simple.Sdk.Caching
             }
 
             // Important we return the object from cache with all cache infos.
-            var cacheResult = typedResult with
-            {
-                CacheInfo = typedResult.CacheInfo with { ObjectFromCache = true, CacheKey = key }
-            };
+            var cacheResult = typedResult with { CacheInfo = typedResult.CacheInfo with { ObjectFromCache = true, CacheKey = key } };
 
             return cacheResult;
-
         }
 
         public Task<bool> DeleteAsync(string cacheKey)
@@ -75,6 +72,5 @@ namespace AspNetCore.Simple.Sdk.Caching
             _memoryCache.Set(key, item, cachingTime);
             return item with { CacheInfo = item.CacheInfo with { CacheKey = key, ObjectFromCache = false } };
         }
-
     }
 }

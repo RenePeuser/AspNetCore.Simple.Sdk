@@ -34,7 +34,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             if (instance.IsNull())
             {
                 throw new ProblemDetailsException("Was not able to create an instance of expected type for auto registration",
-                                                  $"The type: '{customRegistrationAttribute.CustomRegistration.Name}' could not be created");
+                    $"The type: '{customRegistrationAttribute.CustomRegistration.Name}' could not be created");
             }
 
             var customRegistration = instance.Cast<ICustomTypeRegistration>();

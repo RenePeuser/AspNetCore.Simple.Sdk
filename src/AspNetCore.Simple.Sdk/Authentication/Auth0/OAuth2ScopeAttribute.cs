@@ -37,10 +37,10 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
             if (scopeClaim.IsNull())
             {
                 throw new ProblemDetailsException(HttpStatusCode.Unauthorized,
-                                                  "Token does not contain a scope.",
-                                                  "Please ensure your token has an OAuth 2.0 \"scope\" claim defined.",
-                                                  ("Request", $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}"),
-                                                  ("Scope needed", Scope));
+                    "Token does not contain a scope.",
+                    "Please ensure your token has an OAuth 2.0 \"scope\" claim defined.",
+                    ("Request", $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}"),
+                    ("Scope needed", Scope));
             }
 
             // Split the scope string into an array.
@@ -48,17 +48,17 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
             // RFC 6749 section 3.3. (https://www.rfc-editor.org/rfc/rfc6749#section-3.3), which is referred to by
             // RFC 8693 section 4.2. (https://www.rfc-editor.org/rfc/rfc8693#section-4.2).
             var scopes = scopeClaim.Value.Split(' ').ToImmutableList();
-            if (scopes.ContainsAny(Scope))  // uses case-sensitive comparison
+            if (scopes.ContainsAny(Scope)) // uses case-sensitive comparison
             {
                 return;
             }
 
             throw new ProblemDetailsException(HttpStatusCode.Unauthorized,
-                                              "Your token does not contain the correct scope to authorizate calls to this route.",
-                                              "Please ask your administrator or service to permit access for this request.",
-                                              ("Request", $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}"),
-                                              ("Scope needed", Scope),
-                                              ("Scopes from token", scopes.ToJson()));
+                "Your token does not contain the correct scope to authorizate calls to this route.",
+                "Please ask your administrator or service to permit access for this request.",
+                ("Request", $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}"),
+                ("Scope needed", Scope),
+                ("Scopes from token", scopes.ToJson()));
         }
     }
 }

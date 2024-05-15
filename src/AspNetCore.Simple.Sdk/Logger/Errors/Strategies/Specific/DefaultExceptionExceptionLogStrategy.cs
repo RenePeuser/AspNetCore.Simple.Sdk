@@ -41,11 +41,11 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         protected override ErrorLogInfo GetErrorLogFrom(HttpContext httpContext, Exception exception)
         {
             return new ErrorLogInfo(string.Empty,
-                                    exception.Message,
-                                    exception.GetType().Name,
-                                    exception.StackTrace?.Split(Environment.NewLine) ?? Enumerable.Empty<string>(),
-                                    httpContext.Request.GetQueryRequestInfo().ToImmutableDictionary(k => k.key, v => v.value),
-                                    new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
+                exception.Message,
+                exception.GetType().Name,
+                exception.StackTrace?.Split(Environment.NewLine) ?? Enumerable.Empty<string>(),
+                httpContext.Request.GetQueryRequestInfo().ToImmutableDictionary(k => k.key, v => v.value),
+                new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
         }
     }
 }

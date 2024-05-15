@@ -58,7 +58,8 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             var registrationResult = _registrationStrategies.Aggregate(false, (current, registrationStrategy) => registrationStrategy.DoRegistrationFor(type, current));
             if (registrationResult.IsFalse())
             {
-                throw new MissingRegistrationStrategyException($"For type: '{type.Name}' in namespace: '{type.Namespace}' we do not have a strategy to register it correctly. Please check that you use: '{nameof(ServiceRegistrationAttribute)}' for services or '{nameof(AppSettingsRegistrationAttribute)}' for any kind of app settings, if your declaration is not obvious.");
+                throw new MissingRegistrationStrategyException(
+                    $"For type: '{type.Name}' in namespace: '{type.Namespace}' we do not have a strategy to register it correctly. Please check that you use: '{nameof(ServiceRegistrationAttribute)}' for services or '{nameof(AppSettingsRegistrationAttribute)}' for any kind of app settings, if your declaration is not obvious.");
             }
         }
     }

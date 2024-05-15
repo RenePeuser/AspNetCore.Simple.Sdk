@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-
     public class LifetimeDetector
     {
         public ServiceLifetime DetectFor<T>()

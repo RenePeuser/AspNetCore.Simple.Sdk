@@ -47,8 +47,8 @@ namespace AspNetCore.Simple.Sdk.Security
             {
                 var requestInfo = request.GetQueryRequestInfo().ToArray();
                 throw new SecurityProblemException("Invalid query parameters",
-                                                   "Possible attack detected",
-                                                   requestInfo);
+                    "Possible attack detected",
+                    requestInfo);
             }
         }
     }

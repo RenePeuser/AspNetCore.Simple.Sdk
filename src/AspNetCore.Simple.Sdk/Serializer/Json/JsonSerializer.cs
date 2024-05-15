@@ -18,9 +18,7 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
 
             _serializeOptions = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
-                NumberHandling = JsonNumberHandling.AllowReadingFromString,
-                Converters = { new JsonStringEnumConverter() }
+                PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase, NumberHandling = JsonNumberHandling.AllowReadingFromString, Converters = { new JsonStringEnumConverter() }
             };
         }
 
@@ -61,12 +59,12 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
                 var jsonString = securityCritical.IsNotNull() ? json : "Hidden cause of security critical infos";
 
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
-                                                  $"Could not deserialize your json string into expected type: {typeof(T).Name}",
-                                                  ("Exception", errorMessage),
-                                                  ("JsonString", jsonString),
-                                                  ("Type", typeof(T).Name),
-                                                  ("TypeFullName", typeof(T).FullName ?? string.Empty),
-                                                  ("Info", $"Add [{nameof(ShowJsonOnErrorAttribute)}] to your type to see json. But be careful of security critical infos"));
+                    $"Could not deserialize your json string into expected type: {typeof(T).Name}",
+                    ("Exception", errorMessage),
+                    ("JsonString", jsonString),
+                    ("Type", typeof(T).Name),
+                    ("TypeFullName", typeof(T).FullName ?? string.Empty),
+                    ("Info", $"Add [{nameof(ShowJsonOnErrorAttribute)}] to your type to see json. But be careful of security critical infos"));
             }
 
             return deserializeResult;
@@ -105,12 +103,12 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
                 var jsonString = securityCritical.IsNotNull() ? json : "Hidden cause of security critical infos";
 
                 throw new ProblemDetailsException("Could not deserialize your json string into expected type",
-                                                  $"Could not deserialize your json string into expected type: {typeof(T).Name}",
-                                                  ("Exception", errorMessage),
-                                                  ("JsonString", jsonString),
-                                                  ("Type", typeof(T).Name),
-                                                  ("TypeFullName", typeof(T).FullName ?? string.Empty),
-                                                  ("Info", $"Add [{nameof(ShowJsonOnErrorAttribute)}] to your type to see json. But be careful of security critical infos"));
+                    $"Could not deserialize your json string into expected type: {typeof(T).Name}",
+                    ("Exception", errorMessage),
+                    ("JsonString", jsonString),
+                    ("Type", typeof(T).Name),
+                    ("TypeFullName", typeof(T).FullName ?? string.Empty),
+                    ("Info", $"Add [{nameof(ShowJsonOnErrorAttribute)}] to your type to see json. But be careful of security critical infos"));
             }
 
             return deserializeResult;

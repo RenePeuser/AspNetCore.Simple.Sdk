@@ -36,21 +36,21 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             if (settings.IsNull())
             {
                 throw new ProblemDetailsException("Was not able to get settings type info",
-                                                  $"The settings: '{appsettingsAttribute.AppSettingsName}__{appsettingsAttribute.SettingsType}' was not found");
+                    $"The settings: '{appsettingsAttribute.AppSettingsName}__{appsettingsAttribute.SettingsType}' was not found");
             }
 
             var instance = Activator.CreateInstance(appsettingsAttribute.Validator);
             if (instance.IsNull())
             {
                 throw new ProblemDetailsException("Was not able to create an instance of expected validator",
-                                                  $"The type: '{appsettingsAttribute.Validator.Name}' could not be created");
+                    $"The type: '{appsettingsAttribute.Validator.Name}' could not be created");
             }
 
             var validator = instance.As<ISettingsValidatorBase>();
             if (validator.IsNull())
             {
                 throw new ProblemDetailsException("Was not able to create an instance of expected validator",
-                                                  $"The type: '{appsettingsAttribute.Validator.Name}' could not be created");
+                    $"The type: '{appsettingsAttribute.Validator.Name}' could not be created");
             }
 
             validator.ValidateBase(settings);

@@ -43,5 +43,4 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings.Settings
             }
         }
     }
-
 }

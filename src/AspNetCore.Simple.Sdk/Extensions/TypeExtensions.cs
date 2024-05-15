@@ -84,12 +84,15 @@ namespace AspNetCore.Simple.Sdk.Extensions
             return new ControllerTypesInfoLegacy(controller, allTypes, hasVersion);
         }
 
-        public record ControllerTypesInfo(TypeInfo Controller,
-                                          IImmutableList<Type> Types,
-                                          bool HasVersion);
-        public record ControllerTypesInfoLegacy(Type Controller,
-                                                IImmutableList<Type> Types,
-                                                bool HasVersion);
+        public record ControllerTypesInfo(
+            TypeInfo Controller,
+            IImmutableList<Type> Types,
+            bool HasVersion);
+
+        public record ControllerTypesInfoLegacy(
+            Type Controller,
+            IImmutableList<Type> Types,
+            bool HasVersion);
 
 
         private static bool HasVersion(Type typeInfo)

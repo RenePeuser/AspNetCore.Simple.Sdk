@@ -3,7 +3,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.Simple.Sdk.Api
 {
-
     public class Program
     {
         public static void Main(string[] args)
@@ -14,9 +13,9 @@ namespace AspNetCore.Simple.Sdk.Api
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            {
+                webBuilder.UseStartup<Startup>();
+            });
         }
     }
 }

@@ -66,7 +66,7 @@ namespace AspNetCore.Simple.Sdk.Cors
             if (corsSettings.IsNull())
             {
                 throw new ProblemDetailsException($"Was not able get CORS settings",
-                                                  $"The type: '{nameof(CorsSettings)}' could not be fetched from configuration");
+                    $"The type: '{nameof(CorsSettings)}' could not be fetched from configuration");
             }
 
 

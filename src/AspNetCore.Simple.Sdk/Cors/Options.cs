@@ -37,15 +37,15 @@ namespace AspNetCore.Simple.Sdk.Cors
                 if (controllerActionDescriptor is null)
                 {
                     throw new ProblemDetailsException("Middleware is used in wrong order at startup, or you missing [HttpOptions] at your target route",
-                                                      "Please check error details for more",
-                                                      ("Middleware", $"Please check the order of the {nameof(OptionsMiddleware)}. It must be used before the `app.UseEndPoints(..);`"),
-                                                      ("Endpoint", $"Please check that your endpoint: {controllerActionDescriptor?.ActionName} have attribute set: [HttpOptions({controllerActionDescriptor?.ActionName})]"));
+                        "Please check error details for more",
+                        ("Middleware", $"Please check the order of the {nameof(OptionsMiddleware)}. It must be used before the `app.UseEndPoints(..);`"),
+                        ("Endpoint", $"Please check that your endpoint: {controllerActionDescriptor?.ActionName} have attribute set: [HttpOptions({controllerActionDescriptor?.ActionName})]"));
                 }
 
                 var allowedMethods = controllerActionDescriptor.MethodInfo.GetCustomAttributes<HttpMethodAttribute>()
-                                                                          .SelectMany(attribute => attribute.HttpMethods)
-                                                                          .Select(name => name)
-                                                                          .ToImmutableList();
+                                                               .SelectMany(attribute => attribute.HttpMethods)
+                                                               .Select(name => name)
+                                                               .ToImmutableList();
 
                 context.Response.Headers.Append("Access-Control-Allow-Origin", _corsSettings.Origins.ToArray());
                 context.Response.Headers.Append("Access-Control-Allow-Headers", _corsSettings.Headers.ToArray());

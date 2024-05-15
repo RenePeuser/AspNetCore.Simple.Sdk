@@ -35,6 +35,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             _jsonSerializer = jsonSerializer;
             _cachingService = cachingService;
         }
+
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestAsJson = _jsonSerializer.Serialize(request);
@@ -42,9 +43,9 @@ namespace AspNetCore.Simple.Sdk.Caching
             var key = _keyBuilder.BuildKey(keyInfo);
 
             var result = await _cachingService.GetOrAddAsync(key,
-                                                             async () => await next().ConfigureAwait(false),
-                                                             request.UseCache,
-                                                             request.CacheTime).ConfigureAwait(false);
+                async () => await next().ConfigureAwait(false),
+                request.UseCache,
+                request.CacheTime).ConfigureAwait(false);
             return result;
         }
     }

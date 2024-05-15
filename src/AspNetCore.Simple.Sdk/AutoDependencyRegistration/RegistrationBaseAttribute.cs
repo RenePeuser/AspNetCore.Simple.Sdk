@@ -6,6 +6,5 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public abstract class RegistrationBaseAttribute : Attribute
     {
-
     }
 }

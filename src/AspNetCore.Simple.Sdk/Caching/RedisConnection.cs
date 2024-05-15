@@ -82,7 +82,7 @@ namespace AspNetCore.Simple.Sdk.Caching
         private DateTimeOffset _firstErrorTime = DateTimeOffset.MinValue;
         private DateTimeOffset _previousErrorTime = DateTimeOffset.MinValue;
 
-        private readonly SemaphoreSlim _reconnectSemaphore = new(initialCount: 1, maxCount: 1);
+        private readonly SemaphoreSlim _reconnectSemaphore = new(1, 1);
         private ConnectionMultiplexer? _connection;
         private IDatabase? _database;
         private readonly AsyncRetryPolicy _redisRetryPolicy;
@@ -120,7 +120,10 @@ namespace AspNetCore.Simple.Sdk.Caching
             return waitTimes.ElementAt(retry - 1);
         }
 
-        private Task RetryOnError(Exception exception, TimeSpan waitTime, int retry, Context context)
+        private Task RetryOnError(Exception exception,
+                                  TimeSpan waitTime,
+                                  int retry,
+                                  Context context)
         {
             _logger.LogInformation($"Redis retry policy executed. {exception.Message}");
             return ReconnectInternalAsync(false, waitTime);
@@ -235,7 +238,6 @@ namespace AspNetCore.Simple.Sdk.Caching
                     config.SyncTimeout = _redisSettings.SyncTimeout.TotalMilliseconds.ToInt();
                     config.ConnectRetry = 1;
                     config.ConnectTimeout = connectTimeout.TotalMilliseconds.ToInt();
-
                 }).ConfigureAwait(false);
 
                 Interlocked.Exchange(ref _connection, newConnection);

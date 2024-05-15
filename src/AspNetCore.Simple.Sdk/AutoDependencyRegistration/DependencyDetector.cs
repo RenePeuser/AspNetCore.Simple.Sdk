@@ -18,8 +18,8 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 
 
             var implementations = interfaceType.Assembly.GetTypes()
-                                                        .Where(type => type.IsInterface.IsFalse() && interfaceType.IsAssignableFrom(type))
-                                                        .ToImmutableList();
+                                               .Where(type => type.IsInterface.IsFalse() && interfaceType.IsAssignableFrom(type))
+                                               .ToImmutableList();
 
             return implementations;
         }

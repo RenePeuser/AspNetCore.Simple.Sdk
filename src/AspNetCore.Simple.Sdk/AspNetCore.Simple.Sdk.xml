@@ -1,305 +1,326 @@
 <?xml version="1.0"?>
+
 <doc>
     <assembly>
         <name>AspNetCore.Simple.Sdk</name>
     </assembly>
     <members>
         <member name="M:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute.#ctor(System.String)">
-            <summary>Creates a new <see cref="T:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute"/> instance.</summary>
+            <summary>
+                Creates a new <see cref="T:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute" />
+                instance.
+            </summary>
             <param name="scope">The required scope for the operation.</param>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Caching.RedisConnection">
             <summary>
-            We use recommended connection from Microsoft to connect to redis only modernized :)
-            https://github.com/Azure-Samples/azure-cache-redis-samples/blob/main/quickstart/aspnet-core/ContosoTeamStats/RedisConnection.cs
+                We use recommended connection from Microsoft to connect to redis only modernized :)
+                https://github.com/Azure-Samples/azure-cache-redis-samples/blob/main/quickstart/aspnet-core/ContosoTeamStats/RedisConnection.cs
             </summary>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Caching.RedisConnection.ReconnectInternalAsync(System.Boolean,System.TimeSpan)">
+        <member
+            name="M:AspNetCore.Simple.Sdk.Caching.RedisConnection.ReconnectInternalAsync(System.Boolean,System.TimeSpan)">
             https://github.com/Azure-Samples/azure-cache-redis-samples/blob/main/quickstart/aspnet-core/ContosoTeamStats/RedisConnection.cs
             <summary>
-            Force a new ConnectionMultiplexer to be created.
-            NOTES:
+                Force a new ConnectionMultiplexer to be created.
+                NOTES:
                 1. Users of the ConnectionMultiplexer MUST handle ObjectDisposedExceptions, which can now happen as a result of calling ForceReconnectAsync().
                 2. Call ForceReconnectAsync() for RedisConnectionExceptions and RedisSocketExceptions. You can also call it for RedisTimeoutExceptions,
-                    but only if you're using generous ReconnectMinInterval and ReconnectErrorThreshold. Otherwise, establishing new connections can cause
-                    a cascade failure on a server that's timing out because it's already overloaded.
+                but only if you're using generous ReconnectMinInterval and ReconnectErrorThreshold. Otherwise, establishing new connections can cause
+                a cascade failure on a server that's timing out because it's already overloaded.
                 3. The code will:
-                    a. wait to reconnect for at least the "ReconnectErrorThreshold" time of repeated errors before actually reconnecting
-                    b. not reconnect more frequently than configured in "ReconnectMinInterval"
+                a. wait to reconnect for at least the "ReconnectErrorThreshold" time of repeated errors before actually reconnecting
+                b. not reconnect more frequently than configured in "ReconnectMinInterval"
             </summary>
             <param name="initializing">Should only be true when ForceReconnect is running at startup.</param>
             <param name="connectTimeout">The timeout for redis for Polly retry to support best possible reconnect cases</param>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Cors.CorsSettings">
             <summary>
-            The CORS settings class to handle the CORS configurations
+                The CORS settings class to handle the CORS configurations
             </summary>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Cors.CorsSettings.Origins">
             <summary>
-            Provides a list of allowed origins sources
+                Provides a list of allowed origins sources
             </summary>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Cors.CorsSettings.Headers">
             <summary>
-            Provides the list of allowed CORS headers
+                Provides the list of allowed CORS headers
             </summary>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Cors.CorsSettings.AllowCredentials">
             <summary>
-            Provides if CORS credentials are allowed
+                Provides if CORS credentials are allowed
             </summary>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Cors.OptionsMiddleware">
             <summary>
-            Options middleware is a smart part to handle preflight calls
+                Options middleware is a smart part to handle preflight calls
             </summary>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Mediator.AddMediatorExtension.AddOpenPipelineBehavior(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Type)">
+        <member
+            name="M:AspNetCore.Simple.Sdk.Mediator.AddMediatorExtension.AddOpenPipelineBehavior(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Type)">
             <summary>
-            Registers an Mediator pipeline behavior just by its implementation type like: CachingBehavior&lt;,&gt;
+                Registers an Mediator pipeline behavior just by its implementation type like: CachingBehavior&lt;,&gt;
             </summary>
             <code>
-            services.AddOpenPipelineBehavior(typeof(CachingBehavior&lt;,&gt;));
+                services.AddOpenPipelineBehavior(typeof(CachingBehavior&lt;,&gt;));
             </code>
             <param name="services">The service collection to register your services.</param>
             <param name="behaviorType">The implementation type of your behavior</param>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions">
             <summary>
-            Provides a set of extensions for <see cref="T:MediatR.IMediator"/>
+                Provides a set of extensions for <see cref="T:MediatR.IMediator" />
             </summary>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.SendAsync(MediatR.IMediator,MediatR.IRequest,System.Threading.CancellationToken)">
+        <member
+            name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.SendAsync(MediatR.IMediator,MediatR.IRequest,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously send a request to a single handler
+                Asynchronously send a request to a single handler
             </summary>
-            <param name="mediator">The <see cref="T:MediatR.IMediator"/></param>
+            <param name="mediator">The <see cref="T:MediatR.IMediator" /></param>
             <param name="request">Request object</param>
             <param name="cancellationToken">Optional cancellation token</param>
             <returns>A task that represents the send operation. The task result contains the handler response</returns>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.SendAsync``1(MediatR.IMediator,MediatR.IRequest{``0},System.Threading.CancellationToken)">
+        <member
+            name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.SendAsync``1(MediatR.IMediator,MediatR.IRequest{``0},System.Threading.CancellationToken)">
             <summary>
-            Asynchronously send a request to a single handler
+                Asynchronously send a request to a single handler
             </summary>
             <typeparam name="TResponse">Response type</typeparam>
-            <param name="mediator">The <see cref="T:MediatR.IMediator"/></param>
+            <param name="mediator">The <see cref="T:MediatR.IMediator" /></param>
             <param name="request">Request object</param>
             <param name="cancellationToken">Optional cancellation token</param>
             <returns>A task that represents the send operation. The task result contains the handler response</returns>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.SendAsync(MediatR.IMediator,System.Object,System.Threading.CancellationToken)">
+        <member
+            name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.SendAsync(MediatR.IMediator,System.Object,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously send an object request to a single handler via dynamic dispatch
+                Asynchronously send an object request to a single handler via dynamic dispatch
             </summary>
-            <param name="mediator">The <see cref="T:MediatR.IMediator"/> instance to extend.</param>
+            <param name="mediator">The <see cref="T:MediatR.IMediator" /> instance to extend.</param>
             <param name="request">Request object</param>
             <param name="cancellationToken">Optional cancellation token</param>
             <returns>A task that represents the send operation. The task result contains the type erased handler response</returns>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.PublishAsync(MediatR.IMediator,System.Object,System.Threading.CancellationToken)">
+        <member
+            name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.PublishAsync(MediatR.IMediator,System.Object,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously send a notification to multiple handlers
+                Asynchronously send a notification to multiple handlers
             </summary>
-            <param name="mediator">The <see cref="T:MediatR.IMediator"/> instance to extend.</param>
+            <param name="mediator">The <see cref="T:MediatR.IMediator" /> instance to extend.</param>
             <param name="notification">Notification object</param>
             <param name="cancellationToken">Optional cancellation token</param>
             <returns>A task that represents the publish operation.</returns>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.PublishAsync``1(MediatR.IMediator,``0,System.Threading.CancellationToken)">
+        <member
+            name="M:AspNetCore.Simple.Sdk.Mediator.MediatorExtensions.PublishAsync``1(MediatR.IMediator,``0,System.Threading.CancellationToken)">
             <summary>
-            Asynchronously send a notification to multiple handlers
+                Asynchronously send a notification to multiple handlers
             </summary>
-            <param name="mediator">The <see cref="T:MediatR.IMediator"/> instance to extend.</param>
+            <param name="mediator">The <see cref="T:MediatR.IMediator" /> instance to extend.</param>
             <param name="notification">Notification object</param>
             <param name="cancellationToken">Optional cancellation token</param>
             <returns>A task that represents the publish operation.</returns>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom">
             <summary>
-            A random number generator with a Uniform distribution that is thread-safe (via locking).
-            Can be instantiated with a custom <see cref="T:System.Int32"/> seed to make it emit deterministically.
+                A random number generator with a Uniform distribution that is thread-safe (via locking).
+                Can be instantiated with a custom <see cref="T:System.Int32" /> seed to make it emit deterministically.
             </summary>
         </member>
         <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.#ctor(System.Nullable{System.Int32})">
             <summary>
-            Creates an instance of the <see cref="T:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom"/> class.
+                Creates an instance of the <see cref="T:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom" /> class.
             </summary>
-            <param name="seed">An optional <see cref="T:System.Random"/> seed to use.
-            If not specified, will use a shared instance with a random seed, per Microsoft recommendation for maximum randomness.</param>
+            <param name="seed">
+                An optional <see cref="T:System.Random" /> seed to use.
+                If not specified, will use a shared instance with a random seed, per Microsoft recommendation for maximum randomness.
+            </param>
         </member>
         <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.NextDouble">
             <summary>
-            Returns a random floating-point number that is greater than or equal to 0.0,
-            and less than 1.0.
-            This method uses locks in order to avoid issues with concurrent access.
+                Returns a random floating-point number that is greater than or equal to 0.0,
+                and less than 1.0.
+                This method uses locks in order to avoid issues with concurrent access.
             </summary>
             <returns>Nächste Zufallszahl.</returns>
         </member>
         <member name="M:AspNetCore.Simple.Sdk.Polly.Backoff.ConcurrentRandom.Uniform(System.Double,System.Double)">
             <summary>
-            Returns a random floating-point number that is greater than or equal to <paramref name="a"/>,
-            and less than <paramref name="b"/>.
+                Returns a random floating-point number that is greater than or equal to <paramref name="a" />,
+                and less than <paramref name="b" />.
             </summary>
             <param name="a">The minimum value.</param>
             <param name="b">The maximum value.</param>
-            <returns>Random value between <paramref name="a"/> and <paramref name="b"/></returns>
+            <returns>Random value between <paramref name="a" /> and <paramref name="b" /></returns>
         </member>
         <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.Serialize``1(``0)">
             <summary>
-            Converts the provided value into a <see cref="T:System.String"/>.
+                Converts the provided value into a <see cref="T:System.String" />.
             </summary>
             <typeparam name="T">The type of the value to serialize.</typeparam>
-            <returns>A <see cref="T:System.String"/> representation of the value.</returns>
+            <returns>A <see cref="T:System.String" /> representation of the value.</returns>
             <param name="source">The source to convert.</param>
             <exception cref="T:System.NotSupportedException">
-            There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
-            for <typeparamref name="T"/> or its serializable members.
+                There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter" />
+                for <typeparamref name="T" /> or its serializable members.
             </exception>
         </member>
         <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.SerializeOrDefault``1(``0,System.String)">
             <summary>
-            Converts the provided value into a <see cref="T:System.String"/>.
+                Converts the provided value into a <see cref="T:System.String" />.
             </summary>
             <typeparam name="T">The type of the value to serialize.</typeparam>
-            <returns>A <see cref="T:System.String"/> representation of the value.</returns>
+            <returns>A <see cref="T:System.String" /> representation of the value.</returns>
             <param name="source">The source to convert.</param>
-            <param name="defaultValue">A optional default value if result will be <see langword="null"/> you can define alternative return value..</param>
+            <param name="defaultValue">A optional default value if result will be <see langword="null" /> you can define alternative return value..</param>
             <exception cref="T:System.NotSupportedException">
-            There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
-            for <typeparamref name="T"/> or its serializable members.
+                There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter" />
+                for <typeparamref name="T" /> or its serializable members.
             </exception>
         </member>
         <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.Deserialize``1(System.String)">
-             <summary>
-             Parses the text representing a single JSON value into a <typeparamref name="T"/>.
-             </summary>
-             <typeparam name="T">The type to deserialize the JSON value into.</typeparam>
-             <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
-             <param name="json">JSON text to parse.</param>
-             <exception cref="T:System.ArgumentNullException">
-             <paramref name="json"/> is <see langword="null"/>.
-             </exception>
-             <exception cref="T:System.Text.Json.JsonException">
-             The JSON is invalid.
-            
-             -or-
-            
-             <typeparamref name="T" /> is not compatible with the JSON.
-            
-             -or-
-            
-             There is remaining data in the string beyond a single JSON value.</exception>
-             <exception cref="T:System.NotSupportedException">
-             There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
-             for <typeparamref name="T"/> or its serializable members.
-             </exception>
+            <summary>
+                Parses the text representing a single JSON value into a <typeparamref name="T" />.
+            </summary>
+            <typeparam name="T">The type to deserialize the JSON value into.</typeparam>
+            <returns>A <typeparamref name="T" /> representation of the JSON value.</returns>
+            <param name="json">JSON text to parse.</param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="json" /> is <see langword="null" />.
+            </exception>
+            <exception cref="T:System.Text.Json.JsonException">
+                The JSON is invalid.
+
+                -or-
+                <typeparamref name="T" /> is not compatible with the JSON.
+
+                -or-
+
+                There is remaining data in the string beyond a single JSON value.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter" />
+                for <typeparamref name="T" /> or its serializable members.
+            </exception>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.DeserializeOrDefault``1(System.String,``0)">
-             <summary>
-             Parses the text representing a single JSON value into a <typeparamref name="T"/>.
-             </summary>
-             <typeparam name="T">The type to deserialize the JSON value into.</typeparam>
-             <returns>A <typeparamref name="T"/> representation of the JSON value.</returns>
-             <param name="json">JSON text to parse.</param>
-             <param name="defaultValue">A optional default value if result will be <see langword="null"/> you can define alternative return value..</param>
-             <exception cref="T:System.ArgumentNullException">
-             <paramref name="json"/> is <see langword="null"/>.
-             </exception>
-             <exception cref="T:System.Text.Json.JsonException">
-             The JSON is invalid.
-            
-             -or-
-            
-             <typeparamref name="T" /> is not compatible with the JSON.
-            
-             -or-
-            
-             There is remaining data in the string beyond a single JSON value.</exception>
-             <exception cref="T:System.NotSupportedException">
-             There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
-             for <typeparamref name="T"/> or its serializable members.
-             </exception>
+        <member
+            name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.DeserializeOrDefault``1(System.String,``0)">
+            <summary>
+                Parses the text representing a single JSON value into a <typeparamref name="T" />.
+            </summary>
+            <typeparam name="T">The type to deserialize the JSON value into.</typeparam>
+            <returns>A <typeparamref name="T" /> representation of the JSON value.</returns>
+            <param name="json">JSON text to parse.</param>
+            <param name="defaultValue">A optional default value if result will be <see langword="null" /> you can define alternative return value..</param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="json" /> is <see langword="null" />.
+            </exception>
+            <exception cref="T:System.Text.Json.JsonException">
+                The JSON is invalid.
+
+                -or-
+                <typeparamref name="T" /> is not compatible with the JSON.
+
+                -or-
+
+                There is remaining data in the string beyond a single JSON value.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter" />
+                for <typeparamref name="T" /> or its serializable members.
+            </exception>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.Deserialize``1(System.String,System.Type)">
-             <summary>
-             Parses the text representing a single JSON value into a <paramref name="returnType"/>.
-             </summary>
-             <returns>A <paramref name="returnType"/> representation of the JSON value.</returns>
-             <param name="json">JSON text to parse.</param>
-             <param name="returnType">The type of the object to convert to and return.</param>
-             <exception cref="T:System.ArgumentNullException">
-             <paramref name="json"/> or <paramref name="returnType"/> is <see langword="null"/>.
-             </exception>
-             <exception cref="T:System.Text.Json.JsonException">
-             The JSON is invalid.
-            
-             -or-
-            
-             <paramref name="returnType"/> is not compatible with the JSON.
-            
-             -or-
-            
-             There is remaining data in the string beyond a single JSON value.</exception>
-             <exception cref="T:System.NotSupportedException">
-             There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
-             for <paramref name="returnType"/> or its serializable members.
-             </exception>
+        <member
+            name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.Deserialize``1(System.String,System.Type)">
+            <summary>
+                Parses the text representing a single JSON value into a <paramref name="returnType" />.
+            </summary>
+            <returns>A <paramref name="returnType" /> representation of the JSON value.</returns>
+            <param name="json">JSON text to parse.</param>
+            <param name="returnType">The type of the object to convert to and return.</param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="json" /> or <paramref name="returnType" /> is <see langword="null" />.
+            </exception>
+            <exception cref="T:System.Text.Json.JsonException">
+                The JSON is invalid.
+
+                -or-
+                <paramref name="returnType" /> is not compatible with the JSON.
+
+                -or-
+
+                There is remaining data in the string beyond a single JSON value.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter" />
+                for <paramref name="returnType" /> or its serializable members.
+            </exception>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.DeserializeOrDefault(System.String,System.Type,System.Object)">
-             <summary>
-             Parses the text representing a single JSON value into a <paramref name="returnType"/>.
-             </summary>
-             <returns>A <paramref name="returnType"/> representation of the JSON value.</returns>
-             <param name="json">JSON text to parse.</param>
-             <param name="returnType">The type of the object to convert to and return.</param>
-             <param name="defaultValue">A optional default value if result will be <see langword="null"/> you can define alternative return value..</param>
-             <exception cref="T:System.ArgumentNullException">
-             <paramref name="json"/> or <paramref name="returnType"/> is <see langword="null"/>.
-             </exception>
-             <exception cref="T:System.Text.Json.JsonException">
-             The JSON is invalid.
-            
-             -or-
-            
-             <paramref name="returnType"/> is not compatible with the JSON.
-            
-             -or-
-            
-             There is remaining data in the string beyond a single JSON value.</exception>
-             <exception cref="T:System.NotSupportedException">
-             There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter"/>
-             for <paramref name="returnType"/> or its serializable members.
-             </exception>
+        <member
+            name="M:AspNetCore.Simple.Sdk.Serializer.Json.IJsonSerializer.DeserializeOrDefault(System.String,System.Type,System.Object)">
+            <summary>
+                Parses the text representing a single JSON value into a <paramref name="returnType" />.
+            </summary>
+            <returns>A <paramref name="returnType" /> representation of the JSON value.</returns>
+            <param name="json">JSON text to parse.</param>
+            <param name="returnType">The type of the object to convert to and return.</param>
+            <param name="defaultValue">A optional default value if result will be <see langword="null" /> you can define alternative return value..</param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="json" /> or <paramref name="returnType" /> is <see langword="null" />.
+            </exception>
+            <exception cref="T:System.Text.Json.JsonException">
+                The JSON is invalid.
+
+                -or-
+                <paramref name="returnType" /> is not compatible with the JSON.
+
+                -or-
+
+                There is remaining data in the string beyond a single JSON value.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                There is no compatible <see cref="T:System.Text.Json.Serialization.JsonConverter" />
+                for <paramref name="returnType" /> or its serializable members.
+            </exception>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Swagger.EnumSchemaFilter">
-            <summary>A schema filter that removes, in the generated Json, the numeric member values from the <see langword="enum"/>s definitions and
-            and replaces them with the <see langword="string"/> member names. However, the data type of the referencing parameters and properties
-            remains numeric (usually <see langword="int"/>).<br />
-            <br />
-            As a consequence, names instead of numbers will be used in the client code generators' IntelliSense and validations.
+            <summary>
+                A schema filter that removes, in the generated Json, the numeric member values from the
+                <see langword="enum" />s definitions and
+                and replaces them with the <see langword="string" /> member names. However, the data type of the referencing parameters and properties
+                remains numeric (usually <see langword="int" />).<br />
+                <br />
+                As a consequence, names instead of numbers will be used in the client code generators' IntelliSense and validations.
             </summary>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Swagger.ExtensibleEnumFilter">
-            <summary>A schema-and-parameter filter that replaces, in the generated Json, each <see langword="enum"/>-based definition
-            with a <see langword="string"/>-based definition plus "x-extensible-enum" list (a list of the enum member names.)<br />
-            As a consequence, names instead of numbers will be used in the client code generators' IntelliSense and validations.
-            Unlike <see cref="T:AspNetCore.Simple.Sdk.Swagger.EnumSchemaFilter"/>, when the C# enum's members grow, this will not signify a breaking change
-            for consuming clients.<br />
-            See also <a href="https://opensource.zalando.com/restful-api-guidelines/#112">guideline #112</a> by Zalando, who invented this mechanism.
+            <summary>
+                A schema-and-parameter filter that replaces, in the generated Json, each <see langword="enum" />-based definition
+                with a <see langword="string" />-based definition plus "x-extensible-enum" list (a list of the enum member names.)
+                <br />
+                As a consequence, names instead of numbers will be used in the client code generators' IntelliSense and validations.
+                Unlike <see cref="T:AspNetCore.Simple.Sdk.Swagger.EnumSchemaFilter" />, when the C# enum's members grow, this will not signify a breaking change
+                for consuming clients.<br />
+                See also <a href="https://opensource.zalando.com/restful-api-guidelines/#112">guideline #112</a> by Zalando, who invented this mechanism.
             </summary>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Swagger.GetAllSwaggerVersionDocuments">
             <summary>
-            This query provides all Swagger documents in a c# object oriented structure to work with.
+                This query provides all Swagger documents in a c# object oriented structure to work with.
             </summary>
             <param name="Startup">The type of your startup.cs</param>
             <param name="Client">The Http client which was setup for the test environment.</param>
         </member>
-        <member name="M:AspNetCore.Simple.Sdk.Swagger.GetAllSwaggerVersionDocuments.#ctor(System.Type,System.Net.Http.HttpClient)">
+        <member
+            name="M:AspNetCore.Simple.Sdk.Swagger.GetAllSwaggerVersionDocuments.#ctor(System.Type,System.Net.Http.HttpClient)">
             <summary>
-            This query provides all Swagger documents in a c# object oriented structure to work with.
+                This query provides all Swagger documents in a c# object oriented structure to work with.
             </summary>
             <param name="Startup">The type of your startup.cs</param>
             <param name="Client">The Http client which was setup for the test environment.</param>
@@ -311,8 +332,9 @@
             <summary>The Http client which was setup for the test environment.</summary>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Swagger.OAuth2Filter">
-            <summary>Adds OAuth 2.0 security definitions and requirements. Required scopes are determined by the presence of the
-            <see cref="T:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute"/> on the controller actions.
+            <summary>
+                Adds OAuth 2.0 security definitions and requirements. Required scopes are determined by the presence of the
+                <see cref="T:AspNetCore.Simple.Sdk.Authentication.Auth0.OAuth2ScopeAttribute" /> on the controller actions.
             </summary>
         </member>
         <member name="T:AspNetCore.Simple.Sdk.Swagger.RootLevelTagsFilter">
@@ -320,32 +342,39 @@
         </member>
         <member name="M:AspNetCore.Simple.Sdk.Swagger.SchemaFilterForCurrentVersion.GetVersionRegex">
             <remarks>
-            Pattern explanation:<br/>
-            <code>
-            ○ 1st capture group.<br/>
-                ○ Match 'V'.<br/>
-            ○ Match a Unicode digit.<br/>
-            </code>
+                Pattern explanation:<br />
+                <code>
+                    ○ 1st capture group.<br />
+                    ○ Match 'V'.<br />
+                    ○ Match a Unicode digit.<br />
+                </code>
             </remarks>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo.Id">
-            <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#215"> guideline 215</a>.</summary>
+            <summary>
+                See Zalando open source
+                <a href="https://opensource.zalando.com/restful-api-guidelines/#215"> guideline 215</a>.
+            </summary>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo.Audience">
-            <summary>See Zalando open source <a href="https://opensource.zalando.com/restful-api-guidelines/#219"> guideline 219</a>.</summary>
+            <summary>
+                See Zalando open source
+                <a href="https://opensource.zalando.com/restful-api-guidelines/#219"> guideline 219</a>.
+            </summary>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.SwaggerInfosByVersion">
             <summary>
-            You can define swagger document infos per version you have. For each version use on <see cref="T:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo"/>
+                You can define swagger document infos per version you have. For each version use on
+                <see cref="T:AspNetCore.Simple.Sdk.Swagger.SwaggerInfo" />
             </summary>
         </member>
         <member name="P:AspNetCore.Simple.Sdk.Swagger.SwaggerInfos.IncludeOnlyVersionedPaths">
             <summary>
-            Controls that only path´s with a version are included version.
+                Controls that only path´s with a version are included version.
             </summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.GetVersionRegex_0">
-            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the GetVersionRegex method.</summary>
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex" />-derived type for the GetVersionRegex method.</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.GetVersionRegex_0.Instance">
             <summary>Cached, thread-safe singleton instance.</summary>
@@ -354,36 +383,48 @@
             <summary>Initializes the instance.</summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory">
-            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+            <summary>
+                Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner" />
+                instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex" />.
+            </summary>
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory.CreateInstance">
-            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+            <summary>
+                Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner" /> used by methods on
+                <see cref="T:System.Text.RegularExpressions.Regex" />.
+            </summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory.Runner">
             <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
-            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+        <member
+            name="M:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan" /> starting from base.runtextstart for the next match.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
-            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+        <member
+            name="M:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan" /> starting from base.runtextpos for the next location a match could possibly start.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if a possible match was found; false if no more matches are possible.</returns>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
-            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+        <member
+            name="M:System.Text.RegularExpressions.Generated.GetVersionRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan" /> at base.runtextpos is a match for the regular expression.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.Utilities">
-            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex" />-derived implementations.</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
-            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+            <summary>
+                Default timeout value set in <see cref="T:System.AppContext" />, or
+                <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout" /> if none was set.
+            </summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
-            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout" /> is non-infinite.</summary>
         </member>
     </members>
 </doc>

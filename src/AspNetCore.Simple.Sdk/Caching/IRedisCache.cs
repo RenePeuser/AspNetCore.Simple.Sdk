@@ -41,7 +41,8 @@ namespace AspNetCore.Simple.Sdk.Caching
         {
             if (configuration.TryGetSettings<RedisSettings>(out var redisSettings).IsFalse())
             {
-                logger.LogInformation($"No Redis settings was found. We activate InMemory caching service. For activating redis just add '{nameof(RedisSettings)}' to your appsettings or environment variables.{Environment.NewLine}Sample:{JToken.Parse(new RedisSettings().ToJson()).ToString(Formatting.Indented)}");
+                logger.LogInformation(
+                    $"No Redis settings was found. We activate InMemory caching service. For activating redis just add '{nameof(RedisSettings)}' to your appsettings or environment variables.{Environment.NewLine}Sample:{JToken.Parse(new RedisSettings().ToJson()).ToString(Formatting.Indented)}");
                 services.AddInMemoryCache();
                 return;
             }
@@ -139,10 +140,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             await SetAsync(key, item, cachingTime).ConfigureAwait(false);
 
             var expirationDateTimeUtc = _cacheSettings.WithExpirationDateTimeUtc ? await _redisConnection.ExecuteAsync(database => database.KeyExpireTimeAsync(key)).ConfigureAwait(false) : default;
-            return item with
-            {
-                CacheInfo = new CacheInfo(false, key, cachingTime, expirationDateTimeUtc ?? default)
-            };
+            return item with { CacheInfo = new CacheInfo(false, key, cachingTime, expirationDateTimeUtc ?? default) };
         }
 
         private Task SetAsync<T>(string key, T value, TimeSpan cachingTime)

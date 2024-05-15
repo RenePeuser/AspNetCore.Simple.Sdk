@@ -2,6 +2,9 @@
 {
     public class SimpleService
     {
-        public bool Invoke() => true;
+        public bool Invoke()
+        {
+            return true;
+        }
     }
 }

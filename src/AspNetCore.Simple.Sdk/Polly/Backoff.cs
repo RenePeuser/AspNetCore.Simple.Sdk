@@ -17,12 +17,20 @@ namespace AspNetCore.Simple.Sdk.Polly
 
     public interface IBackoff
     {
-        IEnumerable<TimeSpan> DecorrelatedJitterBackoff(TimeSpan minDelay, TimeSpan maxDelay, int retryCount, int? seed = null, bool fastFirst = false);
+        IEnumerable<TimeSpan> DecorrelatedJitterBackoff(TimeSpan minDelay,
+                                                        TimeSpan maxDelay,
+                                                        int retryCount,
+                                                        int? seed = null,
+                                                        bool fastFirst = false);
     }
 
     public class Backoff : IBackoff
     {
-        public IEnumerable<TimeSpan> DecorrelatedJitterBackoff(TimeSpan minDelay, TimeSpan maxDelay, int retryCount, int? seed = null, bool fastFirst = false)
+        public IEnumerable<TimeSpan> DecorrelatedJitterBackoff(TimeSpan minDelay,
+                                                               TimeSpan maxDelay,
+                                                               int retryCount,
+                                                               int? seed = null,
+                                                               bool fastFirst = false)
         {
             Throw.IfLessThan(minDelay, TimeSpan.Zero);
             Throw.IfLessThan(maxDelay, minDelay);
@@ -35,7 +43,11 @@ namespace AspNetCore.Simple.Sdk.Polly
 
             return Enumerate(minDelay, maxDelay, retryCount, fastFirst, new ConcurrentRandom(seed));
 
-            static IEnumerable<TimeSpan> Enumerate(TimeSpan min, TimeSpan max, int retry, bool fast, ConcurrentRandom random)
+            static IEnumerable<TimeSpan> Enumerate(TimeSpan min,
+                                                   TimeSpan max,
+                                                   int retry,
+                                                   bool fast,
+                                                   ConcurrentRandom random)
             {
                 var i = 0;
                 if (fast)
@@ -82,7 +94,7 @@ namespace AspNetCore.Simple.Sdk.Polly
             /// If not specified, will use a shared instance with a random seed, per Microsoft recommendation for maximum randomness.</param>
             public ConcurrentRandom(int? seed = null)
             {
-                this._randomLock = seed == null
+                _randomLock = seed == null
                     ? Random // Do not use 'new Random()' here; in concurrent scenarios they could have the same seed
                     : new Random(seed.Value);
             }
@@ -97,9 +109,9 @@ namespace AspNetCore.Simple.Sdk.Polly
             {
                 // It is safe to lock on _random since it's not exposed
                 // to outside use so it cannot be contended.
-                lock (this._randomLock)
+                lock (_randomLock)
                 {
-                    return this._randomLock.NextDouble();
+                    return _randomLock.NextDouble();
                 }
             }
 
@@ -117,7 +129,7 @@ namespace AspNetCore.Simple.Sdk.Polly
                     return a;
                 }
 
-                return a + ((b - a) * this.NextDouble());
+                return a + ((b - a) * NextDouble());
             }
         }
     }

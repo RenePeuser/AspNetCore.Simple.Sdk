@@ -9,9 +9,9 @@ namespace AspNetCore.Simple.Sdk.Caching
         public bool UseCache { get; }
 
         public TimeSpan CacheTime { get; }
-
     }
 
-    public record CachableQuery<TResponse>([property: JsonIgnore] TimeSpan CacheTime,
-                                           [property: JsonIgnore] bool UseCache) : ICachableQuery<TResponse> where TResponse : CachableObject;
+    public record CachableQuery<TResponse>(
+        [property: JsonIgnore] TimeSpan CacheTime,
+        [property: JsonIgnore] bool UseCache) : ICachableQuery<TResponse> where TResponse : CachableObject;
 }

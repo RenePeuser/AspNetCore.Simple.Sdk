@@ -69,12 +69,9 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                 // We do not want to log any get health code, in Azure we can monitor health status without tons of useless logs
                 var roundedExecutionTime = Math.Round(timer.Elapsed.TotalMilliseconds);
                 var loggingProperties = new Dictionary<string, string>
-                    {
-                        {"Type", cqrsType},
-                        {"Name", cqrsName},
-                        {"Success", successful.ToString()},
-                        {"Duration in ms", $"{roundedExecutionTime}"} // TODO: Fix
-                    };
+                {
+                    { "Type", cqrsType }, { "Name", cqrsName }, { "Success", successful.ToString() }, { "Duration in ms", $"{roundedExecutionTime}" } // TODO: Fix
+                };
 
                 loggingProperties.AddRange(_loggingHelper.GetProperties(request, "Payload_")!);
 

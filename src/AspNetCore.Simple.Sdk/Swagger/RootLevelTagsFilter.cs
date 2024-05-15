@@ -45,9 +45,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
             var tags = swaggerOperationAttributes.Where(attribute => attribute.Tags.IsNotNull()).SelectMany(swaggerOperation => swaggerOperation.Tags).Distinct().ToImmutableList();
 
             var openApiTags = tags.Where(optTag => optTag.IsNotNullOrWhiteSpace())
-                                 .Except(existingDocTagNames)
-                                 .Select(missingDocTagName => new OpenApiTag { Name = missingDocTagName })
-                                 .ToImmutableList();
+                                  .Except(existingDocTagNames)
+                                  .Select(missingDocTagName => new OpenApiTag { Name = missingDocTagName })
+                                  .ToImmutableList();
 
             return openApiTags;
         }
@@ -101,7 +101,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
                               }
 
                               return true;
-
                           }).ToImmutableList();
         }
 

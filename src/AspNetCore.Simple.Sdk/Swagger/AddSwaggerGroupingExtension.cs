@@ -30,31 +30,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
 
         public static void AddBearerSecurityDefinition(this SwaggerGenOptions options)
         {
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                In = ParameterLocation.Header,
-                Description = "Please insert JWT with Bearer into field",
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey
-            });
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme { In = ParameterLocation.Header, Description = "Please insert JWT with Bearer into field", Name = "Authorization", Type = SecuritySchemeType.ApiKey });
         }
 
         public static void AddBearerSecurityRequirement(this SwaggerGenOptions options)
         {
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, Array.Empty<string>() } });
         }
 
         public static void AddXmlComments(this SwaggerGenOptions options, Assembly assembly)

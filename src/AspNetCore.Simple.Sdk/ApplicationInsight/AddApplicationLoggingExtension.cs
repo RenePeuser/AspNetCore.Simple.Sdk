@@ -20,17 +20,27 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
             if (configuration.TryGetSettings<ApplicationInsightsSettings>(out var applicationInsightsSettings))
             {
-                var eventTelemetryNamesToIgnore = configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.EventTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.EventTelemetryFilterSettings.NamesToIgnore)}").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
-                var requestTelemetryNamesToIgnore = configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.RequestTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.RequestTelemetryFilterSettings.NamesToIgnore)}").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
-                var traceTelemetryNamesToIgnore = configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.TraceTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.TraceTelemetryFilterSettings.NamesToIgnore)}").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
-                var dependencyTelemetryNamesToIgnore = configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.DependencyTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.DependencyTelemetryFilterSettings.NamesToIgnore)}").Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var eventTelemetryNamesToIgnore =
+                    configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.EventTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.EventTelemetryFilterSettings.NamesToIgnore)}").Value
+                                 ?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var requestTelemetryNamesToIgnore =
+                    configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.RequestTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.RequestTelemetryFilterSettings.NamesToIgnore)}")
+                                 .Value?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var traceTelemetryNamesToIgnore =
+                    configuration.GetSection($"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.TraceTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.TraceTelemetryFilterSettings.NamesToIgnore)}").Value
+                                 ?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
+                var dependencyTelemetryNamesToIgnore =
+                    configuration.GetSection(
+                                     $"{nameof(ApplicationInsightsSettings)}:{nameof(ApplicationInsightsSettings.DependencyTelemetryFilterSettings)}:{nameof(ApplicationInsightsSettings.DependencyTelemetryFilterSettings.NamesToIgnore)}")
+                                 .Value
+                                 ?.Split(",").Select(value => value.Trim()).ToArray() ?? Array.Empty<string>();
 
                 applicationInsightsSettings = applicationInsightsSettings with
                 {
                     EventTelemetryFilterSettings = applicationInsightsSettings.EventTelemetryFilterSettings with { NamesToIgnore = eventTelemetryNamesToIgnore },
                     RequestTelemetryFilterSettings = applicationInsightsSettings.RequestTelemetryFilterSettings with { NamesToIgnore = requestTelemetryNamesToIgnore },
                     TraceTelemetryFilterSettings = applicationInsightsSettings.TraceTelemetryFilterSettings with { NamesToIgnore = traceTelemetryNamesToIgnore },
-                    DependencyTelemetryFilterSettings = applicationInsightsSettings.DependencyTelemetryFilterSettings with { NamesToIgnore = dependencyTelemetryNamesToIgnore },
+                    DependencyTelemetryFilterSettings = applicationInsightsSettings.DependencyTelemetryFilterSettings with { NamesToIgnore = dependencyTelemetryNamesToIgnore }
                 };
 
 
@@ -53,13 +63,13 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
     {
         public string ConnectionString { get; init; } = "InstrumentationKey=00000000-0000-0000-0000-000000000000;";
 
-        public EventTelemetryFilterSettings EventTelemetryFilterSettings { get; init; } = new EventTelemetryFilterSettings();
+        public EventTelemetryFilterSettings EventTelemetryFilterSettings { get; init; } = new();
 
-        public RequestTelemetryFilterSettings RequestTelemetryFilterSettings { get; init; } = new RequestTelemetryFilterSettings();
+        public RequestTelemetryFilterSettings RequestTelemetryFilterSettings { get; init; } = new();
 
-        public TraceTelemetryFilterSettings TraceTelemetryFilterSettings { get; init; } = new TraceTelemetryFilterSettings();
+        public TraceTelemetryFilterSettings TraceTelemetryFilterSettings { get; init; } = new();
 
-        public DependencyTelemetryFilterSettings DependencyTelemetryFilterSettings { get; init; } = new DependencyTelemetryFilterSettings();
+        public DependencyTelemetryFilterSettings DependencyTelemetryFilterSettings { get; init; } = new();
     }
 
     internal static class AddApplictionInsightsExtensions
@@ -103,8 +113,8 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
             if (settings.ConnectionString.IsNullOrWhiteSpace())
             {
                 throw new ProblemDetailsException("Missing connection string for ApplicationInsights",
-                                                  "Please configure you application insights settings correctly and define the connection string as well",
-                                                  ("Sample", new ApplicationInsightsSettings().ToJson()));
+                    "Please configure you application insights settings correctly and define the connection string as well",
+                    ("Sample", new ApplicationInsightsSettings().ToJson()));
             }
 
             services.AddApplicationInsightsTelemetry(options =>

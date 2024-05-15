@@ -6,7 +6,6 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
     {
         public InvalidValidatorTypeException(Type type) : base($"The validator type: {type.Name} is not implementing: '{nameof(SettingsValidator<object>)}'. Please check your implementation.")
         {
-
         }
     }
 
@@ -14,7 +13,6 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
     {
         public InvalidCustomTypeRegistrationException(Type type) : base($"The custom registration type: {type.Name} is not implementing: '{nameof(ICustomTypeRegistration)}'. Please check your implementation.")
         {
-
         }
     }
 }

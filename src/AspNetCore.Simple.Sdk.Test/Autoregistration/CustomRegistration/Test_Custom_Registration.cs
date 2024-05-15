@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AspNetCore.Simple.Sdk.Test.Autoregistration.CustomRegistration
 {
-
     public class CustomRegistrationForMyService : ICustomTypeRegistration
     {
         public void Register(IServiceCollection serviceCollection, IConfiguration configuration)
@@ -21,7 +20,10 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.CustomRegistration
     [CustomRegistration(typeof(CustomRegistrationForMyService))]
     public class ServiceByCustomRegistration
     {
-        public bool Invoke() => true;
+        public bool Invoke()
+        {
+            return true;
+        }
     }
 
     public class CustomRegistrationForSettings : ICustomTypeRegistration

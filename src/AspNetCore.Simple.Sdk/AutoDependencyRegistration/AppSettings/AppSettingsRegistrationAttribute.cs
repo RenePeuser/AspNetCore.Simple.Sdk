@@ -45,7 +45,6 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
                                                 Type settingsType,
                                                 ServiceLifetime serviceLifetime) : this(appSettingsName, settingsType, serviceLifetime, typeof(DefaultValidator))
         {
-
         }
 
         public AppSettingsRegistrationAttribute(string appSettingsName,

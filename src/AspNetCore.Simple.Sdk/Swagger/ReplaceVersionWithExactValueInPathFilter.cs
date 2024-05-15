@@ -28,9 +28,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
             // Amazing hack, thanks that swashbuckle is not able to detect unique paths absolutely amazing
             SwaggerUi.SelectedVersion = context.DocumentName.ToApiVersion();
 
-            var collectPathInfos = _swaggerInfos.IncludeOnlyVersionedPaths ?
-                CollectInfosVersionOnly(swaggerDoc, context, SwaggerUi.SelectedVersion).Distinct(item => item.key).ToImmutableList() :
-                CollectInfos(swaggerDoc, context, SwaggerUi.SelectedVersion).Distinct(item => item.key).ToImmutableList();
+            var collectPathInfos = _swaggerInfos.IncludeOnlyVersionedPaths
+                ? CollectInfosVersionOnly(swaggerDoc, context, SwaggerUi.SelectedVersion).Distinct(item => item.key).ToImmutableList()
+                : CollectInfos(swaggerDoc, context, SwaggerUi.SelectedVersion).Distinct(item => item.key).ToImmutableList();
 
             var newPath = new OpenApiPaths();
             collectPathInfos.ForEach(path => newPath.Add(path.key, path.openApiPathItem));
@@ -119,7 +119,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 }
 
                 return apiDescription.GroupName == apiDescriptions[0].GroupName;
-
             }).ToImmutableList();
 
             // 2. Get controller infos
@@ -152,8 +151,6 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     {
                         var subRouteByHttpAction = httpMethod.Template.IsNotNull() ? $"/{httpMethod.Template}" : string.Empty;
                         return new HttpMethodInfo(httpMethod.HttpMethods.First(), subRouteByHttpAction);
-
-
                     }).ToList();
 
                     // check if route attribute is there
@@ -184,9 +181,8 @@ namespace AspNetCore.Simple.Sdk.Swagger
         }
 
         private IEnumerable<ApiDescription> GetAllApiDescriptionsForSelectedVersion(ImmutableList<ApiDescription> apiDescriptions,
-                                                                                      ApiVersion selectedApiVersion)
+                                                                                    ApiVersion selectedApiVersion)
         {
-
             foreach (var apiDescription in apiDescriptions)
             {
                 var controller = apiDescription.ActionDescriptor.As<ControllerActionDescriptor>();

@@ -42,7 +42,6 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.ServiceHierarchy.Services
     {
         public void DoSomething()
         {
-
         }
     }
 }

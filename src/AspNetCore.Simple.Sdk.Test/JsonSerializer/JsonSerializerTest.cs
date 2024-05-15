@@ -34,6 +34,21 @@ namespace AspNetCore.Simple.Sdk.Test.JsonSerializer
 
             Assert.AreEqual(exception.ProblemDetails.Extensions["jsonString"], criticalJson);
         }
+
+        [TestMethod]
+        public void Serialize_Camel_Case_Test()
+        {
+            var connectionInfos = new SecuredConnectionInfos()
+            {
+                HostName = "Hello",
+                Password = "123"
+            };
+
+            var serializer = ServiceProvider.GetRequiredService<IJsonSerializer>();
+            var json = serializer.Serialize(connectionInfos);
+
+            Assert.AreEqual("{\"hostName\":\"Hello\",\"password\":\"123\"}", json);
+        }
     }
 
     public class SecuredConnectionInfos

@@ -13,7 +13,7 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         public void Setup()
         {
             // 1. Fetching secrets to get a connection string, for a test database
-            var fileStream = this.GetType().Assembly.GetEmbeddedFileStream("ConfigurationExtensions.appsettings.test.json");
+            var fileStream = GetType().Assembly.GetEmbeddedFileStream("ConfigurationExtensions.appsettings.test.json");
             Configuration = new ConfigurationBuilder().AddJsonStream(fileStream.Stream).Build();
         }
     }

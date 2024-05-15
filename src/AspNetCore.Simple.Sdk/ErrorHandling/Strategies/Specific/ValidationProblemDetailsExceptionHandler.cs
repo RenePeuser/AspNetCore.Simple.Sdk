@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.ErrorHandling
 {
-
     internal static class AddValidationProblemDetailsExceptionHandlerExtension
     {
         public static void AddValidationProblemDetailsExceptionHandler(this IServiceCollection services)

@@ -14,9 +14,9 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         private readonly string _errorType;
 
         protected ExceptionLogStrategyBase(IJsonSerializer jsonSerializer,
-                                  ILogger logger,
-                                  Type exceptionType,
-                                  string errorType)
+                                           ILogger logger,
+                                           Type exceptionType,
+                                           string errorType)
         {
             _jsonSerializer = jsonSerializer;
             _logger = logger;
