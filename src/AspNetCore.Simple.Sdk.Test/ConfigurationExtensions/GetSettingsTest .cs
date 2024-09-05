@@ -58,7 +58,7 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
             var settings = Configuration.GetSettings<DummySettings>(nameof(Dummy));
             var expectedResult = new DummySettings { Value0 = "A", Value1 = "B", Value2 = "C" };
 
-            Assert.That.ObjectsAreEqual(() => settings, () => expectedResult);
+            Assert.That.ObjectsAreEqual(settings, expectedResult);
         }
 
         [TestMethod]
