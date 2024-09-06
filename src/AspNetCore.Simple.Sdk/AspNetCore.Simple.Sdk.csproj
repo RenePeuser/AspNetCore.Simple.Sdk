@@ -45,7 +45,7 @@
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.18" />
+        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.21" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0" PrivateAssets="All" />
         <PackageReference Include="Polly" Version="8.4.1" />
         <PackageReference Include="StackExchange.Redis" Version="2.8.12" />
