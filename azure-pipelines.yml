@@ -22,6 +22,9 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
+- script: dotnet list package --include-transitive --vulnerable
+  displayName: 'Nuget vulnerability check'
+
 - script: dotnet test
   displayName: 'dotnet test'
 
