@@ -46,7 +46,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         {
             var problemDetails = new ValidationProblemDetails()
             {
-                Title = title.IsEmpty() ? null : "One or more validation errors occurred.",
+                Title = title.IsEmpty() ? "One or more validation errors occurred.": title,
                 Detail = details.IsEmpty() ? null : details,
                 Status = StatusCodes.Status400BadRequest,
                 Type = type.IsEmpty() ? "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1" : type
