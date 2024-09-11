@@ -34,7 +34,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         public ValidationProblemDetailsException(string title,
                                                  string details,
                                                  IImmutableDictionary<string, string[]> errors,
-                                                 IImmutableDictionary<string, string> extensions) : this(title, details, "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1", errors, extensions)
+                                                 IImmutableDictionary<string, string> extensions) : this(title, details, nameof(ValidationProblemDetails), errors, extensions)
         {
         }
 
