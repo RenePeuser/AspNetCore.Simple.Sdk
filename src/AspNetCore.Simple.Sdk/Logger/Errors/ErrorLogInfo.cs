@@ -9,7 +9,8 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
                             string title,
                             IEnumerable<string> stackTrace,
                             IReadOnlyDictionary<string, object> requestInfos,
-                            IReadOnlyDictionary<string, object> errorDetails)
+                            IReadOnlyDictionary<string, object> errorDetails,
+                            string errorType)
         {
             Id = id;
             Title = title;
@@ -17,7 +18,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
             StackTrace = stackTrace;
             RequestInfos = requestInfos;
             ErrorDetails = errorDetails;
-            ErrorType = "PulseError";
+            ErrorType = errorType;
         }
 
         public string Id { get; }

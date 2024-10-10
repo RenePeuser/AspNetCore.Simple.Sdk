@@ -33,7 +33,8 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
                 exception.ProblemDetails.Detail ?? "n.A", exception.ProblemDetails.Title ?? "n.A",
                 exception.StackTrace?.Split(Environment.NewLine) ?? Enumerable.Empty<string>(),
                 httpContext.Request.GetQueryRequestInfo().ToImmutableDictionary(k => k.key, v => v.value),
-                new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
+                new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()),
+                exception.GetType().Name);
         }
     }
 }
