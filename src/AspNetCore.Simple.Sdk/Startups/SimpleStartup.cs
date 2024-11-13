@@ -92,7 +92,7 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddQuerySecurityFilter(Configuration);
             services.AddJsonContentNegotiation();
 
-            services.AddSingleton(typeof(Assembly), Assembly);
+            services.AddSingleton(Assembly);
             services.AddHttpClient();
             services.AddErrorHandling();
             services.AddErrorLogging();

@@ -16,7 +16,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.ServiceHierarchy
             var serviceCollection = new ServiceCollection();
             var autoRegister = new AutoRegistrationFactory().Create(serviceCollection, configuration);
 
-            autoRegister.DoAutoRegistrationFor(typeof(ScopedRootRootService));
+            autoRegister.DoAutoRegistrationFor<ScopedRootRootService>();
 
             Assert.AreEqual(3, serviceCollection.Count);
 
