@@ -21,7 +21,7 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         [TestMethod]
         public void Should_Be_Able_To_Fetch_Settings_Directly_By_Typename_With_Settings_Postfix()
         {
-            var exists = Configuration.TryGetSettings<DummySettings>(out var settings);
+            var exists = Configuration.TryGetSettings<Dummy>(out var settings);
 
             exists.Should().BeTrue();
             settings.Should().NotBeNull();
@@ -46,14 +46,21 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         }
 
         [TestMethod]
-        public void Should_Throw_Missing_Settings_Exception_When_Settings_Does_Not_Exists()
+        public void Should_Not_Throw_Missing_Settings_Exception_When_Settings_Does_Not_Exists()
         {
             var exists = Configuration.TryGetSettings<DummySettings>(out var settings);
-            exists.Should().Be(true);
+            exists.Should().Be(false);
+            settings.Should().NotBeNull();
+        }
 
-            var expectedResult = new DummySettings { Value0 = "A", Value1 = "B", Value2 = "C" };
+        [TestMethod]
+        public void Should_Provide_Correct_Settings()
+        {
+            var currentSettings = Configuration.GetSettings<Dummy>();
 
-            Assert.That.ObjectsAreEqual(() => settings, () => expectedResult);
+            var expectedResult = new Dummy { Value0 = "A", Value1 = "B", Value2 = "C" };
+
+            Assert.That.ObjectsAreEqual(expectedResult, currentSettings);
         }
     }
 }
