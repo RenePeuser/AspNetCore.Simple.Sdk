@@ -61,6 +61,8 @@ tab_width = 4
 end_of_line = crlf
 dotnet_diagnostic.CA1859.severity = suggestion
 dotnet_diagnostic.CA1860.severity = suggestion
+dotnet_diagnostic.MSTEST0015.severity = suggestion
+dotnet_diagnostic.MSTEST0016.severity = suggestion
 ###############################
 # C# Coding Conventions       #
 ###############################
@@ -166,6 +168,7 @@ dotnet_diagnostic.IDE0301.severity = suggestion
 dotnet_diagnostic.IDE0302.severity = suggestion
 dotnet_diagnostic.IDE0303.severity = suggestion
 dotnet_diagnostic.IDE0304.severity = suggestion
+csharp_prefer_system_threading_lock = true:suggestion
 ###############################
 # VB Coding Conventions       #
 ###############################

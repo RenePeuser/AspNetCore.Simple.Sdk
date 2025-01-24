@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
 {
     [TestCategory("Configuration")]
+    [TestClass]
     public class TryGetSettingsTest : ConfigurationTestBase
     {
         [TestMethod]
