@@ -8,7 +8,7 @@ your features which brings you your expected benefits
 ## Getting started
 
 ### Prerequisites
-* [.Net 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+* [.Net 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 * [Asp.Net Web-Api](https://learn.microsoft.com/de-de/aspnet/web-api/overview/getting-started-with-aspnet-web-api/tutorial-your-first-web-api)
 
 ### Install the package

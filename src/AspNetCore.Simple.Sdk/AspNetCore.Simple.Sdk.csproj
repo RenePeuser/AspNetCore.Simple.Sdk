@@ -35,25 +35,25 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
-        <PackageReference Include="Extensions.Pack" Version="6.0.1" />
-        <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+        <PackageReference Include="Extensions.Pack" Version="6.0.2" />
+        <PackageReference Include="GitVersion.MsBuild" Version="6.1.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="MediatR" Version="12.4.1" />
         <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.22" />
+        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.23" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0" PrivateAssets="All" />
-        <PackageReference Include="Polly" Version="8.5.0" />
-        <PackageReference Include="StackExchange.Redis" Version="2.8.22" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="7.1.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
+        <PackageReference Include="Polly" Version="8.5.1" />
+        <PackageReference Include="StackExchange.Redis" Version="2.8.24" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="7.2.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
     </ItemGroup>
 
     <ItemGroup>
