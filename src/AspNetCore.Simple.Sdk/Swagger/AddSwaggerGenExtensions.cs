@@ -45,6 +45,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 options.DocumentFilter<AdditionalPropertiesFilter>();
                 options.DocumentFilter<RootLevelTagsFilter>();
                 options.DocumentFilter<SchemaFilterForCurrentVersion>();
+                options.DocumentFilter<OpenApiVersionFilter>();
 
                 options.ResolveConflictingActions(apiDescriptions =>
                 {
