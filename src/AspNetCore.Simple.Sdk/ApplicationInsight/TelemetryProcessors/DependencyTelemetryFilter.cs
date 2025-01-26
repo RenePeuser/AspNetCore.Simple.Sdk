@@ -23,24 +23,16 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
         public string[] NamesToIgnore { get; init; } = Array.Empty<string>();
     }
 
-    internal sealed class DependencyTelemetryFilter : ITelemetryProcessor
+    internal sealed class DependencyTelemetryFilter(ITelemetryProcessor telemetryProcessor,
+                                                    DependencyTelemetryFilterSettings dependencyTelemetryFilterSettings) : ITelemetryProcessor
     {
-        private readonly ITelemetryProcessor _telemetryProcessor;
-        private readonly DependencyTelemetryFilterSettings _dependencyTelemetryFilterSettings;
-
         // next will point to the next TelemetryProcessor in the chain.
-        public DependencyTelemetryFilter(ITelemetryProcessor telemetryProcessor,
-                                         DependencyTelemetryFilterSettings dependencyTelemetryFilterSettings)
-        {
-            _telemetryProcessor = telemetryProcessor;
-            _dependencyTelemetryFilterSettings = dependencyTelemetryFilterSettings;
-        }
 
         public void Process(ITelemetry item)
         {
             if (item is DependencyTelemetry dependencyTelemetry)
             {
-                if (_dependencyTelemetryFilterSettings.NamesToIgnore.Any(name => dependencyTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase) ||
+                if (dependencyTelemetryFilterSettings.NamesToIgnore.Any(name => dependencyTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase) ||
                                                                                  dependencyTelemetry.Data.Contains(name, StringComparison.OrdinalIgnoreCase)))
                 {
                     // We stop telemetry processing cause we want to filter out unexpected once.
@@ -48,7 +40,7 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
                 }
             }
 
-            _telemetryProcessor.Process(item);
+            telemetryProcessor.Process(item);
         }
     }
 }

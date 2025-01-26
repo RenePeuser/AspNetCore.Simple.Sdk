@@ -73,21 +73,11 @@ namespace AspNetCore.Simple.Sdk.Caching
     }
 
 
-    public class RedisCache : ICachingService
+    public class RedisCache(IRedisConnection redisConnection,
+                            IJsonSerializer jsonSerializer,
+                            CacheSettings cacheSettings) : ICachingService
     {
-        private readonly IRedisConnection _redisConnection;
-        private readonly IJsonSerializer _jsonSerializer;
-        private readonly CacheSettings _cacheSettings;
         private readonly TimeSpan _defaultTimInCache = TimeSpan.FromHours(1);
-
-        public RedisCache(IRedisConnection redisConnection,
-                          IJsonSerializer jsonSerializer,
-                          CacheSettings cacheSettings)
-        {
-            _redisConnection = redisConnection;
-            _jsonSerializer = jsonSerializer;
-            _cacheSettings = cacheSettings;
-        }
 
         public Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> itemFactory, bool useCache) where T : CachableObject
         {
@@ -120,18 +110,18 @@ namespace AspNetCore.Simple.Sdk.Caching
 
         public Task<bool> DeleteAsync(string cacheKey)
         {
-            return _redisConnection.ExecuteAsync(database => database.KeyDeleteAsync(new RedisKey(cacheKey)));
+            return redisConnection.ExecuteAsync(database => database.KeyDeleteAsync(new RedisKey(cacheKey)));
         }
 
         private async Task<T?> GetAsync<T>(string key) where T : class
         {
-            var responseFromRedis = await _redisConnection.ExecuteAsync(database => database.StringGetAsync(key)).ConfigureAwait(false);
+            var responseFromRedis = await redisConnection.ExecuteAsync(database => database.StringGetAsync(key)).ConfigureAwait(false);
             if (responseFromRedis.IsNull)
             {
                 return default;
             }
 
-            return responseFromRedis.HasValue ? _jsonSerializer.Deserialize<T>(responseFromRedis!) : default;
+            return responseFromRedis.HasValue ? jsonSerializer.Deserialize<T>(responseFromRedis!) : default;
         }
 
         private async Task<T> SetAsync<T>(string key, Func<Task<T>> itemFactory, TimeSpan cachingTime) where T : CachableObject
@@ -139,14 +129,14 @@ namespace AspNetCore.Simple.Sdk.Caching
             var item = await itemFactory().ConfigureAwait(false);
             await SetAsync(key, item, cachingTime).ConfigureAwait(false);
 
-            var expirationDateTimeUtc = _cacheSettings.WithExpirationDateTimeUtc ? await _redisConnection.ExecuteAsync(database => database.KeyExpireTimeAsync(key)).ConfigureAwait(false) : default;
+            var expirationDateTimeUtc = cacheSettings.WithExpirationDateTimeUtc ? await redisConnection.ExecuteAsync(database => database.KeyExpireTimeAsync(key)).ConfigureAwait(false) : default;
             return item with { CacheInfo = new CacheInfo(false, key, cachingTime, expirationDateTimeUtc ?? default) };
         }
 
         private Task SetAsync<T>(string key, T value, TimeSpan cachingTime)
         {
-            var valueAsJson = _jsonSerializer.Serialize(value);
-            return _redisConnection.ExecuteAsync(database => database.StringSetAsync(key, valueAsJson, cachingTime));
+            var valueAsJson = jsonSerializer.Serialize(value);
+            return redisConnection.ExecuteAsync(database => database.StringSetAsync(key, valueAsJson, cachingTime));
         }
     }
 }

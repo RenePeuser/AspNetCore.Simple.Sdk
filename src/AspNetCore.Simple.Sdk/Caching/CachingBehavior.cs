@@ -20,29 +20,19 @@ namespace AspNetCore.Simple.Sdk.Caching
         }
     }
 
-    public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : ICachableQuery<TResponse>
-                                                                                               where TResponse : CachableObject
+    public class CachingBehavior<TRequest, TResponse>(IKeyBuilder keyBuilder,
+                                                      IJsonSerializer jsonSerializer,
+                                                      ICachingService cachingService) : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : ICachableQuery<TResponse>
+        where TResponse : CachableObject
     {
-        private readonly IKeyBuilder _keyBuilder;
-        private readonly IJsonSerializer _jsonSerializer;
-        private readonly ICachingService _cachingService;
-
-        public CachingBehavior(IKeyBuilder keyBuilder,
-                               IJsonSerializer jsonSerializer,
-                               ICachingService cachingService)
-        {
-            _keyBuilder = keyBuilder;
-            _jsonSerializer = jsonSerializer;
-            _cachingService = cachingService;
-        }
-
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            var requestAsJson = _jsonSerializer.Serialize(request);
+            var requestAsJson = jsonSerializer.Serialize(request);
             var keyInfo = new KeyInfo(typeof(TRequest).Name.ToLower(CultureInfo.InvariantCulture), requestAsJson);
-            var key = _keyBuilder.BuildKey(keyInfo);
+            var key = keyBuilder.BuildKey(keyInfo);
 
-            var result = await _cachingService.GetOrAddAsync(key,
+            var result = await cachingService.GetOrAddAsync(key,
                 async () => await next().ConfigureAwait(false),
                 request.UseCache,
                 request.CacheTime).ConfigureAwait(false);

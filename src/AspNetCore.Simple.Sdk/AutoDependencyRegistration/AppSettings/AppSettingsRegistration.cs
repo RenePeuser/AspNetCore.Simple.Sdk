@@ -6,19 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal sealed class AppSettingsRegistration : IRegistrationStrategy
+    internal sealed class AppSettingsRegistration(LifetimeDetector lifetimeDetector,
+                                                  IServiceCollection serviceCollection,
+                                                  IConfiguration configuration) : IRegistrationStrategy
     {
-        private readonly LifetimeDetector _lifetimeDetector;
-        private readonly IServiceCollection _serviceCollection;
-        private readonly IConfiguration _configuration;
-
-        public AppSettingsRegistration(LifetimeDetector lifetimeDetector, IServiceCollection serviceCollection, IConfiguration configuration)
-        {
-            _lifetimeDetector = lifetimeDetector;
-            _serviceCollection = serviceCollection;
-            _configuration = configuration;
-        }
-
         public bool DoRegistrationFor(Type type, bool registrationDone)
         {
             if (registrationDone)
@@ -32,7 +23,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
                 return false;
             }
 
-            var settings = _configuration.GetSection(appsettingsAttribute.AppSettingsName).Get(appsettingsAttribute.SettingsType);
+            var settings = configuration.GetSection(appsettingsAttribute.AppSettingsName).Get(appsettingsAttribute.SettingsType);
             if (settings.IsNull())
             {
                 throw new ProblemDetailsException("Was not able to get settings type info",
@@ -54,8 +45,8 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             }
 
             validator.ValidateBase(settings);
-            var lifetime = _lifetimeDetector.DetectFor(type);
-            _serviceCollection.Add(new ServiceDescriptor(type, _ => settings, lifetime));
+            var lifetime = lifetimeDetector.DetectFor(type);
+            serviceCollection.Add(new ServiceDescriptor(type, _ => settings, lifetime));
             return true;
         }
     }

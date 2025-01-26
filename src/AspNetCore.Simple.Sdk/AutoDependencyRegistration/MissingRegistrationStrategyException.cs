@@ -2,10 +2,5 @@
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal sealed class MissingRegistrationStrategyException : Exception
-    {
-        public MissingRegistrationStrategyException(string message) : base(message)
-        {
-        }
-    }
+    internal sealed class MissingRegistrationStrategyException(string message) : Exception(message);
 }

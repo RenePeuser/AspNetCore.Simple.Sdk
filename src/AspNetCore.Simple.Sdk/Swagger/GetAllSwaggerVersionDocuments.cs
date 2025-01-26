@@ -23,20 +23,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
     /// <param name="Client">The Http client which was setup for the test environment.</param>
     public sealed record GetAllSwaggerVersionDocuments(Type Startup, HttpClient Client) : IQuery<IImmutableList<OpenApiDocument>>;
 
-    internal sealed class GetAllSwaggerVersionDocumentsHandler : IQueryHandler<GetAllSwaggerVersionDocuments, IImmutableList<OpenApiDocument>>
+    internal sealed class GetAllSwaggerVersionDocumentsHandler(IApiVersionProvider apiVersionProvider,
+                                                               BasePath path) : IQueryHandler<GetAllSwaggerVersionDocuments, IImmutableList<OpenApiDocument>>
     {
-        private readonly IApiVersionProvider _apiVersionProvider;
-        private readonly BasePath _basePath;
-
-        public GetAllSwaggerVersionDocumentsHandler(IApiVersionProvider apiVersionProvider, BasePath basePath)
-        {
-            _apiVersionProvider = apiVersionProvider;
-            _basePath = basePath;
-        }
-
         public async Task<IImmutableList<OpenApiDocument>> Handle(GetAllSwaggerVersionDocuments request, CancellationToken cancellationToken)
         {
-            var apiVersions = _apiVersionProvider.GetAllApiVersions(request.Startup.Assembly).ToImmutableList();
+            var apiVersions = apiVersionProvider.GetAllApiVersions(request.Startup.Assembly).ToImmutableList();
 
             var apiVersionInfos = await FetchAllSwaggerDocuments(apiVersions).ToListAsync(cancellationToken).ConfigureAwait(false);
 
@@ -46,7 +38,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
             {
                 foreach (var apiVersion in apiVersions)
                 {
-                    var basePath = _basePath.Value.HasValue ? $"{_basePath.Value.Value}/" : string.Empty;
+                    var basePath = path.Value.HasValue ? $"{path.Value.Value}/" : string.Empty;
                     var swaggerResponse = await request.Client.GetAsync($"{basePath}swagger/v{apiVersion.MajorVersion}.{apiVersion.MinorVersion}/swagger.json", cancellationToken).ConfigureAwait(false);
                     if (swaggerResponse.IsSuccessStatusCode.IsFalse())
                     {

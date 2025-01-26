@@ -19,19 +19,11 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface.Services
     }
 
     [ServiceRegistration(ServiceLifetime.Scoped)]
-    public class ScopedServiceWithInterfaceDependencies
+    public class ScopedServiceWithInterfaceDependencies(IScopedService scopedService)
     {
-        private readonly IScopedService _scopedService;
-
-        public ScopedServiceWithInterfaceDependencies(IScopedService scopedService)
-        {
-            _scopedService = scopedService;
-        }
-
-
         public bool DoSomething()
         {
-            return _scopedService.DoSomething();
+            return scopedService.DoSomething();
         }
     }
 
@@ -55,20 +47,12 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface.Services
     }
 
     [ServiceRegistration(ServiceLifetime.Scoped)]
-    public class ScopedServiceWithListOfInterfaceDependencies
+    public class ScopedServiceWithListOfInterfaceDependencies(IEnumerable<IStrategy> strategies)
     {
-        private readonly IEnumerable<IStrategy> _strategies;
-
-        public ScopedServiceWithListOfInterfaceDependencies(IEnumerable<IStrategy> strategies)
-        {
-            _strategies = strategies;
-        }
-
-
         public bool DoSomething()
         {
             var result = false;
-            foreach (var strategy in _strategies)
+            foreach (var strategy in strategies)
             {
                 result = strategy.DoSomething();
             }

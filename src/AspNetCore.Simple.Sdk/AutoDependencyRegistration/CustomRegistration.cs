@@ -6,17 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal sealed class CustomRegistration : IRegistrationStrategy
+    internal sealed class CustomRegistration(IServiceCollection serviceCollection,
+                                             IConfiguration configuration) : IRegistrationStrategy
     {
-        private readonly IServiceCollection _serviceCollection;
-        private readonly IConfiguration _configuration;
-
-        public CustomRegistration(IServiceCollection serviceCollection, IConfiguration configuration)
-        {
-            _serviceCollection = serviceCollection;
-            _configuration = configuration;
-        }
-
         public bool DoRegistrationFor(Type type, bool registrationDone)
         {
             if (registrationDone)
@@ -38,7 +30,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             }
 
             var customRegistration = instance.Cast<ICustomTypeRegistration>();
-            customRegistration.Register(_serviceCollection, _configuration);
+            customRegistration.Register(serviceCollection, configuration);
             return true;
         }
     }

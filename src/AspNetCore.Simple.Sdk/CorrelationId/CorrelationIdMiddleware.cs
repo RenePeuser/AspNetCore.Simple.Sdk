@@ -22,21 +22,15 @@ namespace AspNetCore.Simple.Sdk.CorrelationId
         }
     }
 
-    internal sealed class CorrelationIdMiddleware : IMiddleware
+    internal sealed class CorrelationIdMiddleware(ICorrelationIdService correlationIdService) : IMiddleware
     {
-        private readonly ICorrelationIdService _correlationIdService;
         private const string CorrelationIdHeader = "x-correlation-id";
-
-        public CorrelationIdMiddleware(ICorrelationIdService correlationIdService)
-        {
-            _correlationIdService = correlationIdService;
-        }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             if (context.Request.Headers.ContainsKey(CorrelationIdHeader).IsFalse())
             {
-                context.Request.Headers.Append(CorrelationIdHeader, _correlationIdService.CreateId());
+                context.Request.Headers.Append(CorrelationIdHeader, correlationIdService.CreateId());
             }
 
             await next(context).ConfigureAwait(false);

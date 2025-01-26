@@ -7,19 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal sealed class SimpleAppSettingsRegistration : IRegistrationStrategy
+    internal sealed class SimpleAppSettingsRegistration(LifetimeDetector lifetimeDetector,
+                                                        IServiceCollection serviceCollection,
+                                                        IConfiguration configuration) : IRegistrationStrategy
     {
-        private readonly LifetimeDetector _lifetimeDetector;
-        private readonly IServiceCollection _serviceCollection;
-        private readonly IConfiguration _configuration;
         private readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-
-        public SimpleAppSettingsRegistration(LifetimeDetector lifetimeDetector, IServiceCollection serviceCollection, IConfiguration configuration)
-        {
-            _lifetimeDetector = lifetimeDetector;
-            _serviceCollection = serviceCollection;
-            _configuration = configuration;
-        }
 
         public bool DoRegistrationFor(Type type, bool registrationDone)
         {
@@ -57,7 +49,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 
             // 3. Check class name first
             var settingsName = type.Name;
-            var settings = _configuration.GetSection(settingsName).Get(type);
+            var settings = configuration.GetSection(settingsName).Get(type);
 
             //// 4. Fallback value check if name contains settings remove it
             //if (settings is null)
@@ -72,8 +64,8 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
                 return false;
             }
 
-            var lifetime = _lifetimeDetector.DetectFor(type);
-            _serviceCollection.Add(new ServiceDescriptor(type, _ => settings, lifetime));
+            var lifetime = lifetimeDetector.DetectFor(type);
+            serviceCollection.Add(new ServiceDescriptor(type, _ => settings, lifetime));
             return true;
         }
     }

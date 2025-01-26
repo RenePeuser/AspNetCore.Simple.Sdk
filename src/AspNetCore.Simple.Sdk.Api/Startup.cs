@@ -7,13 +7,9 @@ using AspNetCore.Simple.Sdk.Api.WeatherForecast.V1;
 
 namespace AspNetCore.Simple.Sdk.Api
 {
-    public class Startup : SimpleStartup
+    public class Startup(IConfiguration configuration,
+                         IWebHostEnvironment webHostEnvironment) : SimpleStartup(configuration, webHostEnvironment, new PathString("/api/sample"))
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment) :
-            base(configuration, webHostEnvironment, new PathString("/api/sample"))
-        {
-        }
-
         public override void AutoConfigureServices(AutoRegistration autoRegistration)
         {
             base.AutoConfigureServices(autoRegistration);

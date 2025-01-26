@@ -23,29 +23,22 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
         public string[] NamesToIgnore { get; init; } = Array.Empty<string>();
     }
 
-    internal sealed class RequestTelemetryFilter : ITelemetryProcessor
+    internal sealed class RequestTelemetryFilter(ITelemetryProcessor telemetryProcessor,
+                                                 RequestTelemetryFilterSettings requestTelemetryFilterSettings) : ITelemetryProcessor
     {
-        private readonly ITelemetryProcessor _telemetryProcessor;
-        private readonly RequestTelemetryFilterSettings _requestTelemetryFilterSettings;
-
         // next will point to the next TelemetryProcessor in the chain.
-        public RequestTelemetryFilter(ITelemetryProcessor telemetryProcessor, RequestTelemetryFilterSettings requestTelemetryFilterSettings)
-        {
-            _telemetryProcessor = telemetryProcessor;
-            _requestTelemetryFilterSettings = requestTelemetryFilterSettings;
-        }
 
         public void Process(ITelemetry item)
         {
             if (item is RequestTelemetry requestTelemetry)
             {
-                if (_requestTelemetryFilterSettings.NamesToIgnore.Any(name => requestTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase)))
+                if (requestTelemetryFilterSettings.NamesToIgnore.Any(name => requestTelemetry.Name.Contains(name, StringComparison.OrdinalIgnoreCase)))
                 {
                     return;
                 }
             }
 
-            _telemetryProcessor.Process(item);
+            telemetryProcessor.Process(item);
         }
     }
 }

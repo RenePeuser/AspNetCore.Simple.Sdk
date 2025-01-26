@@ -14,15 +14,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace AspNetCore.Simple.Sdk.Swagger
 {
     /// <summary>Ensures that each tag defined on the operation level also exists on the root level of the OpenAPI Json document.</summary>
-    public class RootLevelTagsFilter : IDocumentFilter
+    public class RootLevelTagsFilter(SwaggerInfos swaggerInfos) : IDocumentFilter
     {
-        private readonly SwaggerInfos _swaggerInfos;
-
-        public RootLevelTagsFilter(SwaggerInfos swaggerInfos)
-        {
-            _swaggerInfos = swaggerInfos;
-        }
-
         void IDocumentFilter.Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             var selectedVersion = swaggerDoc.Info.Version.ToApiVersion();
@@ -38,7 +31,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
             swaggerDoc.Tags.AddRange(missingDocTags);
         }
 
-        private IImmutableList<OpenApiTag> GetAllOpenApiTags(ImmutableList<ApiDescription> apiDescriptionsVersionBased, ImmutableArray<string> existingDocTagNames)
+        private ImmutableList<OpenApiTag> GetAllOpenApiTags(ImmutableList<ApiDescription> apiDescriptionsVersionBased, ImmutableArray<string> existingDocTagNames)
         {
             var controllerActionDescriptor = apiDescriptionsVersionBased.Select(apiDescription => apiDescription.ActionDescriptor).OfType<ControllerActionDescriptor>().ToImmutableList();
             var swaggerOperationAttributes = controllerActionDescriptor.SelectMany(descriptor => descriptor.EndpointMetadata).OfType<SwaggerOperationAttribute>().ToImmutableList();
@@ -65,7 +58,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                               }
 
                               // 2. If all versions and non versions allowed we return true to show all
-                              if (_swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
+                              if (swaggerInfos.IncludeOnlyVersionedPaths.IsFalse())
                               {
                                   return true;
                               }

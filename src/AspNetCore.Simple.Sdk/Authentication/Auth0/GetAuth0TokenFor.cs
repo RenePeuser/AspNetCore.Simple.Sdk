@@ -12,20 +12,13 @@ namespace AspNetCore.Simple.Sdk.Authentication.Auth0
 {
     public record GetAuth0TokenFor(Auth0 Auth0Settings, bool UseCache = true) : CachableQuery<Auth0Token>(Auth0Settings.TokenCacheTime, UseCache);
 
-    internal sealed class GetAuth0TokenForHandler : IQueryHandler<GetAuth0TokenFor, Auth0Token>
+    internal sealed class GetAuth0TokenForHandler(IHttpClientFactory htpHttpClientFactory) : IQueryHandler<GetAuth0TokenFor, Auth0Token>
     {
-        private readonly IHttpClientFactory _htpHttpClientFactory;
-
-        public GetAuth0TokenForHandler(IHttpClientFactory htpHttpClientFactory)
-        {
-            _htpHttpClientFactory = htpHttpClientFactory;
-        }
-
         public async Task<Auth0Token> Handle(GetAuth0TokenFor request, CancellationToken cancellationToken)
         {
             var auth0Request = new Auth0Request() { Audience = request.Auth0Settings.Audience, ClientId = request.Auth0Settings.ClientId, ClientSecret = request.Auth0Settings.ClientSecret, GrantType = request.Auth0Settings.GrantType };
 
-            var client = _htpHttpClientFactory.CreateClient();
+            var client = htpHttpClientFactory.CreateClient();
             var response = await client.PostAsJsonStringAsync(request.Auth0Settings.TokenEndpoint, auth0Request.ToJson()).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)

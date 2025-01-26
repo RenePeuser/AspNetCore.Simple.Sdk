@@ -25,15 +25,8 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
         }
     }
 
-    internal sealed class DependencyDetector
+    internal sealed class DependencyDetector(ImplementationFinderForInterface implementationFinderForInterface)
     {
-        private readonly ImplementationFinderForInterface _implementationFinderForInterface;
-
-        public DependencyDetector(ImplementationFinderForInterface implementationFinderForInterface)
-        {
-            _implementationFinderForInterface = implementationFinderForInterface;
-        }
-
         internal IImmutableList<Type> FindDependenciesFor(Type type)
         {
             var dependencies = FindDependenciesForInternal(type);
@@ -44,7 +37,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 
         private IImmutableList<Type> FindDependenciesForInterface(Type interfaceType)
         {
-            var implementations = _implementationFinderForInterface.FindFor(interfaceType);
+            var implementations = implementationFinderForInterface.FindFor(interfaceType);
             var allDependencies = implementations.SelectMany(FindDependenciesForInternal).ToImmutableList();
             return allDependencies;
         }

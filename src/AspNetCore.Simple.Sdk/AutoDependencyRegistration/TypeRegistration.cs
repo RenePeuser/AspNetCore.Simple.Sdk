@@ -6,31 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal sealed class TypeRegistration
+    internal sealed class TypeRegistration(IEnumerable<IRegistrationStrategy> registrationStrategies,
+                                           RegistrationCheck registrationCheck,
+                                           DependencyDetector dependencyDetector)
     {
-        private readonly IEnumerable<IRegistrationStrategy> _registrationStrategies;
-        private readonly RegistrationCheck _registrationCheck;
-        private readonly DependencyDetector _dependencyDetector;
-
-        public TypeRegistration(IEnumerable<IRegistrationStrategy> registrationStrategies,
-                                RegistrationCheck registrationCheck,
-                                DependencyDetector dependencyDetector)
-        {
-            _registrationStrategies = registrationStrategies;
-            _registrationCheck = registrationCheck;
-            _dependencyDetector = dependencyDetector;
-        }
-
         internal void DoAutoRegistration(Type type)
         {
             // 1. Check if this is already registered
-            if (_registrationCheck.IsAlreadyRegistered(type))
+            if (registrationCheck.IsAlreadyRegistered(type))
             {
                 return;
             }
 
             // 2. Detect dependencies 
-            var dependencies = _dependencyDetector.FindDependenciesFor(type).ToList();
+            var dependencies = dependencyDetector.FindDependenciesFor(type).ToList();
 
             // 3. Register dependencies first
             foreach (var dependency in dependencies)
@@ -44,7 +33,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 
         private void DoAutoRegistrationInternal(Type type)
         {
-            if (_registrationCheck.IsAlreadyRegistered(type))
+            if (registrationCheck.IsAlreadyRegistered(type))
             {
                 return;
             }
@@ -55,7 +44,7 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
                 return;
             }
 
-            var registrationResult = _registrationStrategies.Aggregate(false, (current, registrationStrategy) => registrationStrategy.DoRegistrationFor(type, current));
+            var registrationResult = registrationStrategies.Aggregate(false, (current, registrationStrategy) => registrationStrategy.DoRegistrationFor(type, current));
             if (registrationResult.IsFalse())
             {
                 throw new MissingRegistrationStrategyException(

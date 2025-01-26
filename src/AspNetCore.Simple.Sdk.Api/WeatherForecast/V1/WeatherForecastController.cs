@@ -27,26 +27,17 @@ namespace AspNetCore.Simple.Sdk.Api.WeatherForecast.V1
     [ApiVersion("1.0")]
     [ApiController]
     [Route("v{version:apiVersion}/weather")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController(SummariesProvider summariesProvider,
+                                           WeatherConfig weatherConfig) : ControllerBase
     {
-        private readonly SummariesProvider _summariesProvider;
-        private readonly WeatherConfig _weatherConfig;
-
-        public WeatherForecastController(SummariesProvider summariesProvider, WeatherConfig weatherConfig)
-        {
-            _summariesProvider = summariesProvider;
-            _weatherConfig = weatherConfig;
-        }
-
-
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            return Enumerable.Range(1, _weatherConfig.AmountOfForecasts).Select(index => new WeatherForecast
+            return Enumerable.Range(1, weatherConfig.AmountOfForecasts).Select(index => new WeatherForecast
             {
                 Date = new DateTime(2021, 11, index),
-                TemperatureC = _weatherConfig.Temperature,
-                Summary = _summariesProvider.GetAllSummaries()[index]
+                TemperatureC = weatherConfig.Temperature,
+                Summary = summariesProvider.GetAllSummaries()[index]
             }).ToArray();
         }
     }

@@ -6,12 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
-    public abstract class ExceptionLogStrategy<TException> : ExceptionLogStrategyBase
+    public abstract class ExceptionLogStrategy<TException>(IJsonSerializer jsonSerializer,
+                                                           ILogger logger,
+                                                           string errorType = "Error") : ExceptionLogStrategyBase(jsonSerializer, logger, typeof(TException),
+                                                                                                                  errorType)
     {
-        protected ExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger logger, string errorType = "Error") : base(jsonSerializer, logger, typeof(TException), errorType)
-        {
-        }
-
         protected sealed override ErrorLogInfo GetErrorLogFromInternal(HttpContext httpContext, Exception exception)
         {
             return GetErrorLogFrom(httpContext, exception.Cast<TException>());

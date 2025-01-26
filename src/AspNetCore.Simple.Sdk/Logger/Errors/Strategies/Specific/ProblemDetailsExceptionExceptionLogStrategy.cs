@@ -21,12 +21,9 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         }
     }
 
-    public class ProblemDetailsExceptionExceptionLogStrategy : ExceptionLogStrategy<ProblemDetailsException>
+    public class ProblemDetailsExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer,
+                                                             ILogger<ProblemDetailsExceptionExceptionLogStrategy> logger) : ExceptionLogStrategy<ProblemDetailsException>(jsonSerializer, logger)
     {
-        public ProblemDetailsExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger<ProblemDetailsExceptionExceptionLogStrategy> logger) : base(jsonSerializer, logger)
-        {
-        }
-
         protected override ErrorLogInfo GetErrorLogFrom(HttpContext httpContext, ProblemDetailsException exception)
         {
             return new ErrorLogInfo(string.Empty,

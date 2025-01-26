@@ -20,19 +20,12 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
         Task HandleAsync(HttpContext context, Exception exception);
     }
 
-    internal sealed class ErrorHandlingStrategy : IErrorHandlingStrategy
+    internal sealed class ErrorHandlingStrategy(IEnumerable<ISpecificErrorHandler> specificErrorHandlers) : IErrorHandlingStrategy
     {
-        private readonly IEnumerable<ISpecificErrorHandler> _specificErrorHandlers;
-
-        public ErrorHandlingStrategy(IEnumerable<ISpecificErrorHandler> specificErrorHandlers)
-        {
-            _specificErrorHandlers = specificErrorHandlers;
-        }
-
         public async Task HandleAsync(HttpContext context, Exception exception)
         {
             var lastResult = false;
-            foreach (var specificErrorLogStrategy in _specificErrorHandlers)
+            foreach (var specificErrorLogStrategy in specificErrorHandlers)
             {
                 lastResult = await specificErrorLogStrategy.HandleExceptionAsync(context, exception, lastResult).ConfigureAwait(false);
             }

@@ -11,17 +11,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
-    public partial class SchemaFilterForCurrentVersion : IDocumentFilter
+    public partial class SchemaFilterForCurrentVersion(Assembly callingAssembly,
+                                                       SwaggerInfos swaggerInfos) : IDocumentFilter
     {
         private static readonly Regex VersionRegex = GetVersionRegex();
-        private readonly Assembly _callingAssembly;
-        private readonly SwaggerInfos _swaggerInfos;
-
-        public SchemaFilterForCurrentVersion(Assembly callingAssembly, SwaggerInfos swaggerInfos)
-        {
-            _callingAssembly = callingAssembly;
-            _swaggerInfos = swaggerInfos;
-        }
 
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
@@ -42,9 +35,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
             // - here we have only the path => namespaces of classes
             // - to unique identify the types we need to know each controllers, routes and types
             // - then we can compare full qualified name to detect if this is to ignore or not.
-            var controllers = _callingAssembly.DefinedTypes.Where(type => typeof(ControllerBase).IsAssignableFrom(type)).ToImmutableList();
+            var controllers = callingAssembly.DefinedTypes.Where(type => typeof(ControllerBase).IsAssignableFrom(type)).ToImmutableList();
             var controllerAndTypes = controllers.Select(controller => controller.GetAllTypesForController()).ToImmutableList();
-            var assemblyRootName = _callingAssembly.GetName().Name!.ToUpperInvariant();
+            var assemblyRootName = callingAssembly.GetName().Name!.ToUpperInvariant();
             var currentVersionSpecificSchema = swaggerDoc.Components.Schemas.Where(keyValue =>
             {
                 // Problem to detect type we can not expect that controller and type folders are in the sam sub strcture
@@ -66,7 +59,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 }
 
                 // If only version paths are allowed we filter directly out if there is no version
-                if (_swaggerInfos.IncludeOnlyVersionedPaths && matchingType.HasVersion.IsFalse())
+                if (swaggerInfos.IncludeOnlyVersionedPaths && matchingType.HasVersion.IsFalse())
                 {
                     return false;
                 }

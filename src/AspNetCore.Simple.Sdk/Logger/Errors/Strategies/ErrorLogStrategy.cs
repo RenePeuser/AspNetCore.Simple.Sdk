@@ -21,23 +21,15 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         void Handle(HttpContext context, Exception exception);
     }
 
-    public class ErrorLogStrategy : IErrorLogStrategy
+    public class ErrorLogStrategy(IEnumerable<ISpecificErrorLogStrategy> specificErrorLogStrategies,
+                                  ILogger<ErrorLogStrategy> logger) : IErrorLogStrategy
     {
-        private readonly IEnumerable<ISpecificErrorLogStrategy> _specificErrorLogStrategies;
-        private readonly ILogger<ErrorLogStrategy> _logger;
-
-        public ErrorLogStrategy(IEnumerable<ISpecificErrorLogStrategy> specificErrorLogStrategies, ILogger<ErrorLogStrategy> logger)
-        {
-            _specificErrorLogStrategies = specificErrorLogStrategies;
-            _logger = logger;
-        }
-
         public void Handle(HttpContext context, Exception exception)
         {
-            var result = _specificErrorLogStrategies.Aggregate(false, (current, specificErrorLogStrategy) => specificErrorLogStrategy.HandleException(context, exception, current));
+            var result = specificErrorLogStrategies.Aggregate(false, (current, specificErrorLogStrategy) => specificErrorLogStrategy.HandleException(context, exception, current));
             if (result.IsFalse())
             {
-                _logger.LogError($"No strategy handled exception: {exception.GetType()}. Following exception occurred: {exception.Message}");
+                logger.LogError($"No strategy handled exception: {exception.GetType()}. Following exception occurred: {exception.Message}");
             }
         }
     }

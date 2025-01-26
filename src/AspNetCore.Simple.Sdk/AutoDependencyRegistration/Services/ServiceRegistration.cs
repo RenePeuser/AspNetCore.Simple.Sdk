@@ -6,21 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    internal sealed class ServiceRegistration : IRegistrationStrategy
+    internal sealed class ServiceRegistration(IServiceCollection serviceCollection,
+                                              LifetimeDetector lifetimeDetector,
+                                              InterfaceDetector interfaceDetector) : IRegistrationStrategy
     {
-        private readonly IServiceCollection _serviceCollection;
-        private readonly LifetimeDetector _lifetimeDetector;
-        private readonly InterfaceDetector _interfaceDetector;
         private readonly BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-
-        public ServiceRegistration(IServiceCollection serviceCollection,
-                                   LifetimeDetector lifetimeDetector,
-                                   InterfaceDetector interfaceDetector)
-        {
-            _serviceCollection = serviceCollection;
-            _lifetimeDetector = lifetimeDetector;
-            _interfaceDetector = interfaceDetector;
-        }
 
         public bool DoRegistrationFor(Type type, bool registrationDone)
         {
@@ -48,11 +38,11 @@ namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
             //    return false;
             //}
 
-            var interfaceToRegisterFor = _interfaceDetector.DetectInterface(type);
-            var lifetime = _lifetimeDetector.DetectFor(type);
+            var interfaceToRegisterFor = interfaceDetector.DetectInterface(type);
+            var lifetime = lifetimeDetector.DetectFor(type);
             var interfaceType = interfaceToRegisterFor ?? type;
             // If no interface exists we register the same type for interface and implementation !
-            _serviceCollection.Add(new ServiceDescriptor(interfaceType, type, lifetime));
+            serviceCollection.Add(new ServiceDescriptor(interfaceType, type, lifetime));
             return true;
         }
     }

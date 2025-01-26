@@ -23,37 +23,30 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight.TelemetryProcessors
         public string[] NamesToIgnore { get; init; } = Array.Empty<string>();
     }
 
-    internal sealed class TraceTelemetryFilter : ITelemetryProcessor
+    internal sealed class TraceTelemetryFilter(ITelemetryProcessor telemetryProcessor,
+                                               TraceTelemetryFilterSettings traceTelemetryFilterSettings) : ITelemetryProcessor
     {
-        private readonly ITelemetryProcessor _telemetryProcessor;
-        private readonly TraceTelemetryFilterSettings _traceTelemetryFilterSettings;
-
         // next will point to the next TelemetryProcessor in the chain.
-        public TraceTelemetryFilter(ITelemetryProcessor telemetryProcessor, TraceTelemetryFilterSettings traceTelemetryFilterSettings)
-        {
-            _telemetryProcessor = telemetryProcessor;
-            _traceTelemetryFilterSettings = traceTelemetryFilterSettings;
-        }
 
         public void Process(ITelemetry item)
         {
             if (item is TraceTelemetry traceTelemetry)
             {
-                if (_traceTelemetryFilterSettings.NamesToIgnore.Any(name => traceTelemetry.Message.Contains(name, StringComparison.OrdinalIgnoreCase)))
+                if (traceTelemetryFilterSettings.NamesToIgnore.Any(name => traceTelemetry.Message.Contains(name, StringComparison.OrdinalIgnoreCase)))
                 {
                     return;
                 }
 
                 if (traceTelemetry.Properties.TryGetValue("RequestPath", out var requestPath))
                 {
-                    if (_traceTelemetryFilterSettings.NamesToIgnore.Any(name => requestPath.Contains(name, StringComparison.OrdinalIgnoreCase)))
+                    if (traceTelemetryFilterSettings.NamesToIgnore.Any(name => requestPath.Contains(name, StringComparison.OrdinalIgnoreCase)))
                     {
                         return;
                     }
                 }
             }
 
-            _telemetryProcessor.Process(item);
+            telemetryProcessor.Process(item);
         }
     }
 }

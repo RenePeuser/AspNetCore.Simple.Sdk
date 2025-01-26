@@ -16,12 +16,12 @@ namespace AspNetCore.Simple.Sdk.Swagger
             {
                 if (api.GroupName != null)
                 {
-                    return new[] { api.GroupName };
+                    return [api.GroupName];
                 }
 
                 if (api.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
                 {
-                    return new[] { controllerActionDescriptor.ControllerName };
+                    return [controllerActionDescriptor.ControllerName];
                 }
 
                 throw new InvalidOperationException("Unable to determine tag for endpoint.");

@@ -47,19 +47,13 @@ namespace AspNetCore.Simple.Sdk.Storage
         IAzureBlobStorage CreateFrom(string connectionString);
     }
 
-    internal sealed class AzureBlobStorageFactory : IAzureBlobStorageFactory
+    internal sealed class AzureBlobStorageFactory(ITelemetryClientAdapter telemetryClientAdapter) : IAzureBlobStorageFactory
     {
-        private readonly ITelemetryClientAdapter _telemetryClientAdapter;
         private readonly ConcurrentDictionary<string, IAzureBlobStorage> _bloStorageClients = new();
-
-        public AzureBlobStorageFactory(ITelemetryClientAdapter telemetryClientAdapter)
-        {
-            _telemetryClientAdapter = telemetryClientAdapter;
-        }
 
         public IAzureBlobStorage CreateFrom(string connectionString)
         {
-            return _bloStorageClients.GetOrAdd(connectionString, key => new AzureBlobStorage(new StorageSettings { ConnectionString = key }, _telemetryClientAdapter));
+            return _bloStorageClients.GetOrAdd(connectionString, key => new AzureBlobStorage(new StorageSettings { ConnectionString = key }, telemetryClientAdapter));
         }
     }
 
@@ -94,19 +88,10 @@ namespace AspNetCore.Simple.Sdk.Storage
         Task DeleteAsync(BlobContainerClient container, CancellationToken cancellationToken = default);
     }
 
-    internal sealed class AzureBlobStorage : IAzureBlobStorage
+    internal sealed class AzureBlobStorage(StorageSettings storageSettings,
+                                           ITelemetryClientAdapter telemetryClientAdapter) : IAzureBlobStorage
     {
-        private readonly StorageSettings _storageSettings;
-        private readonly ITelemetryClientAdapter _telemetryClientAdapter;
-        private readonly BlobServiceClient _blobServiceClient;
-
-        public AzureBlobStorage(StorageSettings storageSettings,
-                                ITelemetryClientAdapter telemetryClientAdapter)
-        {
-            _storageSettings = storageSettings;
-            _telemetryClientAdapter = telemetryClientAdapter;
-            _blobServiceClient = new BlobServiceClient(storageSettings.ConnectionString);
-        }
+        private readonly BlobServiceClient _blobServiceClient = new(storageSettings.ConnectionString);
 
         public Task<BlobClient> AddOrUpdateBlobAsync(string containerName,
                                                      string fileName,
@@ -161,7 +146,7 @@ namespace AspNetCore.Simple.Sdk.Storage
             }
             catch (Exception e)
             {
-                _telemetryClientAdapter.TrackException(e,
+                telemetryClientAdapter.TrackException(e,
                     ("Container", containerName),
                     ("File", fileName),
                     ("Json", fileContent.Value.Content.ToString()));
@@ -196,7 +181,7 @@ namespace AspNetCore.Simple.Sdk.Storage
 
         public async IAsyncEnumerable<BlobContainerClient> GetAllAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var blobServiceClient = new BlobServiceClient(_storageSettings.ConnectionString);
+            var blobServiceClient = new BlobServiceClient(storageSettings.ConnectionString);
             var containers = blobServiceClient.GetBlobContainersAsync(cancellationToken: cancellationToken);
             var asyncEnumerator = containers.GetAsyncEnumerator(cancellationToken);
             try
@@ -204,7 +189,7 @@ namespace AspNetCore.Simple.Sdk.Storage
                 while (await asyncEnumerator.MoveNextAsync().ConfigureAwait(false))
                 {
                     var container = asyncEnumerator.Current;
-                    yield return new BlobContainerClient(_storageSettings.ConnectionString, container.Name);
+                    yield return new BlobContainerClient(storageSettings.ConnectionString, container.Name);
                 }
             }
             finally
@@ -215,7 +200,7 @@ namespace AspNetCore.Simple.Sdk.Storage
 
         public async Task<BlobContainerClient?> FirstOrDefaultAsync(string containerName, CancellationToken cancellationToken = default)
         {
-            var blobServiceClient = new BlobServiceClient(_storageSettings.ConnectionString);
+            var blobServiceClient = new BlobServiceClient(storageSettings.ConnectionString);
             var containers = blobServiceClient.GetBlobContainersAsync(cancellationToken: cancellationToken);
             var asyncEnumerator = containers.GetAsyncEnumerator(cancellationToken);
             try
@@ -225,7 +210,7 @@ namespace AspNetCore.Simple.Sdk.Storage
                     var container = asyncEnumerator.Current;
                     if (container.Name == containerName)
                     {
-                        return new BlobContainerClient(_storageSettings.ConnectionString, containerName);
+                        return new BlobContainerClient(storageSettings.ConnectionString, containerName);
                     }
                 }
             }

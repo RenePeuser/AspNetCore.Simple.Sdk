@@ -21,22 +21,15 @@ namespace AspNetCore.Simple.Sdk.ApiVersioning
         IImmutableList<ApiVersion> GetAllApiVersions(Assembly assemblies);
     }
 
-    public sealed class ApiVersionProvider : IApiVersionProvider
+    public sealed class ApiVersionProvider(AssemblyTypeProvider assemblyTypeProvider) : IApiVersionProvider
     {
-        private readonly AssemblyTypeProvider _assemblyTypeProvider;
-
         public ApiVersionProvider() : this(new AssemblyTypeProvider())
         {
         }
 
-        public ApiVersionProvider(AssemblyTypeProvider assemblyTypeProvider)
-        {
-            _assemblyTypeProvider = assemblyTypeProvider;
-        }
-
         public IImmutableList<ApiVersion> GetAllApiVersions(Assembly assemblies)
         {
-            var allApiVersions = _assemblyTypeProvider.GetAllTypes(assemblies)
+            var allApiVersions = assemblyTypeProvider.GetAllTypes(assemblies)
                                                       .Where(type => type.HasCustomAttribute<ApiVersionAttribute>())
                                                       .SelectMany(type => type.GetCustomAttributes<ApiVersionAttribute>())
                                                       .SelectMany(attribute => attribute.Versions)

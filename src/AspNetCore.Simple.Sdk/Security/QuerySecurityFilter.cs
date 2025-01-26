@@ -18,15 +18,8 @@ namespace AspNetCore.Simple.Sdk.Security
         }
     }
 
-    internal sealed class QuerySecurityFilter : IAsyncActionFilter
+    internal sealed class QuerySecurityFilter(QuerySecurityFilterSettings querySecurityFilterSettings) : IAsyncActionFilter
     {
-        private readonly QuerySecurityFilterSettings _querySecurityFilterSettings;
-
-        public QuerySecurityFilter(QuerySecurityFilterSettings querySecurityFilterSettings)
-        {
-            _querySecurityFilterSettings = querySecurityFilterSettings;
-        }
-
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             ValidateQueryParams(context);
@@ -38,7 +31,7 @@ namespace AspNetCore.Simple.Sdk.Security
         {
             var declaredQueryParameters = context.ActionDescriptor.GetQueryParameters().ToList();
             var request = context.HttpContext.Request;
-            var requestQueryParameters = request.Query.Keys.Except(_querySecurityFilterSettings.QueryParamsToIgnore).ToList();
+            var requestQueryParameters = request.Query.Keys.Except(querySecurityFilterSettings.QueryParamsToIgnore).ToList();
 
             var names = declaredQueryParameters.Select(d => d.BindingInfo!.BinderModelName.IsNotNullOrWhiteSpace() ? d.BindingInfo.BinderModelName : d.Name).ToList();
 

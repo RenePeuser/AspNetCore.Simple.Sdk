@@ -4,15 +4,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.Simple.Sdk.Logger.Errors
 {
-    internal sealed class ErrorLoggingMiddleware : IMiddleware
+    internal sealed class ErrorLoggingMiddleware(IErrorLogStrategy errorLogStrategy) : IMiddleware
     {
-        private readonly IErrorLogStrategy _errorLogStrategy;
-
-        public ErrorLoggingMiddleware(IErrorLogStrategy errorLogStrategy)
-        {
-            _errorLogStrategy = errorLogStrategy;
-        }
-
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -21,7 +14,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
             }
             catch (Exception exception)
             {
-                _errorLogStrategy.Handle(context, exception);
+                errorLogStrategy.Handle(context, exception);
                 throw;
             }
         }

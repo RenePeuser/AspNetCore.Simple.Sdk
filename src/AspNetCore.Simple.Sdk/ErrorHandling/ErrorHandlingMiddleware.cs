@@ -18,15 +18,8 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
 
 
     // this middle ware is just for handling the errors, not for logging !!
-    internal sealed class ErrorHandlingMiddleware : IMiddleware
+    internal sealed class ErrorHandlingMiddleware(IErrorHandlingStrategy errorHandlingStrategy) : IMiddleware
     {
-        private readonly IErrorHandlingStrategy _errorHandlingStrategy;
-
-        public ErrorHandlingMiddleware(IErrorHandlingStrategy errorHandlingStrategy)
-        {
-            _errorHandlingStrategy = errorHandlingStrategy;
-        }
-
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -35,7 +28,7 @@ namespace AspNetCore.Simple.Sdk.ErrorHandling
             }
             catch (Exception exception)
             {
-                await _errorHandlingStrategy.HandleAsync(context, exception).ConfigureAwait(false);
+                await errorHandlingStrategy.HandleAsync(context, exception).ConfigureAwait(false);
             }
         }
     }

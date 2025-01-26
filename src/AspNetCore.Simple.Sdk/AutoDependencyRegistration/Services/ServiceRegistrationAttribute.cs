@@ -3,16 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Simple.Sdk.AutoDependencyRegistration
 {
-    public class ServiceRegistrationAttribute : RegistrationBaseAttribute
+    public class ServiceRegistrationAttribute(ServiceLifetime serviceLifetime,
+                                              Type? interfaceType = default) : RegistrationBaseAttribute
     {
-        public ServiceRegistrationAttribute(ServiceLifetime serviceLifetime, Type? interfaceType = default)
-        {
-            ServiceLifetime = serviceLifetime;
-            InterfaceType = interfaceType;
-        }
+        public ServiceLifetime ServiceLifetime { get; } = serviceLifetime;
 
-        public ServiceLifetime ServiceLifetime { get; }
-
-        public Type? InterfaceType { get; }
+        public Type? InterfaceType { get; } = interfaceType;
     }
 }

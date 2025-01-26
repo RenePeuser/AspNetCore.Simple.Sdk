@@ -21,12 +21,9 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         }
     }
 
-    public class SecurityExceptionExceptionLogStrategy : ExceptionLogStrategy<SecurityProblemException>
+    public class SecurityExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer,
+                                                       ILogger<SecurityExceptionExceptionLogStrategy> logger) : ExceptionLogStrategy<SecurityProblemException>(jsonSerializer, logger, "Security")
     {
-        public SecurityExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger<SecurityExceptionExceptionLogStrategy> logger) : base(jsonSerializer, logger, "Security")
-        {
-        }
-
         protected override ErrorLogInfo GetErrorLogFrom(HttpContext httpContext, SecurityProblemException exception)
         {
             return new ErrorLogInfo(string.Empty,

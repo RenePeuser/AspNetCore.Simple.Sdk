@@ -43,29 +43,18 @@ namespace AspNetCore.Simple.Sdk.Caching
         }
     }
 
-    public sealed class RedisConnectionFactory
+    public sealed class RedisConnectionFactory(RedisSettings redisSettings,
+                                               IBackoff backoff,
+                                               ILogger<RedisConnectionFactory> logger)
     {
-        private readonly RedisSettings _redisSettings;
-        private readonly IBackoff _backoff;
-        private readonly ILogger<RedisConnectionFactory> _logger;
-
-        public RedisConnectionFactory(RedisSettings redisSettings,
-                                      IBackoff backoff,
-                                      ILogger<RedisConnectionFactory> logger)
-        {
-            _redisSettings = redisSettings;
-            _backoff = backoff;
-            _logger = logger;
-        }
-
         public IRedisConnection BuildWith()
         {
-            return BuildWith(_redisSettings);
+            return BuildWith(redisSettings);
         }
 
         public IRedisConnection BuildWith(RedisSettings redisSettings)
         {
-            return new RedisConnection(redisSettings, _logger, _backoff);
+            return new RedisConnection(redisSettings, logger, backoff);
         }
     }
 

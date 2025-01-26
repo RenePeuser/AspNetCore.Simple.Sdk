@@ -14,21 +14,14 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
-    public sealed class ReplaceVersionWithExactValueInPathFilter : IDocumentFilter
+    public sealed class ReplaceVersionWithExactValueInPathFilter(SwaggerInfos swaggerInfos) : IDocumentFilter
     {
-        private readonly SwaggerInfos _swaggerInfos;
-
-        public ReplaceVersionWithExactValueInPathFilter(SwaggerInfos swaggerInfos)
-        {
-            _swaggerInfos = swaggerInfos;
-        }
-
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             // Amazing hack, thanks that swashbuckle is not able to detect unique paths absolutely amazing
             SwaggerUi.SelectedVersion = context.DocumentName.ToApiVersion();
 
-            var collectPathInfos = _swaggerInfos.IncludeOnlyVersionedPaths
+            var collectPathInfos = swaggerInfos.IncludeOnlyVersionedPaths
                 ? CollectInfosVersionOnly(swaggerDoc, context, SwaggerUi.SelectedVersion).Distinct(item => item.key).ToImmutableList()
                 : CollectInfos(swaggerDoc, context, SwaggerUi.SelectedVersion).Distinct(item => item.key).ToImmutableList();
 
@@ -43,7 +36,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
             foreach (var path in swaggerDoc.Paths)
             {
                 // Include only version path = true means only path with versions
-                if (_swaggerInfos.IncludeOnlyVersionedPaths && path.ToString().DoesNotContain("{version}"))
+                if (swaggerInfos.IncludeOnlyVersionedPaths && path.ToString().DoesNotContain("{version}"))
                 {
                     continue;
                 }
@@ -61,7 +54,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     }
 
                     var apiVersion = controller.ControllerTypeInfo.GetCustomAttribute<ApiVersionAttribute>();
-                    if (apiVersion.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
+                    if (apiVersion.IsNull() && swaggerInfos.IncludeOnlyVersionedPaths)
                     {
                         continue;
                     }
@@ -76,7 +69,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     httpMethods = httpMethods.Select(item => item with { Route = item.Route.Replace("//", "/") }).ToImmutableList();
 
                     // New feature if path without version should be ignored we do not list it any more
-                    if (versionInfo.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
+                    if (versionInfo.IsNull() && swaggerInfos.IncludeOnlyVersionedPaths)
                     {
                         continue;
                     }
@@ -211,7 +204,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                     var versionInfo = apiDescription.ActionDescriptor.EndpointMetadata.FirstOrDefaultOfType<ApiVersionAttribute>();
 
                     // New feature if path without version should be ignored we do not list it any more
-                    if (versionInfo.IsNull() && _swaggerInfos.IncludeOnlyVersionedPaths)
+                    if (versionInfo.IsNull() && swaggerInfos.IncludeOnlyVersionedPaths)
                     {
                         continue;
                     }

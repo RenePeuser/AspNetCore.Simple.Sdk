@@ -14,15 +14,9 @@ namespace AspNetCore.Simple.Sdk.Caching
         }
     }
 
-    internal sealed class InMemoryCache : ICachingService
+    internal sealed class InMemoryCache(IMemoryCache memoryCache) : ICachingService
     {
-        private readonly IMemoryCache _memoryCache;
         private readonly TimeSpan _defaultTimInCache = TimeSpan.FromHours(1);
-
-        public InMemoryCache(IMemoryCache memoryCache)
-        {
-            _memoryCache = memoryCache;
-        }
 
         public Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> itemFactory, bool useCache) where T : CachableObject
         {
@@ -41,7 +35,7 @@ namespace AspNetCore.Simple.Sdk.Caching
             }
 
             // Try get object out of cache, if not possible set current value and return actual one
-            if (_memoryCache.TryGetValue(key, out var result).IsFalse())
+            if (memoryCache.TryGetValue(key, out var result).IsFalse())
             {
                 return await SetCacheAsync(key, itemFactory, cachingTime).ConfigureAwait(false);
             }
@@ -60,7 +54,7 @@ namespace AspNetCore.Simple.Sdk.Caching
 
         public Task<bool> DeleteAsync(string cacheKey)
         {
-            _memoryCache.Remove(cacheKey);
+            memoryCache.Remove(cacheKey);
             return Task.FromResult(true);
         }
 
@@ -69,7 +63,7 @@ namespace AspNetCore.Simple.Sdk.Caching
                                                TimeSpan cachingTime) where T : CachableObject
         {
             var item = await itemFactory().ConfigureAwait(false);
-            _memoryCache.Set(key, item, cachingTime);
+            memoryCache.Set(key, item, cachingTime);
             return item with { CacheInfo = item.CacheInfo with { CacheKey = key, ObjectFromCache = false } };
         }
     }

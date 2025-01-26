@@ -13,17 +13,9 @@ namespace AspNetCore.Simple.Sdk.Cors
     /// <summary>
     /// Options middleware is a smart part to handle preflight calls
     /// </summary>
-    public class OptionsMiddleware
+    public class OptionsMiddleware(RequestDelegate next,
+                                   CorsSettings corsSettings)
     {
-        private readonly RequestDelegate _next;
-        private readonly CorsSettings _corsSettings;
-
-        public OptionsMiddleware(RequestDelegate next, CorsSettings corsSettings)
-        {
-            _next = next;
-            _corsSettings = corsSettings;
-        }
-
         public Task Invoke(HttpContext context)
         {
             return BeginInvoke(context);
@@ -47,15 +39,15 @@ namespace AspNetCore.Simple.Sdk.Cors
                                                                .Select(name => name)
                                                                .ToImmutableList();
 
-                context.Response.Headers.Append("Access-Control-Allow-Origin", _corsSettings.Origins.ToArray());
-                context.Response.Headers.Append("Access-Control-Allow-Headers", _corsSettings.Headers.ToArray());
+                context.Response.Headers.Append("Access-Control-Allow-Origin", corsSettings.Origins.ToArray());
+                context.Response.Headers.Append("Access-Control-Allow-Headers", corsSettings.Headers.ToArray());
                 context.Response.Headers.Append("Access-Control-Allow-Methods", new[] { allowedMethods.Flatten(", ") });
-                context.Response.Headers.Append("Access-Control-Allow-Credentials", new[] { _corsSettings.AllowCredentials.ToString() });
+                context.Response.Headers.Append("Access-Control-Allow-Credentials", new[] { corsSettings.AllowCredentials.ToString() });
                 context.Response.StatusCode = 204;
                 return Task.CompletedTask;
             }
 
-            return _next.Invoke(context);
+            return next.Invoke(context);
         }
     }
 

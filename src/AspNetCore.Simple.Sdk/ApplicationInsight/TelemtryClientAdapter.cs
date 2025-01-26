@@ -36,29 +36,22 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         }
     }
 
-    public class TelemetryClientAdapter : ITelemetryClientAdapter
+    public class TelemetryClientAdapter(TelemetryClient telemetryClient) : ITelemetryClientAdapter
     {
-        private readonly TelemetryClient _telemetryClient;
-
-        public TelemetryClientAdapter(TelemetryClient telemetryClient)
-        {
-            _telemetryClient = telemetryClient;
-        }
-
         public void TrackInformation(string message, params (string key, string? value)[] details)
         {
-            _telemetryClient.TrackTrace(message, SeverityLevel.Information, details.ToDictionary());
+            telemetryClient.TrackTrace(message, SeverityLevel.Information, details.ToDictionary());
         }
 
         public void TrackError(string message, params (string key, string? value)[] details)
         {
-            _telemetryClient.TrackTrace(message, SeverityLevel.Error, details.ToDictionary());
+            telemetryClient.TrackTrace(message, SeverityLevel.Error, details.ToDictionary());
         }
 
         public void TrackException(string message, params (string key, string? value)[] details)
         {
 #pragma warning disable CA2201 // We just full fill the signature, we do not raise here
-            _telemetryClient.TrackException(new Exception(message), details.ToDictionary(item => item.key, item => item.value));
+            telemetryClient.TrackException(new Exception(message), details.ToDictionary(item => item.key, item => item.value));
 #pragma warning restore CA2201 // We just full fill the signature, we do not raise here
         }
 
@@ -67,37 +60,37 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
             var valueTuples = ("Exception Message", exception.Message).ToIList();
             var concatedDetails = details.ToList()!.Concat(valueTuples).ToDictionary(item => item.Item1, item => item.Item2);
 
-            _telemetryClient.TrackException(exception, concatedDetails!);
+            telemetryClient.TrackException(exception, concatedDetails!);
         }
 
         public void TrackException(Exception exception, params (string key, string? value)[] details)
         {
-            _telemetryClient.TrackException(exception, details.ToDictionary());
+            telemetryClient.TrackException(exception, details.ToDictionary());
         }
 
         public void TrackTrace(string message, params (string key, string? value)[] details)
         {
-            _telemetryClient.TrackTrace(message, details.ToDictionary());
+            telemetryClient.TrackTrace(message, details.ToDictionary());
         }
 
         public IOperationHolder<T> StartOperation<T>(Activity activity) where T : OperationTelemetry, new()
         {
-            return _telemetryClient.StartOperation<T>(activity);
+            return telemetryClient.StartOperation<T>(activity);
         }
 
         public void TrackEvent(string eventName, params (string key, string? value)[] details)
         {
-            _telemetryClient.TrackEvent(eventName, details.ToDictionary());
+            telemetryClient.TrackEvent(eventName, details.ToDictionary());
         }
 
         public void TrackMetric(string name, double value, params (string key, string? value)[] details)
         {
-            _telemetryClient.TrackMetric(name, value, details.ToDictionary());
+            telemetryClient.TrackMetric(name, value, details.ToDictionary());
         }
 
         public void TrackEvent(EventTelemetry eventTelemetry)
         {
-            _telemetryClient.TrackEvent(eventTelemetry);
+            telemetryClient.TrackEvent(eventTelemetry);
         }
     }
 
@@ -115,43 +108,36 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         void TrackEvent(EventTelemetry eventTelemetry);
     }
 
-    internal sealed class NoTelemetryAdapter : ITelemetryClientAdapter
+    internal sealed class NoTelemetryAdapter(ILogger<NoTelemetryAdapter> logger) : ITelemetryClientAdapter
     {
-        private readonly ILogger<NoTelemetryAdapter> _logger;
-
-        public NoTelemetryAdapter(ILogger<NoTelemetryAdapter> logger)
-        {
-            _logger = logger;
-        }
-
         public void TrackInformation(string message, params (string key, string? value)[] details)
         {
-            _logger.LogInformation(message, details);
+            logger.LogInformation(message, details);
         }
 
         public void TrackError(string message, params (string key, string? value)[] details)
         {
-            _logger.LogError(message, details);
+            logger.LogError(message, details);
         }
 
         public void TrackException(string message, params (string key, string? value)[] details)
         {
-            _logger.LogError(message, details);
+            logger.LogError(message, details);
         }
 
         public void TrackException(string message, Exception exception, params (string key, string? value)[] details)
         {
-            _logger.LogError(message, details);
+            logger.LogError(message, details);
         }
 
         public void TrackException(Exception exception, params (string key, string? value)[] details)
         {
-            _logger.LogError(exception.Message, details);
+            logger.LogError(exception.Message, details);
         }
 
         public void TrackTrace(string message, params (string key, string? value)[] details)
         {
-            _logger.LogInformation(message, details);
+            logger.LogInformation(message, details);
         }
 
         public IOperationHolder<T> StartOperation<T>(Activity activity) where T : OperationTelemetry, new()
@@ -161,17 +147,17 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
         public void TrackEvent(string eventName, params (string key, string? value)[] details)
         {
-            _logger.LogInformation(eventName, details);
+            logger.LogInformation(eventName, details);
         }
 
         public void TrackMetric(string name, double value, params (string key, string? value)[] details)
         {
-            _logger.LogInformation(name, details);
+            logger.LogInformation(name, details);
         }
 
         public void TrackEvent(EventTelemetry eventTelemetry)
         {
-            _logger.LogInformation(eventTelemetry.Name);
+            logger.LogInformation(eventTelemetry.Name);
         }
     }
 

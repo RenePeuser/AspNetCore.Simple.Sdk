@@ -7,20 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Serializer.Json
 {
-    public class JsonSerializer : IJsonSerializer
+    public class JsonSerializer(ILogger<JsonSerializer> logger) : IJsonSerializer
     {
-        private readonly ILogger<JsonSerializer> _logger;
-        private readonly JsonSerializerOptions _serializeOptions;
-
-        public JsonSerializer(ILogger<JsonSerializer> logger)
-        {
-            _logger = logger;
-
-            _serializeOptions = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase, NumberHandling = JsonNumberHandling.AllowReadingFromString, Converters = { new JsonStringEnumConverter() }
-            };
-        }
+        private readonly JsonSerializerOptions _serializeOptions = new()
+                                                                   {
+                                                                       PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase, NumberHandling = JsonNumberHandling.AllowReadingFromString, Converters = { new JsonStringEnumConverter() }
+                                                                   };
 
         public string Serialize<T>(T source)
         {
@@ -35,7 +27,7 @@ namespace AspNetCore.Simple.Sdk.Serializer.Json
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                logger.LogError(e, e.Message);
                 return defaultValue;
             }
         }

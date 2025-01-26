@@ -6,17 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Simple.Sdk.Logger.Requests
 {
-    public class LogRequestMiddleware : IMiddleware
+    public class LogRequestMiddleware(ILogger<LogRequestMiddleware> logger,
+                                      IJsonSerializer jsonSerializer) : IMiddleware
     {
-        private readonly ILogger<LogRequestMiddleware> _logger;
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public LogRequestMiddleware(ILogger<LogRequestMiddleware> logger, IJsonSerializer jsonSerializer)
-        {
-            _logger = logger;
-            _jsonSerializer = jsonSerializer;
-        }
-
         public Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             var requestHeaders = context.Request.Headers.Select(h => new { h.Key, Value = h.Value.First() }).Where(item => !item.Key.Contains("Auth")).ToList();
@@ -24,7 +16,7 @@ namespace AspNetCore.Simple.Sdk.Logger.Requests
 
             var logInfo = new { RequestHeaders = responseHeaders, ResponseHeaders = requestHeaders };
 
-            _logger.LogInformation(_jsonSerializer.Serialize(logInfo));
+            logger.LogInformation(jsonSerializer.Serialize(logInfo));
 
             return next(context);
         }

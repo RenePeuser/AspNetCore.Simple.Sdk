@@ -30,18 +30,10 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
     }
 
 
-    public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+    public class LoggingBehavior<TRequest, TResponse>(ITelemetryClientAdapter telemetryClientAdapter,
+                                                      LoggingHelper loggingHelper) : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
     {
-        private readonly LoggingHelper _loggingHelper;
-        private readonly ITelemetryClientAdapter _telemetryClientAdapter;
-
-        public LoggingBehavior(ITelemetryClientAdapter telemetryClientAdapter,
-                               LoggingHelper loggingHelper)
-        {
-            _telemetryClientAdapter = telemetryClientAdapter;
-            _loggingHelper = loggingHelper;
-        }
-
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var cqrsName = typeof(TRequest).Name;
@@ -73,11 +65,11 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
                     { "Type", cqrsType }, { "Name", cqrsName }, { "Success", successful.ToString() }, { "Duration in ms", $"{roundedExecutionTime}" } // TODO: Fix
                 };
 
-                loggingProperties.AddRange(_loggingHelper.GetProperties(request, "Payload_")!);
+                loggingProperties.AddRange(loggingHelper.GetProperties(request, "Payload_")!);
 
                 executeEvent.Properties.AddRange(loggingProperties);
-                _telemetryClientAdapter.TrackEvent(executeEvent);
-                _telemetryClientAdapter.TrackMetric($"{cqrsName} execution time", roundedExecutionTime);
+                telemetryClientAdapter.TrackEvent(executeEvent);
+                telemetryClientAdapter.TrackMetric($"{cqrsName} execution time", roundedExecutionTime);
             }
         }
     }

@@ -26,12 +26,9 @@ namespace AspNetCore.Simple.Sdk.Logger.Errors
         }
     }
 
-    public class DefaultExceptionExceptionLogStrategy : ExceptionLogStrategy<Exception>
+    public class DefaultExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer,
+                                                      ILogger<DefaultExceptionExceptionLogStrategy> logger) : ExceptionLogStrategy<Exception>(jsonSerializer, logger)
     {
-        public DefaultExceptionExceptionLogStrategy(IJsonSerializer jsonSerializer, ILogger<DefaultExceptionExceptionLogStrategy> logger) : base(jsonSerializer, logger)
-        {
-        }
-
         protected override bool CanHandleException(Exception exception)
         {
             var result = base.CanHandleException(exception);
