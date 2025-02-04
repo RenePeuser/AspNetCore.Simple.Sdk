@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AspNetCore.Simple.Sdk.Swagger
 {
-   public class OpenApiVersionFilter : IDocumentFilter
-{
-    public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+    public class OpenApiVersionFilter : IDocumentFilter
     {
-        swaggerDoc.Extensions["swagger"] = new OpenApiString("2.0");
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+        {
+            swaggerDoc.Extensions["swagger"] = new OpenApiString("2.0");
+        }
     }
-}
 }

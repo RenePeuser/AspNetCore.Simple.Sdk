@@ -24,6 +24,7 @@
         <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
         <PackageReadmeFile>readme.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <OpenApiDocumentsDirectory>./</OpenApiDocumentsDirectory>
     </PropertyGroup>
 
     <!--Property group settings for source link !-->
@@ -45,6 +46,7 @@
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
         <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.23" />
         <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="8.0.0" PrivateAssets="All" />
         <PackageReference Include="Polly" Version="8.5.1" />

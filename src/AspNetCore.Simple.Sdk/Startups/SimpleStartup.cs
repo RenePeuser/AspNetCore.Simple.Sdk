@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using AspNetCore.Simple.Sdk.ApiVersioning;
 using AspNetCore.Simple.Sdk.ApplicationInsight;
 using AspNetCore.Simple.Sdk.Authentication.Auth0;
@@ -16,12 +20,15 @@ using AspNetCore.Simple.Sdk.Serializer.Json;
 using AspNetCore.Simple.Sdk.Storage;
 using AspNetCore.Simple.Sdk.Swagger;
 using Extensions.Pack;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace AspNetCore.Simple.Sdk.Startups
 {
@@ -38,6 +45,7 @@ namespace AspNetCore.Simple.Sdk.Startups
     public abstract class SimpleStartup
     {
         private Lazy<AutoRegistration> _lazyAutoRegistration = new();
+        private readonly ApiVersionProvider _apiVersionProvider = new ApiVersionProvider(new AssemblyTypeProvider());
 
         protected SimpleStartup(IConfiguration configuration,
                                 IWebHostEnvironment webHostEnvironment,
@@ -100,7 +108,6 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddApiVersioningSimplified();
             services.AddJsonSerializer();
             services.AddCorsSettings(Configuration);
-
             services.AddBackOff();
 
             services.AddOAuthAuthentication(Configuration);
@@ -118,6 +125,17 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddAzureBlobStorage(Configuration);
             services.AddAzureBlobStorageFactory(Configuration);
+
+            // Register all versions of existing APIs
+            var versions = _apiVersionProvider.GetAllApiVersions(Assembly);
+            foreach (var version in versions)
+            {
+                services.AddOpenApi($"v{version.MajorVersion}", options =>
+                                          {
+                                              options.AddDocumentTransformer<DocumentInfosTransformer>();
+                                              options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+                                          });
+            }
 
             AutoConfigureServices(GetAutoRegistration(services, Configuration));
         }
@@ -152,9 +170,11 @@ namespace AspNetCore.Simple.Sdk.Startups
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // app.UseOptions();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers().RequireAuthorization(); });
+            app.UseEndpoints(endpoints =>
+                             {
+                                 endpoints.MapOpenApi();
+                                 endpoints.MapControllers().RequireAuthorization();
+                             });
         }
 
         private AutoRegistration GetAutoRegistration(IServiceCollection serviceCollection, IConfiguration configuration)
@@ -165,6 +185,91 @@ namespace AspNetCore.Simple.Sdk.Startups
             }
 
             return _lazyAutoRegistration.Value;
+        }
+    }
+
+
+    public sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider,
+                                                          SwaggerInfos swaggerInfos) : IOpenApiDocumentTransformer
+    {
+        public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+        {
+            var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync().ConfigureAwait(false);
+            if (authenticationSchemes.Any(authScheme => authScheme.Name == "Bearer"))
+            {
+                var requirements = new Dictionary<string, OpenApiSecurityScheme>
+                {
+                    ["Bearer"] = new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer", // "bearer" refers to the header name here
+                        In = ParameterLocation.Header,
+                        BearerFormat = "Json Web Token"
+                    }
+                };
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes = requirements;
+            }
+
+            var documentSpecificInfos = swaggerInfos.SwaggerInfosByVersion.FirstOrDefault(doc => doc.Version.Contains(context.DocumentName.TrimStart('v').TrimStart('V')));
+
+            if (documentSpecificInfos.IsNotNull())
+            {
+                document.Info = new()
+                {
+                    Title = documentSpecificInfos.Title,
+                    Version = documentSpecificInfos.Version,
+                    Description = documentSpecificInfos.Description,
+                    Contact = new OpenApiContact()
+                    {
+                        Email = documentSpecificInfos.ContactEmail,
+                        Name = documentSpecificInfos.ContactName,
+                    }
+                };
+            }
+            else
+            {
+                document.Info = new()
+                {
+                    Title = "Your first Open API",
+                    Version = "v1",
+                    Description = "API for Damien"
+                };
+            }
+        }
+    }
+
+    public sealed class DocumentInfosTransformer(SwaggerInfos swaggerInfos) : IOpenApiDocumentTransformer
+    {
+        public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+        {
+            var documentSpecificInfos = swaggerInfos.SwaggerInfosByVersion.FirstOrDefault(doc => doc.Version.Contains(context.DocumentName.TrimStart('v').TrimStart('V')));
+
+            if (documentSpecificInfos.IsNotNull())
+            {
+                document.Info = new()
+                {
+                    Title = documentSpecificInfos.Title,
+                    Version = documentSpecificInfos.Version,
+                    Description = documentSpecificInfos.Description,
+                    Contact = new OpenApiContact()
+                    {
+                        Email = documentSpecificInfos.ContactEmail,
+                        Name = documentSpecificInfos.ContactName,
+                    }
+                };
+            }
+            else
+            {
+                document.Info = new()
+                {
+                    Title = "Your first Open API",
+                    Version = "v1",
+                    Description = "API for Damien"
+                };
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
