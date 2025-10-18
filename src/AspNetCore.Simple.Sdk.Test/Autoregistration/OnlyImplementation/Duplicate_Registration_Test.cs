@@ -23,7 +23,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.OnlyImplementation
             _autoregister = new AutoRegistrationFactory().Create(_serviceCollection, _configuration);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(ScopedService), ServiceLifetime.Scoped)]
         [DataRow(typeof(TransientService), ServiceLifetime.Transient)]
         [DataRow(typeof(SingletonService), ServiceLifetime.Singleton)]

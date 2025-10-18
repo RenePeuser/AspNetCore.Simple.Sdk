@@ -11,7 +11,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.OnlyImplementation
     [TestClass]
     public class Type_Registration_Tests
     {
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(ScopedService), ServiceLifetime.Scoped)]
         [DataRow(typeof(TransientService), ServiceLifetime.Transient)]
         [DataRow(typeof(SingletonService), ServiceLifetime.Singleton)]

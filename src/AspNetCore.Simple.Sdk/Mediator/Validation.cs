@@ -32,7 +32,7 @@ namespace AspNetCore.Simple.Sdk.Mediator
                 await validatorForRequest.ValidateAsync(request).ConfigureAwait(false);
             }
 
-            return await next().ConfigureAwait(false);
+            return await next(cancellationToken).ConfigureAwait(false);
         }
     }
 }

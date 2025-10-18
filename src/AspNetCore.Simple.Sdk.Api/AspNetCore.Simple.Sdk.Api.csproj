@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>AspNetCore.Simple.Sdk.Api</RootNamespace>
+      <NoWarn>IDE0305</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -9,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup>

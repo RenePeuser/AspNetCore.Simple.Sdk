@@ -33,7 +33,7 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         [TestMethod]
         public void Should_Not_Be_Able_To_Fetch_Settings_Directly_By_Typename_With_Settings_Postfix()
         {
-            Assert.ThrowsException<MissingSettingsException<DummySettings>>(() => Configuration.GetSettings<DummySettings>());
+            Assert.ThrowsExactly<MissingSettingsException<DummySettings>>(() => Configuration.GetSettings<DummySettings>());
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         [TestMethod]
         public void Should_Throw_Missing_Settings_Exception_When_Settings_Does_Not_Exists()
         {
-            var exception = Assert.ThrowsException<MissingSettingsException<Person>>(Configuration.GetSettings<Person>);
+            var exception = Assert.ThrowsExactly<MissingSettingsException<Person>>(Configuration.GetSettings<Person>);
 
             exception?.Message.Should().Be($"The setting: '{nameof(Person)}' is missing. Please check your specific appsettings.json or your environment variables.");
         }

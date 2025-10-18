@@ -12,8 +12,7 @@ namespace AspNetCore.Simple.Sdk.Test
         [TestMethod]
         public Task Should_Return_Expected_Weather_Result()
         {
-            return Client.AssertGetAsync<IEnumerable<WeatherForecast>>("api/sample/v1/weather", /*lang=json,strict*/
-                "[{\"Date\":\"2021-11-01T00:00:00\",\"TemperatureC\":27,\"TemperatureF\":80,\"Summary\":\"Bracing\"},{\"Date\":\"2021-11-02T00:00:00\",\"TemperatureC\":27,\"TemperatureF\":80,\"Summary\":\"Chilly\"},{\"Date\":\"2021-11-03T00:00:00\",\"TemperatureC\":27,\"TemperatureF\":80,\"Summary\":\"Cool\"},{\"Date\":\"2021-11-04T00:00:00\",\"TemperatureC\":27,\"TemperatureF\":80,\"Summary\":\"Mild\"},{\"Date\":\"2021-11-05T00:00:00\",\"TemperatureC\":27,\"TemperatureF\":80,\"Summary\":\"Warm\"}]");
+            return Client.AssertGetAsync<IEnumerable<WeatherForecast>>("api/sample/v1/weather", /*lang=json,strict*/ "[{\"date\":\"2021-11-01T00:00:00\",\"temperatureC\":27,\"temperatureF\":80,\"summary\":\"Bracing\"},{\"date\":\"2021-11-02T00:00:00\",\"temperatureC\":27,\"temperatureF\":80,\"summary\":\"Chilly\"},{\"date\":\"2021-11-03T00:00:00\",\"temperatureC\":27,\"temperatureF\":80,\"summary\":\"Cool\"},{\"date\":\"2021-11-04T00:00:00\",\"temperatureC\":27,\"temperatureF\":80,\"summary\":\"Mild\"},{\"date\":\"2021-11-05T00:00:00\",\"temperatureC\":27,\"temperatureF\":80,\"summary\":\"Warm\"}]");
         }
     }
 }

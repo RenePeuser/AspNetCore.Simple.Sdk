@@ -39,7 +39,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.OnlyImplementation
             Assert.AreEqual(result, result2);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(TransientService))]
         public void Should_Register_Simple_Scoped_Service_Without_Dependency_With_Default_As_Singleton(Type service)
         {

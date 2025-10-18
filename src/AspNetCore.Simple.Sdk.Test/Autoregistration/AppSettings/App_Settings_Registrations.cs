@@ -12,13 +12,17 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings
     public class App_Settings_Registrations
     {
         private AutoRegistration _autoRegistration = null!;
+
         private ServiceCollection _serviceCollection = null!;
 
         [TestInitialize]
         public void Init()
         {
             var configurationBuilder = new ConfigurationBuilder();
-            var testAppsettingsJson = Path.Combine(Environment.CurrentDirectory, "Autoregistration", "AppSettings", "Json", "appsettings.test.json");
+
+            var testAppsettingsJson = Path.Combine(Environment.CurrentDirectory, "Autoregistration", "AppSettings",
+                                                   "Json", "appsettings.test.json");
+
             configurationBuilder.AddJsonFile(testAppsettingsJson);
 
             _serviceCollection = new ServiceCollection();
@@ -27,7 +31,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings
             _autoRegistration = new AutoRegistrationFactory().Create(_serviceCollection, configuration);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(ScopedSettings))]
         [DataRow(typeof(TransientSettings))]
         [DataRow(typeof(SingletonSettings))]
@@ -41,17 +45,17 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings
             Assert.IsNotNull(instance);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(ScopedSettingsWithValidator))]
         public void Should_Not_Be_Able_To_Register_AppSettings_Because_Of_Validation_Errors(Type type)
         {
-            Assert.ThrowsException<ArgumentException>(() => _autoRegistration.DoAutoRegistrationFor(type));
+            Assert.ThrowsExactly<ArgumentException>(() => _autoRegistration.DoAutoRegistrationFor(type));
         }
 
         [TestMethod]
         public void Should_Not_Be_Able_To_Register_AppSettings_Because_Of_Validation_Errors()
         {
-            Assert.ThrowsException<ArgumentException>(_autoRegistration.DoAutoRegistrationFor<ScopedSettingsWithValidator>);
+            Assert.ThrowsExactly<ArgumentException>(_autoRegistration.DoAutoRegistrationFor<ScopedSettingsWithValidator>);
         }
     }
 }

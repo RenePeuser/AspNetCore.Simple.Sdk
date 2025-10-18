@@ -14,7 +14,8 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 {
     public static class AddLoggingBehaviorExtension
     {
-        public static void AddBetterLoggingBehavior(this IServiceCollection services, IConfiguration configuration)
+        public static void AddBetterLoggingBehavior(this IServiceCollection services,
+                                                    IConfiguration configuration)
         {
             // If Telemetry client already registered go out.
             if (services.IsAlreadyRegistered<ITelemetryClientAdapter>())
@@ -29,12 +30,13 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         }
     }
 
-
     public class LoggingBehavior<TRequest, TResponse>(ITelemetryClientAdapter telemetryClientAdapter,
                                                       LoggingHelper loggingHelper) : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull
     {
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request,
+                                            RequestHandlerDelegate<TResponse> next,
+                                            CancellationToken cancellationToken)
         {
             var cqrsName = typeof(TRequest).Name;
             var cqrsType = request is ICommand or ICommand<TResponse> ? "Command" : "Query";
@@ -46,12 +48,14 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
             try
             {
-                var response = await next().ConfigureAwait(false);
+                var response = await next(cancellationToken).ConfigureAwait(false);
+
                 return response;
             }
             catch (Exception)
             {
                 successful = false;
+
                 throw;
             }
             finally
@@ -60,10 +64,14 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
 
                 // We do not want to log any get health code, in Azure we can monitor health status without tons of useless logs
                 var roundedExecutionTime = Math.Round(timer.Elapsed.TotalMilliseconds);
+
                 var loggingProperties = new Dictionary<string, string>
-                {
-                    { "Type", cqrsType }, { "Name", cqrsName }, { "Success", successful.ToString() }, { "Duration in ms", $"{roundedExecutionTime}" } // TODO: Fix
-                };
+                                        {
+                                            { "Type", cqrsType },
+                                            { "Name", cqrsName },
+                                            { "Success", successful.ToString() },
+                                            { "Duration in ms", $"{roundedExecutionTime}" } // TODO: Fix
+                                        };
 
                 loggingProperties.AddRange(loggingHelper.GetProperties(request, "Payload_")!);
 

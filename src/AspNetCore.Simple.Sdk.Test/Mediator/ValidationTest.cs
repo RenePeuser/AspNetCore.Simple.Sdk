@@ -16,7 +16,8 @@ namespace AspNetCore.Simple.Sdk.Test.Mediator
 
     public class PersonHandler : IQueryHandler<GetPersonByName, Person>
     {
-        public Task<Person> Handle(GetPersonByName request, CancellationToken cancellationToken)
+        public Task<Person> Handle(GetPersonByName request,
+                                   CancellationToken cancellationToken)
         {
             return Task.FromResult(new Person(string.Empty));
         }
@@ -55,6 +56,7 @@ namespace AspNetCore.Simple.Sdk.Test.Mediator
             serviceCollection.AddValidationBehavior();
             serviceCollection.AddSingletonIfNotExists<IServiceProvider, ServiceProvider>();
             serviceCollection.AddGetPersonByNameValidator();
+            serviceCollection.AddLogging();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -64,7 +66,7 @@ namespace AspNetCore.Simple.Sdk.Test.Mediator
         [TestMethod]
         public Task If_Validator_Exists_User_Response_Exception_Have_To_Be_Thrown()
         {
-            return Assert.ThrowsExceptionAsync<ProblemDetailsException>(() => _mediator.SendAsync(new GetPersonByName(string.Empty)));
+            return Assert.ThrowsExactlyAsync<ProblemDetailsException>(() => _mediator.SendAsync(new GetPersonByName(string.Empty), CancellationToken.None));
         }
     }
 }

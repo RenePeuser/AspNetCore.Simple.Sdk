@@ -28,7 +28,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.AppSettings
             _autoRegistration = new AutoRegistrationFactory().Create(_serviceCollection, configuration);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(ScopedSettings), ServiceLifetime.Scoped)]
         [DataRow(typeof(TransientSettings), ServiceLifetime.Transient)]
         [DataRow(typeof(SingletonSettings), ServiceLifetime.Singleton)]

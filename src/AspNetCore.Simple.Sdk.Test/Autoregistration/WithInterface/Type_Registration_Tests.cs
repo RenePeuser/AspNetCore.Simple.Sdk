@@ -11,7 +11,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface
     [TestClass]
     public class Type_Registration_Tests
     {
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(ScopedServiceWithInterface), typeof(IScopedService), ServiceLifetime.Scoped)]
         public void Should_Register_Correct_Lifetime_Automatically(Type implementationType, Type interfaceType, ServiceLifetime serviceLifetime)
         {
@@ -46,7 +46,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface
             Assert.AreEqual(ServiceLifetime.Scoped, serviceRegistration.Lifetime);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(ScopedServiceWithInterfaceDependencies), ServiceLifetime.Scoped)]
         public void Should_Register_Correct_Lifetime_If_Dependency_Is_An_Interface_Automatically(Type implementationType, ServiceLifetime serviceLifetime)
         {
@@ -68,7 +68,7 @@ namespace AspNetCore.Simple.Sdk.Test.Autoregistration.WithInterface
         }
 
         [Ignore]
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(typeof(ScopedServiceWithListOfInterfaceDependencies), ServiceLifetime.Scoped)]
         public void Should_Register_All_Dependencies_If_They_Are_Injected_By_EnumerationTypes(Type implementationType, ServiceLifetime serviceLifetime)
         {

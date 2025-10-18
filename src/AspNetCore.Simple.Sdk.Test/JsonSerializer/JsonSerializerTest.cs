@@ -17,7 +17,7 @@ namespace AspNetCore.Simple.Sdk.Test.JsonSerializer
             var serializer = ServiceProvider.GetRequiredService<IJsonSerializer>();
             var criticalJson = """[{""HostName"":""localhost"",""Password"":""123456""}]""";
 
-            var exception = Assert.ThrowsException<ProblemDetailsException>(() => serializer.Deserialize<SecuredConnectionInfos>(criticalJson));
+            var exception = Assert.ThrowsExactly<ProblemDetailsException>(() => serializer.Deserialize<SecuredConnectionInfos>(criticalJson));
 
             var json = exception.ProblemDetails.ToJson();
 
@@ -30,7 +30,7 @@ namespace AspNetCore.Simple.Sdk.Test.JsonSerializer
             var serializer = ServiceProvider.GetRequiredService<IJsonSerializer>();
             var criticalJson = """[{""HostName"":""localhost"",""Password"":""123456""}]""";
 
-            var exception = Assert.ThrowsException<ProblemDetailsException>(() => serializer.Deserialize<UnSecuredConnectionInfos>(criticalJson));
+            var exception = Assert.ThrowsExactly<ProblemDetailsException>(() => serializer.Deserialize<UnSecuredConnectionInfos>(criticalJson));
 
             Assert.AreEqual(exception.ProblemDetails.Extensions["jsonString"], criticalJson);
         }
