@@ -1,5 +1,6 @@
 ﻿using AspNetCore.Simple.MsTest.Sdk;
 using Extensions.Pack;
+using Extensions.Pack.Exceptions;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -55,7 +56,13 @@ namespace AspNetCore.Simple.Sdk.Test.ConfigurationExtensions
         public void Should_Be_Able_To_Fetch_Settings_With_Correct_Content()
         {
             var settings = Configuration.GetSettings<DummySettings>(nameof(Dummy));
-            var expectedResult = new DummySettings { Value0 = "A", Value1 = "B", Value2 = "C" };
+
+            var expectedResult = new DummySettings
+            {
+                Value0 = "A",
+                Value1 = "B",
+                Value2 = "C"
+            };
 
             Assert.That.ObjectsAreEqual(settings, expectedResult);
         }

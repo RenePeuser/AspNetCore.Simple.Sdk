@@ -38,7 +38,7 @@ namespace AspNetCore.Simple.Sdk.Api.WeatherForecast.V1
                 Date = new DateTime(2021, 11, index),
                 TemperatureC = weatherConfig.Temperature,
                 Summary = summariesProvider.GetAllSummaries()[index]
-            }).ToArray();
+            });
         }
     }
 }

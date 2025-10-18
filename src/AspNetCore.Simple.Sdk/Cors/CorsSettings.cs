@@ -16,7 +16,7 @@ namespace AspNetCore.Simple.Sdk.Cors
         /// <summary>
         /// Provides a list of allowed origins sources
         /// </summary>
-        public IImmutableList<string> Origins { get; init; } = "*".AsImmutableList();
+        public IImmutableList<string> Origins { get; init; } = ImmutableList.Create<string>("*");
 
         /// <summary>
         /// Provides the list of allowed CORS headers
@@ -33,7 +33,8 @@ namespace AspNetCore.Simple.Sdk.Cors
     {
         private const string CorsSettingsName = "cors";
 
-        public static void AddCorsSettings(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCorsSettings(this IServiceCollection services,
+                                           IConfiguration configuration)
         {
             if (services.IsAlreadyRegistered<CorsSettings>())
             {
@@ -45,39 +46,41 @@ namespace AspNetCore.Simple.Sdk.Cors
             services.AddSingletonIfNotExists(corsSettings);
 
             services.AddCors(o => o.AddPolicy(CorsSettingsName,
-                builder =>
-                {
-                    builder.SetIsOriginAllowedToAllowWildcardSubdomains();
-                    builder.WithOrigins(corsSettings.Origins.ToArray());
-                    builder.Build();
-                }
-            ));
+                                              builder =>
+                                              {
+                                                  builder.SetIsOriginAllowedToAllowWildcardSubdomains();
+                                                  builder.WithOrigins(corsSettings.Origins.ToArray());
+                                                  builder.Build();
+                                              }));
         }
 
         private static CorsSettings GetSettingsOrDefault(IConfiguration configuration)
         {
             var corsSection = configuration.GetSection(nameof(CorsSettings));
+
             if (corsSection.IsNull())
             {
                 return new CorsSettings();
             }
 
             var corsSettings = configuration.Get<CorsSettings>();
+
             if (corsSettings.IsNull())
             {
                 throw new ProblemDetailsException($"Was not able get CORS settings",
-                    $"The type: '{nameof(CorsSettings)}' could not be fetched from configuration");
+                                                  $"The type: '{nameof(CorsSettings)}' could not be fetched from configuration");
             }
-
 
             // Origins
             var originsValue = corsSection[nameof(CorsSettings.Origins)];
+
             if (originsValue.IsNotNullOrWhiteSpace())
             {
                 corsSettings = corsSettings with { Origins = originsValue.Split(",").Distinct().ToImmutableList() };
             }
 
             var headersValue = corsSection[nameof(CorsSettings.Headers)];
+
             if (headersValue.IsNotNull())
             {
                 corsSettings = corsSettings with { Headers = headersValue.Split(",").Distinct().ToImmutableList() };
