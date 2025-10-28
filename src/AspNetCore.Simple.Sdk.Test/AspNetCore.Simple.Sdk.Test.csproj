@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.Simple.MsTest.Sdk" Version="6.1.11" />
-    <PackageReference Include="FluentAssertions" Version="8.7.1" />
+    <PackageReference Include="AspNetCore.Simple.MsTest.Sdk" Version="6.1.14" />
+    <PackageReference Include="FluentAssertions" Version="8.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.10" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
