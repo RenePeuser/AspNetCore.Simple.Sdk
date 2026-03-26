@@ -17,12 +17,9 @@ namespace AspNetCore.Simple.Sdk.Api.WeatherForecast.V1
     public class SummariesProvider
     {
         private static readonly IImmutableList<string> Summaries = new[]
-                                                                   {
-                                                                       "Freezing", "Bracing", "Chilly",
-                                                                       "Cool", "Mild", "Warm",
-                                                                       "Balmy", "Hot", "Sweltering",
-                                                                       "Scorching"
-                                                                   }.ToImmutableList();
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        }.ToImmutableList();
 
         public IImmutableList<string> GetAllSummaries()
         {
@@ -34,8 +31,9 @@ namespace AspNetCore.Simple.Sdk.Api.WeatherForecast.V1
     [ApiVersion("1.0")]
     [ApiController]
     [Route("v{version:apiVersion}/weather")]
-    public class WeatherForecastController(SummariesProvider summariesProvider,
-                                           WeatherConfig weatherConfig) : ControllerBase
+    public class WeatherForecastController(
+        SummariesProvider summariesProvider,
+        WeatherConfig weatherConfig) : ControllerBase
     {
         [HttpGet]
         public List<WeatherForecast> Get()

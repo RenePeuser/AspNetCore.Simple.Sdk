@@ -24,11 +24,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.OpenApi;
+// using Microsoft.AspNetCore.OpenApi; // Removed - not needed for .NET 10 with Swashbuckle
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+// using Microsoft.OpenApi.Models; // Not needed - commented out transformers
 
 namespace AspNetCore.Simple.Sdk.Startups
 {
@@ -121,15 +121,17 @@ namespace AspNetCore.Simple.Sdk.Startups
             services.AddAzureBlobStorageFactory(Configuration);
 
             // Register all versions of existing APIs
-            var versions = _apiVersionProvider.GetAllApiVersions(Assembly);
-            foreach (var version in versions)
-            {
-                services.AddOpenApi($"v{version.MajorVersion}", options =>
-                                          {
-                                              options.AddDocumentTransformer<DocumentInfosTransformer>();
-                                              options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-                                          });
-            }
+            // Note: AddOpenApi and Document Transformers are part of Microsoft.AspNetCore.OpenApi
+            // which conflicts with Swashbuckle in .NET 10. Using Swashbuckle only.
+            // var versions = _apiVersionProvider.GetAllApiVersions(Assembly);
+            // foreach (var version in versions)
+            // {
+            //     services.AddOpenApi($"v{version.MajorVersion}", options =>
+            //                               {
+            //                                   options.AddDocumentTransformer<DocumentInfosTransformer>();
+            //                                   options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+            //                               });
+            // }
 
             // Activate mediator for current assembly and calling once
             services.AddMediator();
@@ -171,7 +173,7 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             app.UseEndpoints(endpoints =>
                              {
-                                 endpoints.MapOpenApi();
+                                 // endpoints.MapOpenApi(); // Part of Microsoft.AspNetCore.OpenApi - using Swashbuckle instead
                                  endpoints.MapControllers().RequireAuthorization();
                              });
         }
@@ -188,6 +190,9 @@ namespace AspNetCore.Simple.Sdk.Startups
     }
 
 
+    // Commented out - these transformers use Microsoft.AspNetCore.OpenApi which we removed
+    // Swashbuckle's own filters and configuration handle this functionality
+    /*
     public sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider,
                                                           SwaggerInfos swaggerInfos) : IOpenApiDocumentTransformer
     {
@@ -271,4 +276,5 @@ namespace AspNetCore.Simple.Sdk.Startups
             return Task.CompletedTask;
         }
     }
+    */
 }
