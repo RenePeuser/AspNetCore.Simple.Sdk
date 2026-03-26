@@ -159,7 +159,7 @@ namespace AspNetCore.Simple.Sdk.Storage
             var container = await FirstOrDefaultAsync(containerName, cancellationToken).ConfigureAwait(false);
             if (container.IsNull())
             {
-                var allContainers = await GetAllContainerAsync(cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+                var allContainers = await GetAllContainerAsync(cancellationToken).ToImmutableListAsync(cancellationToken).ConfigureAwait(false);
                 throw new ProblemDetailsException("Could not delete expected file because the storage container for does not exists",
                     $"The container: '{containerName}' which should contains the file: '{fileName}' does not exists",
                     ("Available Containers", allContainers.Select(c => c.Name).ToJson()));

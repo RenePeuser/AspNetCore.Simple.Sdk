@@ -65,7 +65,7 @@ namespace AspNetCore.Simple.Sdk.Swagger
                 }
 
                 // No version return
-                if (VersionRegex.Match(key).Success.IsFalse())
+                if (VersionRegex.IsMatch(key).IsFalse())
                 {
                     return true;
                 }

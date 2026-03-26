@@ -30,9 +30,9 @@ namespace AspNetCore.Simple.Sdk.Swagger
         {
             var apiVersions = apiVersionProvider.GetAllApiVersions(request.Startup.Assembly).ToImmutableList();
 
-            var apiVersionInfos = await FetchAllSwaggerDocuments(apiVersions).ToListAsync(cancellationToken).ConfigureAwait(false);
+            var apiVersionInfos = await FetchAllSwaggerDocuments(apiVersions).ToImmutableListAsync(cancellationToken).ConfigureAwait(false);
 
-            return apiVersionInfos.ToImmutableList();
+            return apiVersionInfos;
 
             async IAsyncEnumerable<OpenApiDocument> FetchAllSwaggerDocuments(IImmutableList<ApiVersion> apiVersions)
             {

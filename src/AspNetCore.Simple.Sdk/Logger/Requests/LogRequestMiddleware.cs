@@ -16,7 +16,9 @@ namespace AspNetCore.Simple.Sdk.Logger.Requests
 
             var logInfo = new { RequestHeaders = responseHeaders, ResponseHeaders = requestHeaders };
 
-            logger.LogInformation(jsonSerializer.Serialize(logInfo));
+            var serialize = jsonSerializer.Serialize(logInfo);
+
+            logger.LogInformation(serialize);
 
             return next(context);
         }

@@ -10,6 +10,8 @@ using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+#pragma warning disable IDE0051
+#pragma warning disable CA1873 // Avoid potentially expensive logging
 
 namespace AspNetCore.Simple.Sdk.ApplicationInsight
 {
@@ -172,3 +174,4 @@ namespace AspNetCore.Simple.Sdk.ApplicationInsight
         public T Telemetry { get; init; } = default!;
     }
 }
+#pragma warning restore CA1873 // Avoid potentially expensive logging

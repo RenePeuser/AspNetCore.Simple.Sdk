@@ -114,7 +114,9 @@ namespace AspNetCore.Simple.Sdk.Caching
                                   int retry,
                                   Context context)
         {
+#pragma warning disable CA1873 // Avoid potentially expensive logging
             _logger.LogInformation($"Redis retry policy executed. {exception.Message}");
+#pragma warning restore CA1873 // Avoid potentially expensive logging
             return ReconnectInternalAsync(false, waitTime);
         }
 

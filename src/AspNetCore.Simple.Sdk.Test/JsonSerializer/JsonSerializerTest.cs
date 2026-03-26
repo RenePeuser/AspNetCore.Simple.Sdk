@@ -21,7 +21,7 @@ namespace AspNetCore.Simple.Sdk.Test.JsonSerializer
 
             var json = exception.ProblemDetails.ToJson();
 
-            Assert.AreEqual(exception.ProblemDetails.Extensions["jsonString"], "Hidden cause of security critical infos");
+            Assert.AreEqual("Hidden cause of security critical infos", exception.ProblemDetails.Extensions["jsonString"]);
         }
 
         [TestMethod]

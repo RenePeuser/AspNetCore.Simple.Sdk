@@ -41,8 +41,9 @@ namespace AspNetCore.Simple.Sdk.Caching
         {
             if (configuration.TryGetSettings<RedisSettings>(out var redisSettings).IsFalse())
             {
-                logger.LogInformation(
-                    $"No Redis settings was found. We activate InMemory caching service. For activating redis just add '{nameof(RedisSettings)}' to your appsettings or environment variables.{Environment.NewLine}Sample:{JToken.Parse(new RedisSettings().ToJson()).ToString(Formatting.Indented)}");
+#pragma warning disable CA1873
+                logger.LogInformation($"No Redis settings was found. We activate InMemory caching service. For activating redis just add '{nameof(RedisSettings)}' to your appsettings or environment variables.{Environment.NewLine}Sample:{JToken.Parse(new RedisSettings().ToJson()).ToString(Formatting.Indented)}");
+#pragma warning restore CA1873
                 services.AddInMemoryCache();
                 return;
             }
