@@ -93,7 +93,6 @@ namespace AspNetCore.Simple.Sdk.Startups
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddBasePath(BasePath);
-            services.AddMediator(Assembly);
             services.AddValidationBehavior();
 
             services.AddControllers();
@@ -114,11 +113,6 @@ namespace AspNetCore.Simple.Sdk.Startups
 
             services.AddApplicationInsights(Configuration);
 
-            // Activate mediator for current assembly and calling once
-            services.AddMediator();
-            services.AddMediator(Assembly);
-            services.AddMediatRCaching(Assembly);
-
             services.AddRedisCache(Configuration, Logger);
 
             services.AddSwaggerGenSimplified(Assembly, Configuration, Logger);
@@ -136,6 +130,11 @@ namespace AspNetCore.Simple.Sdk.Startups
                                               options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
                                           });
             }
+
+            // Activate mediator for current assembly and calling once
+            services.AddMediator();
+            services.AddMediator(Assembly);
+            services.AddMediatRCaching(Assembly);
 
             AutoConfigureServices(GetAutoRegistration(services, Configuration));
         }
