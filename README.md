@@ -1,5 +1,11 @@
-# AspNetCore.Simple.Sdk
+﻿# AspNetCore.Simple.Sdk
 
+[![Build](https://github.com/RenePeuser/AspNetCore.Simple.Sdk/actions/workflows/build.yml/badge.svg)](https://github.com/RenePeuser/AspNetCore.Simple.Sdk/actions/workflows/build.yml)
+[![NuGet](https://img.shields.io/nuget/v/AspNetCore.Simple.Sdk.svg)](https://www.nuget.org/packages/AspNetCore.Simple.Sdk/)
+[![Downloads](https://img.shields.io/nuget/dt/AspNetCore.Simple.Sdk.svg)](https://www.nuget.org/packages/AspNetCore.Simple.Sdk/)
+[![Build](https://github.com/RenePeuser/AspNetCore.Simple.Sdk/actions/workflows/build.yml/badge.svg)](https://github.com/RenePeuser/AspNetCore.Simple.Sdk/actions/workflows/build.yml)
+[![NuGet](https://img.shields.io/nuget/v/AspNetCore.Simple.Sdk.svg)](https://www.nuget.org/packages/AspNetCore.Simple.Sdk/)
+[![Downloads](https://img.shields.io/nuget/dt/AspNetCore.Simple.Sdk.svg)](https://www.nuget.org/packages/AspNetCore.Simple.Sdk/)
 Target of this package is to create fast and clean Web-Api.
 You only need to configure in your appsettings needed and from
 the package supported services and you can start implementing
