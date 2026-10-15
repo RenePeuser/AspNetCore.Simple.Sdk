@@ -35,27 +35,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Storage.Blobs" Version="12.27.0" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.30.1" />
         <PackageReference Include="Extensions.Pack" Version="7.0.0" />
-        <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+        <PackageReference Include="GitVersion.MsBuild" Version="[5.12.0]">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="MediatR" Version="12.5.0" />
-        <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
-        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+        <PackageReference Include="MediatR" Version="[12.5.0]" />
+        <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.13" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.14" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
-        <PackageReference Include="Polly" Version="8.6.6" />
-        <PackageReference Include="StackExchange.Redis" Version="2.12.8" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="9.0.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.31" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.402" PrivateAssets="All" />
+        <PackageReference Include="Polly" Version="8.8.0" />
+        <PackageReference Include="StackExchange.Redis" Version="3.4.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="9.0.6" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
     </ItemGroup>
 
     <ItemGroup>
